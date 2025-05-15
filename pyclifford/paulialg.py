@@ -170,43 +170,6 @@ class Pauli(object):
             result = numpy.kron(result, mat)
         
         return (1j)**(self.p) * result
-    
-    def to_dict(self):
-        #Convert Pauli operator to a serializable dictionary format.
-        # Convert phase indicator to string representation
-        phase_map = {0: '+', 1: 'i', 2: '-', 3: '-i'}
-        phase = phase_map[self.p]
-        # Convert binary representation to operator dictionary
-        operator = {}
-        for i in range(self.N):
-            x = self.g[2*i]
-            z = self.g[2*i+1]
-            if x == 1 and z == 0:
-                operator[i] = 'X'
-            elif x == 1 and z == 1:
-                operator[i] = 'Y'
-            elif x == 0 and z == 1:
-                operator[i] = 'Z'
-            # Skip I operator (x=0, z=0)
-        return {
-            "class": "Pauli",
-            "phase": phase,
-            "operator": operator,
-            "N": self.N
-        }
-    
-    @classmethod
-    def from_dict(cls, data):
-        #Convert a dictionary to a Pauli operator.
-        if data['class'] != cls.__name__:
-            raise ValueError('Data class {} does not match expected class {}'.format(data['class'], cls.__name__))
-        phase_map = {'+': 0, 'i': 1, '-': 2, '-i': 3}
-        operator = data['operator']
-        # construct g and p
-        op = pauli(operator, N=data['N'])
-        op.p = phase_map[data['phase']]
-        return op
-                
 
 class PauliList(object):
     '''Represents a list of Pauli operators.
@@ -341,24 +304,6 @@ class PauliList(object):
             
         # Apply phases
         return (1j)**(self.ps[:,None,None]) * result
-    
-    def to_dict(self):
-        #Convert PauliList to a serializable dictionary format.
-        pauli_dicts = [pauli.to_dict() for pauli in self]
-        operators = [{k: d[k] for k in ['phase', 'operator']} for d in pauli_dicts]
-        return {
-            "class": "PauliList",
-            "operators": operators,
-            "N": self.N
-        }
-    
-    @classmethod
-    def from_dict(cls, data):
-        #Convert a dictionary to a PauliList.
-        if data['class'] != cls.__name__:
-            raise ValueError('Data class {} does not match expected class {}'.format(data['class'], cls.__name__))
-        operators = [Pauli.from_dict(op) for op in data['operators']]
-        return paulis(*operators)
 
 class PauliMonomial(Pauli):
     '''Represent a Pauli operator with a coefficient.
@@ -445,37 +390,6 @@ class PauliMonomial(Pauli):
     def to_numpy(self):
         """Convert Pauli monomial to numpy array representation."""
         return self.c * super().to_numpy()
-    
-    def to_dict(self):
-        #Convert PauliMonomial to a serializable dictionary format.
-        # Convert binary representation to operator dictionary
-        operator = {}
-        for i in range(self.N):
-            x = self.g[2*i]
-            z = self.g[2*i+1]
-            if x == 1 and z == 0:
-                operator[i] = 'X'
-            elif x == 1 and z == 1:
-                operator[i] = 'Y'
-            elif x == 0 and z == 1:
-                operator[i] = 'Z'
-            # Skip I operator (x=0, z=0)
-        coeff = self.c * 1j**self.p
-        return {
-            "type": "pauli_monomial",
-            "coefficient": coeff,
-            "operator": operator,
-            "N": self.N
-        }
-    
-    @classmethod
-    def from_dict(cls, data):
-        #Convert a dictionary to a PauliMonomial.
-        if data['type'] != 'pauli_monomial':
-            raise ValueError('Invalid data type: {} for PauliMonomial class'.format(data['type']))
-        op = pauli(data['operator'], N=data['N']).as_monomial()
-        op.c = data['coefficient']
-        return op
 
 class PauliPolynomial(PauliList):
     '''Represent a linear combination of Pauli operators.
@@ -578,7 +492,6 @@ class PauliPolynomial(PauliList):
         matrices = super().to_numpy()
         # Contract batch dimension with coefficients to get final matrix
         return numpy.tensordot(self.cs, matrices, axes=(0,0))
-
 
 # ---- constructors ----
 def pauli(obj, N = None):
