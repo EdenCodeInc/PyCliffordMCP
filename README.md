@@ -1,0 +1,79 @@
+# PyCliffordMCP
+
+## Project Overview
+
+This project aims to bridge the gap between symbolic quantum computing and AI-driven problem-solving by leveraging the `pyclifford` package. The `pyclifford` package is a modular and efficient Python library for simulating and analyzing quantum systems in the stabilizer formalism. It provides core abstractions for working with Pauli operators, Clifford maps, stabilizer states, and Clifford circuits, enabling simulation and symbolic manipulation of quantum error correction protocols, measurement processes, and randomized benchmarking tools.
+
+## Why MCP Tools?
+
+To enable AI agents (like Cursor AI) to effectively leverage the `pyclifford` package for solving symbolic quantum problems, we need a structured interface that bridges language-model reasoning with structured API access. This is where MCP (Machine-Client Protocol) tools come in. By building MCP tools on top of `pyclifford`, we can:
+
+- **Automate Quantum Simulations**: Allow AI agents to perform complex quantum simulations without manual intervention.
+- **Enhance Problem-Solving Capabilities**: Enable AI agents to tackle quantum error correction, state tomography, and other quantum information tasks.
+- **Streamline Integration**: Provide a clear, type-safe, and schema-driven interface for AI agents to interact with quantum computing tools.
+
+## Project Structure
+
+```
+/pyclifford/      # Core library code (Pauli, Clifford, Stabilizer, etc.)
+/mcp_server/      # MCP server code and helper functions
+/dev/             # Development notebooks and experiments
+/tests/           # Automated tests for the project
+/pyproject.toml   # Project configuration and metadata
+/README.md        # This file
+```
+
+## Usage
+
+1. **Installation**: From the project root, install the package in editable mode:
+   ```bash
+   pip install -e .
+   ```
+
+2. **Running the MCP Server**: Navigate to the `mcp_server` directory and run the server:
+   ```bash
+   python server.py
+   ```
+
+3. **Interacting with AI Agents**: Use the MCP tools to perform quantum simulations and analyses. The AI agent can call these tools to solve complex quantum problems.
+
+## Main Components of `pyclifford`
+
+### 1. Pauli Algebra (`paulialg.py`)
+- **Pauli, PauliList, PauliMonomial, PauliPolynomial**: Classes for representing single Pauli operators, lists of Paulis, monomials (Pauli with a coefficient), and polynomials (linear combinations).
+- **Operations**: Arithmetic, tensor products, trace, weight, conversion to matrix form, and Clifford transformations.
+- **Constructors**: Utility functions to create Pauli objects from various representations.
+
+### 2. Stabilizer Formalism (`stabilizer.py`)
+- **CliffordMap**: Represents a Clifford transformation as a mapping of Pauli operators.
+- **StabilizerState**: Represents a quantum state stabilized by a set of commuting Pauli operators (stabilizer tableau).
+- **State Manipulation**: Measurement, postselection, expectation values, entropy, sampling, and conversion between map and state representations.
+- **State Constructors**: Functions to create identity, random, GHZ, bit, and maximally mixed states.
+
+### 3. Clifford Circuits (`circuit.py`)
+- **CliffordGate, Measurement, Layer, Circuit**: Classes to build and simulate Clifford circuits, including gates, measurements, and layers of operations.
+- **Gate Constructors**: Functions for standard gates (X, Y, Z, H, S, CNOT, SWAP, CZ, etc.) and random Clifford gates.
+- **Circuit Constructors**: Functions to build identity circuits, brickwall circuits, measurement layers, and diagonalization circuits.
+- **Simulation**: Forward and backward application of circuits to stabilizer states, compilation of circuits, and extraction of measurement outcomes.
+
+### 4. Utilities (`utils.py`)
+- **Binary Representation**: Efficient encoding of Pauli operators and stabilizer tableaus as binary arrays.
+- **Commutation, Product, and Transformation**: Functions for commutation checks, operator products, Clifford rotations, and transformations.
+- **Random Generation**: Sampling of random Pauli and Clifford operators.
+- **Linear Algebra**: Z2 rank and inversion, aggregation, and entropy calculations.
+
+### 5. Classical Shadows (`device.py`)
+- **ClassicalShadow**: Class for simulating classical shadow tomography, i.e., repeated randomized measurements of a quantum state using Clifford circuits.
+
+## Typical Use Cases
+
+- **Quantum Error Correction**: Simulate stabilizer codes, syndrome extraction, and logical operations.
+- **Clifford Circuit Simulation**: Efficiently simulate large Clifford circuits, including measurement and postselection.
+- **Quantum State Tomography**: Use classical shadows for efficient estimation of quantum observables.
+- **Quantum Information Theory**: Analyze entanglement, entropy, and other properties of stabilizer states.
+
+## Design Highlights
+
+- **Efficiency**: Heavy use of binary/NumPy representations and Numba for fast computation.
+- **Extensibility**: Modular design allows for easy extension to new gates, states, and operations.
+- **Mathematical Rigor**: Implements the stabilizer formalism and Clifford group operations as described in quantum information literature. 
