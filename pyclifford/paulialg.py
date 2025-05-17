@@ -381,7 +381,7 @@ class PauliMonomial(Pauli):
         '''cast the Pauli monomial to a single-term Pauli polynomial'''
         gs = numpy.expand_dims(self.g, 0)
         ps = numpy.array([self.p], dtype=numpy.int_)
-        cs = numpy.array([self.c], dtype=numpy.complex_)
+        cs = numpy.array([self.c], dtype=numpy.complex128)
         return PauliPolynomial(gs, ps).set_cs(cs)
 
     def inverse(self):
@@ -400,7 +400,7 @@ class PauliPolynomial(PauliList):
     cs: comlex (L) - coefficients.'''
     def __init__(self, *args, **kwargs):
         super(PauliPolynomial, self).__init__(*args, **kwargs)
-        self.cs = numpy.ones(self.ps.shape, dtype=numpy.complex_) # default coefficient
+        self.cs = numpy.ones(self.ps.shape, dtype=numpy.complex128) # default coefficient
 
     def __repr__(self):
         txt = ''
@@ -512,6 +512,7 @@ def pauli(obj, N = None):
     h = 0
     p = 0
     for i, mu in inds:
+        i = int(i)
         assert i-h < N, 'qubit {} is out of bounds for system size {}.'.format(i, N)
         if mu == 0 or mu == 'I':
             continue
