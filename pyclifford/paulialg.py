@@ -368,10 +368,6 @@ class PauliMonomial(Pauli):
         else:
             raise NotImplementedError('matmul is not implemented for between {} and {}'.format(type(self).__name__, type(other).__name__))
 
-    def set_c(self, c):
-        self.c = c
-        return self
-
     def trace(self):
         return self.c * super(PauliMonomial, self).trace()
 
@@ -464,11 +460,6 @@ class PauliPolynomial(PauliList):
             other.expand(N)
         gs, ps, cs = batch_dot(self.gs, self.ps, self.cs, other.gs, other.ps, other.cs)
         return PauliPolynomial(gs, ps, cs=cs)
-
-    def set_cs(self, cs):
-        '''set coefficients'''
-        self.cs = cs
-        return self
 
     def trace(self):
         return self.cs.dot(super(PauliPolynomial, self).trace())
