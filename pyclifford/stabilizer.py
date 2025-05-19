@@ -98,7 +98,7 @@ class StabilizerState(PauliList):
         # otherwise, set r = 0 as pure state by default.
         self.r = kwargs.pop('r', 0) 
         # call superclass PauliList to handle remaining arguments
-        super().__init__(*args, **kwargs)
+        super(StabilizerState, self).__init__(*args, **kwargs)
         
     def __repr__(self):
         ''' will only show active stabilizers, 

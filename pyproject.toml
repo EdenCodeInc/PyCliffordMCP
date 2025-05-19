@@ -5,13 +5,16 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyclifford"
 version = "0.1.0"
-description = "A modular and efficient Python library for performing Pauli algebra, handling stabilizer states, and simulating Clifford circuits."
+description = "A modular and efficient Python library for simulating and analyzing quantum systems in the stabilizer formalism."
 authors = [
     { name = "EdenCode", email = "info@edencode.ai" }
 ]
 readme = "README.md"
 requires-python = ">=3.8"
-license = { text = "MIT" }
+license = "MIT"
 
 [project.urls]
-Homepage = "https://github.com/EdenCodeInc/PyCliffordMCP" 
+Homepage = "https://github.com/EdenCodeInc/PyCliffordMCP"
+
+[tool.setuptools.packages.find]
+include = ["pyclifford*"] 

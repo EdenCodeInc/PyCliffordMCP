@@ -248,7 +248,7 @@ def pauli_transform(gs_in, ps_in, gs_map, ps_map):
 
 @njit
 def pauli_decompose(gs_in, ps_in, gs_stb, ps_stb, r):
-    '''Decompose a Pauli operator into stabilizer and destabilizers.
+    '''Decompose Pauli operators into stabilizer and destabilizers.
 
     Parameters:
     gs_in: int (L, 2*N) - Pauli strings in binary representation.

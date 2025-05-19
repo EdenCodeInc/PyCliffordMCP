@@ -27,7 +27,7 @@ class Pauli(object):
             elif self.p == 3:
                 txt = '-i'
         else:
-            txt = 'null'
+            txt = '1'
         # interprete Pauli string
         for i in range(self.N):
             x = self.g[2*i  ]
@@ -313,8 +313,9 @@ class PauliMonomial(Pauli):
     p: int - phase indicator (i power).
     c: comlex - coefficient.'''
     def __init__(self, *args, **kwargs):
+        # extract c and remove it from kwargs, if present.
+        self.c = kwargs.pop('c', 1.+0.j) # default coefficient 1.0+0.0j
         super(PauliMonomial, self).__init__(*args, **kwargs)
-        self.c = 1.+0.j # default coefficient
 
     def __repr__(self):
         # interprete coefficient
@@ -344,10 +345,10 @@ class PauliMonomial(Pauli):
         return txt
 
     def __neg__(self):
-        return PauliMonomial(self.g, self.p).set_c(-self.c)
+        return PauliMonomial(self.g, self.p, c=-self.c)
 
     def __rmul__(self, c):
-        return PauliMonomial(self.g, self.p).set_c(c * self.c)
+        return PauliMonomial(self.g, self.p, c=c * self.c)
 
     def __truediv__(self, other):
         return (1/other) * self
@@ -375,14 +376,14 @@ class PauliMonomial(Pauli):
         return self.c * super(PauliMonomial, self).trace()
 
     def copy(self):
-        return PauliMonomial(self.g.copy(), self.p).set_c(self.c)
+        return PauliMonomial(self.g.copy(), self.p, c=self.c)
         
     def as_polynomial(self):
         '''cast the Pauli monomial to a single-term Pauli polynomial'''
         gs = numpy.expand_dims(self.g, 0)
         ps = numpy.array([self.p], dtype=numpy.int_)
         cs = numpy.array([self.c], dtype=numpy.complex128)
-        return PauliPolynomial(gs, ps).set_cs(cs)
+        return PauliPolynomial(gs, ps, cs=cs)
 
     def inverse(self):
         return Pauli(self.g)/(self.c * 1j**self.p)
@@ -399,8 +400,11 @@ class PauliPolynomial(PauliList):
     ps: int (L) - array of phase indicators (i powers).
     cs: comlex (L) - coefficients.'''
     def __init__(self, *args, **kwargs):
+        # extract cs and remove it from kwargs, if present.
+        self.cs = kwargs.pop('cs', None) 
         super(PauliPolynomial, self).__init__(*args, **kwargs)
-        self.cs = numpy.ones(self.ps.shape, dtype=numpy.complex128) # default coefficient
+        if self.cs is None:
+            self.cs = numpy.ones(self.ps.shape, dtype=numpy.complex128)
 
     def __repr__(self):
         txt = ''
@@ -416,14 +420,14 @@ class PauliPolynomial(PauliList):
 
     def __getitem__(self, item):
         if isinstance(item, (int, numpy.integer)):
-            return PauliMonomial(self.gs[item], self.ps[item]).set_c(self.cs[item])
-        return PauliPolynomial(self.gs[item], self.ps[item]).set_cs(self.cs[item])
+            return PauliMonomial(self.gs[item], self.ps[item], c=self.cs[item])
+        return PauliPolynomial(self.gs[item], self.ps[item], cs=self.cs[item])
 
     def __neg__(self):
-        return PauliPolynomial(self.gs, self.ps).set_cs(-self.cs)
+        return PauliPolynomial(self.gs, self.ps, cs=-self.cs)
 
     def __rmul__(self, c):
-        return PauliPolynomial(self.gs, self.ps).set_cs(c * self.cs)
+        return PauliPolynomial(self.gs, self.ps, cs=c * self.cs)
 
     def __truediv__(self, other):
         return (1/other) * self
@@ -441,7 +445,7 @@ class PauliPolynomial(PauliList):
         gs = numpy.concatenate([self.gs, other.gs])
         ps = numpy.concatenate([self.ps, other.ps])
         cs = numpy.concatenate([self.cs, other.cs])
-        return PauliPolynomial(gs, ps).set_cs(cs).reduce()
+        return PauliPolynomial(gs, ps, cs=cs).reduce()
 
     def __radd__(self, other):
         return self + other
@@ -459,7 +463,7 @@ class PauliPolynomial(PauliList):
             self.expand(N)
             other.expand(N)
         gs, ps, cs = batch_dot(self.gs, self.ps, self.cs, other.gs, other.ps, other.cs)
-        return PauliPolynomial(gs, ps).set_cs(cs)
+        return PauliPolynomial(gs, ps, cs=cs)
 
     def set_cs(self, cs):
         '''set coefficients'''
@@ -470,7 +474,7 @@ class PauliPolynomial(PauliList):
         return self.cs.dot(super(PauliPolynomial, self).trace())
 
     def copy(self):
-        return PauliPolynomial(self.gs.copy(), self.ps.copy()).set_cs(self.cs.copy())
+        return PauliPolynomial(self.gs.copy(), self.ps.copy(), cs=self.cs.copy())
 
     def as_polynomial(self):
         return self
@@ -483,7 +487,7 @@ class PauliPolynomial(PauliList):
         gs, inds = numpy.unique(self.gs, return_inverse=True, axis=0)
         cs = aggregate(self.cs * 1j**self.ps, inds, gs.shape[0])
         mask = (numpy.abs(cs) > tol)
-        return PauliPolynomial(gs[mask]).set_cs(cs[mask])
+        return PauliPolynomial(gs[mask], cs=cs[mask])
 
     def to_numpy(self):
         """Convert Pauli polynomial to numpy array representation.
