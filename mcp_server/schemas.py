@@ -20,13 +20,13 @@ class PauliTerm(BaseModel):
         - This approach is recommended for complex or lengthy operator expressions, or when you are uncertain about the correct structured representation.
     '''
 
-    coefficient: float | complex | str | None = Field(
+    coefficient: complex | None = Field(
         default=1.0,
         description=(
             'The scalar coefficient of the Pauli term.\n\n'
             'Acceptable formats:\n'
-            '- Real numbers: "1.0", "-0.5"\n'
-            '- Complex values: "1+2j", "0.5j"\n'
+            '- Complex number: "1+2j", "0.5j", "1+0j" (default)\n'
+            '- Other number will be converted to complex: "2.0", "-0.5" -> "2.0+0.0j", "-0.5+0.0j"\n'
             '- Phase factors as strings: "+", "-", "+i", "-i", "i", "j"\n\n'
             'AI agent tip: You may use either "i" or "j" for the imaginary unit (validator can handle both).'
         )
@@ -156,7 +156,7 @@ class PauliTerm(BaseModel):
         return coefficient
     
     @model_validator(mode='after')
-    def set_text(self):
+    def render_to_text(self):
         # provide a canonical text representation of the Pauli term
         phase_str_map = {1: '', 1j: '+i', -1: '-', -1j: '-i'}
         coeff = self.coefficient
@@ -296,7 +296,7 @@ class Operator(BaseModel):
         return data
         
     @model_validator(mode='after')
-    def set_text(self):
+    def render_to_text(self):
         if not self.terms:
             self.text = '0'
         else:
