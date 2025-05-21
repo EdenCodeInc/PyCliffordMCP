@@ -202,6 +202,21 @@ class PauliTerm(BaseModel):
     
     @classmethod
     def from_obj(cls, obj) -> 'PauliTerm':
+        def pauli_string(g: list[int]) -> dict:
+            # convert a list of integers to a dictionary of operators
+            pauli_string = {}
+            N = g.shape[0]//2
+            for i in range(N):
+                x = g[2*i]
+                z = g[2*i+1]
+                if x == 1 and z == 0:
+                    pauli_string[i] = 'X'
+                elif x == 1 and z == 1:
+                    pauli_string[i] = 'Y'
+                elif x == 0 and z == 1:
+                    pauli_string[i] = 'Z'
+                # skip I operator (x=0, z=0)
+            return pauli_string
         if isinstance(obj, pc.PauliMonomial):
             return cls(coefficient=obj.c * 1j**obj.p, pauli_string=pauli_string(obj.g))
         if isinstance(obj, pc.Pauli): # Don't move it before PauliMonomial check
@@ -221,16 +236,16 @@ class Operator(BaseModel):
     - This model supports either structured input (`terms`) or text-based input (via `text`).
     - Operators can be used to represent Hamiltonians, observables, or any general operator expression.
 
-    Examples:
-        - "+i X_1 Y_2"         # One term: +i times X on qubit 1 and Y on qubit 2
-        - "-0.5 Z_1 + 0.5 Z_2" # Two terms: -0.5 times Z on qubit 1, plus 0.5 times Z on qubit 2
-
     AI Agent Note:
         - When structured data is available, represent each term as a `PauliTerm` object using the `coefficient` and `pauli_string` fields.
         - Collect all terms in a list and assign it to the `terms` field to form the complete operator.
         - If you are provided with a raw text expression, or if parsing the expression into structured fields is ambiguous or error-prone, you may supply the entire operator expression to the `text` field.
         - The model will automatically parse the `text` input and populate the `terms` field for you.
         - This approach is recommended for complex, lengthy, or ambiguous operator expressions, or when you are uncertain about the correct structured representation.
+
+    Examples:
+        - "+i X_1 Y_2"         # One term: +i times X on qubit 1 and Y on qubit 2
+        - "-0.5 Z_1 + 0.5 Z_2" # Two terms: -0.5 times Z on qubit 1, plus 0.5 times Z on qubit 2
     '''
 
     terms: list[PauliTerm] | None = Field(
@@ -326,20 +341,164 @@ class Operator(BaseModel):
         else:
             raise ValueError(f"Unsupported object type: {type(obj)}")
 
-def pauli_string(g: list[int]) -> dict:
-    # convert a list of integers to a dictionary of operators
-    pauli_string = {}
-    N = g.shape[0]//2
-    for i in range(N):
-        x = g[2*i]
-        z = g[2*i+1]
-        if x == 1 and z == 0:
-            pauli_string[i] = 'X'
-        elif x == 1 and z == 1:
-            pauli_string[i] = 'Y'
-        elif x == 0 and z == 1:
-            pauli_string[i] = 'Z'
-        # skip I operator (x=0, z=0)
-    return pauli_string
+class CliffordUnitary(BaseModel):
+    '''Represents a Clifford unitary transformation specifiedby its action on Pauli operators.
 
+    - A Clifford unitary $U$ is defined by its transformation (conjugation action) on any operator $O$ as $O -> U O U^H$.
+    - The action of $U$ is fully specified by its effect on the Pauli group generators (e.g., $X_i$, $Z_i$ for $i=1,...,N$).
+    - The forward map is a dictionary mapping each generator (as a string representation of a PauliTerm) 
+      to its image under unitary transformation (as a PauliTerm).
 
+    AI Agent Note:
+        - The `clifford_map` field should be a dictionary where keys are string representations of Pauli group generators and values are PauliTerm objects.
+        - The `text` field provides a human-readable or text-based description of the Clifford unitary, e.g., a table of generator mappings.
+        - This model is useful for representing, serializing, and communicating Clifford unitaries in a structured way.
+
+    Example:
+        Generator forward map ($O -> U O U^H$):
+            X_1 -> + X_1 Y_2
+            Z_1 -> - X_1 Z_2
+            X_2 -> + X_2
+            Z_2 -> + Y_1 X_2
+        Input schema:
+            - either use text field to specify Clifford unitary:
+                {
+                    "text": "X_1 -> + X_1 Y_2, Z_1 -> - X_1 Z_2, X_2 -> + X_2, Z_2 -> + Y_1 X_2"
+                }
+            - or use dictionary of text representations of Pauli strings to specify Clifford unitary:
+                {
+                    "clifford_map": {
+                        "X_1": "+ X_1 Y_2",
+                        "Z_1": "- X_1 Z_2",
+                        "X_2": "+ X_2",
+                        "Z_2": "+ Y_1 X_2"
+                    }
+                }
+            - or use dictionary of structured PauliTerm objects to specify Clifford unitary:
+                {
+                    "clifford_map": {
+                        "X_1": {"coefficient": 1, "pauli_string": {"1": "X", "2": "Y"}},
+                        "Z_1": {"coefficient": -1, "pauli_string": {"1": "X", "2": "Z"}},
+                        "X_2": {"coefficient": 1, "pauli_string": {"2": "X"}},
+                        "Z_2": {"coefficient": 1, "pauli_string": {"1": "Y", "2": "X"}}
+                    }
+                }
+    '''
+
+    clifford_map: dict[str, PauliTerm] = Field(
+        default_factory=dict,
+        description=(
+            "Dictionary representing the forward action of the Clifford unitary on Pauli generators. "
+            "Each key is a string representation of a Pauli group generator (e.g., 'X1', 'Z_2', 'X{3}', 'Z(4)'). "
+            "Each value is the image PauliTerm under conjugation."
+        )
+    )
+
+    text: str | None = Field(
+        default=None,
+        description=(
+            "Optional human-readable text-based expression of the Clifford unitary, "
+            "such as a table of generator mappings."
+        )
+    )
+
+    @model_validator(mode='before')
+    @classmethod
+    def parse_from_text(cls, data):
+        if 'text' in data and data['text']:
+            text = data.pop('text')
+            # Split into mapping entries (comma, \\, or newline as separator)
+            entries = re.split(r',|\\\\|\n', text)
+            clifford_map = {}
+            for entry in entries:
+                entry = entry.strip()
+                if entry == '':
+                    continue
+                # Split key and value by mapping arrow (->, :, \to, \mapsto, \rightarrow)
+                m = re.split(r'\s*(?:->|:|\\to|\\mapsto|\\rightarrow)\s*', entry, maxsplit=1)
+                if len(m) < 2:
+                    raise ToolError(f"Invalid mapping entry: '{entry}'. Expected format like 'X_1 -> + X_1 Y_2'.")
+                key = m[0].strip()
+                value = m[1].strip()
+                clifford_map[key] = value
+            data['clifford_map'] = clifford_map
+        return data
+
+    @field_validator('clifford_map', mode='before')
+    @classmethod
+    def parse_clifford_map(cls, clifford_map):
+        key_pattern = re.compile(r"[XZ]_\{\d+\}")
+        new_map = {}
+        for key, value in clifford_map.items():
+            # Parse the key as a PauliTerm
+            key_term = PauliTerm(text=key)
+            # Extract all matches for single Pauli operator
+            matches = key_pattern.findall(key_term.text)
+            if len(matches) != 1:
+                raise ToolError(f"Clifford map key '{key}' must contain exactly one single-qubit Pauli operator (X_{{int}} or Z_{{int}}). Found: {matches}")
+            key_str = matches[0]
+            # If key has a phase, invert it and apply to value
+            phase = key_term.coefficient
+            if isinstance(value, str):
+                value_term = PauliTerm(text=value)
+            else:
+                value_term = value
+            # If key phase is not 1, invert and apply to value
+            if phase != 1:
+                # Multiply value's coefficient
+                value_coeff = value_term.coefficient / phase
+                value_term = value_term.model_copy(update={"coefficient": value_coeff})
+            new_map[key_str] = value_term
+        return new_map
+    
+    @model_validator(mode='after')
+    def render_to_text(self):
+        self.text = ''  # Initialize as empty string
+        for key, value in self.clifford_map.items():
+            self.text += f'{key} -> {value.text}, '
+        self.text = self.text.rstrip(', ')
+        return self
+    
+    def to_obj(self) -> pc.CliffordGate:
+        qubits = set()
+        for key in self.clifford_map.keys():
+            m = re.match(r'[XZ]_\{(\d+)\}', key)
+            if m:
+                qubits.add(int(m.group(1)))
+        qubits = sorted(qubits)
+        if not qubits:
+            return pc.CliffordGate()
+        i0 = min(qubits)
+        ops = []
+        for i in qubits:
+            for op in ("X", "Z"):
+                key = f"{op}_{{{i}}}"
+                value = self.clifford_map.get(key, PauliTerm(text=key))
+                value.pauli_string = {int(i) - i0: op for i, op in value.pauli_string.items()}
+                ops.append(value.to_obj())
+        ops = pc.paulis(ops)
+        clifford_map = pc.CliffordMap(ops.gs, ops.ps)
+        gate = pc.CliffordGate(*qubits)
+        gate.set_forward_map(clifford_map)
+        return gate
+        
+    @classmethod
+    def from_obj(cls, obj) -> 'CliffordUnitary':
+        def clifford_map(ops: pc.PauliList, i0: int = 0) -> dict:
+            print(f'i0 = {i0}')
+            keys, values = [], []
+            for i in range(ops.N):
+                for op in ("X", "Z"):
+                    keys.append(f"{op}_{{{i + i0}}}")
+            for op in ops:
+                value = PauliTerm.from_obj(op)
+                pauli_string = {int(i) + i0: op for i, op in value.pauli_string.items()}
+                value = value.model_copy(update={"pauli_string": pauli_string})
+                values.append(value)
+            return {key: value for key, value in zip(keys, values)}
+        if isinstance(obj, pc.CliffordGate):
+            return cls(clifford_map=clifford_map(obj.forward_map, i0 =min(obj.qubits)))
+        elif isinstance(obj, pc.CliffordMap):
+            return cls(clifford_map=clifford_map(obj))
+        else:
+            raise ValueError(f"Unsupported object type: {type(obj)}")

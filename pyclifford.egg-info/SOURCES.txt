@@ -1,5 +1,8 @@
 README.md
 pyproject.toml
+mcp_server/__init__.py
+mcp_server/schemas.py
+mcp_server/server.py
 pyclifford/__init__.py
 pyclifford/circuit.py
 pyclifford/device.py
@@ -9,4 +12,5 @@ pyclifford/utils.py
 pyclifford.egg-info/PKG-INFO
 pyclifford.egg-info/SOURCES.txt
 pyclifford.egg-info/dependency_links.txt
+pyclifford.egg-info/requires.txt
 pyclifford.egg-info/top_level.txt

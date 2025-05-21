@@ -1,6 +1,6 @@
 from fastmcp import FastMCP
-from .schemas import PauliTerm, Operator
-
+from mcp_server.schemas import PauliTerm, Operator, CliffordUnitary
+from typing import Literal
 # Create the MCP server object
 mcp = FastMCP('PyClifford Server')
 
@@ -12,19 +12,19 @@ def pauli_operator_product(op1: PauliTerm, op2: PauliTerm) -> PauliTerm:
     Examples:
         - Input: $(+i X_1) (Y_1)$
         - Input schema:
-            - use text field to specify PauliTerm
+            - either use text field to specify PauliTerm:
                 {
                     "op1": {"text": "+i X_1"},
                     "op2": {"text": "Y_1"}
                 }
-            - use structured fields to specify PauliTerm
+            - or use structured fields to specify PauliTerm:
                 {
                     "op1": {"coefficient": 1j, "pauli_string": {"1": "X"}},
                     "op2": {"coefficient": 1, "pauli_string": {"1": "Y"}}
                 }
         - Output schema:
             {
-                "coefficient": -1,
+                "coefficient": "-1+0j",
                 "pauli_string": {"1": "Z"},
                 "text": "- Z_{1}"
             }
@@ -40,12 +40,12 @@ def operator_product(op1: Operator, op2: Operator) -> Operator:
     Examples:
         - Input: $(-0.5 Z_1 + 0.5 Z_2) (X_1)$
         - Input schema:
-            - use text field to specify Operator
+            - either use text field to specify Operator:
                 {
                     "op1": {"text": "-0.5 Z_1 + 0.5 Z_2"},
                     "op2": {"text": "X_1"}
                 }
-            - use structured fields to specify Operator
+            - or use structured fields to specify Operator:
                 {
                     "op1": {
                         "terms": [
@@ -62,14 +62,65 @@ def operator_product(op1: Operator, op2: Operator) -> Operator:
         - Output schema:
             {
                 "terms": [
-                    {"coefficient": -0.5, "pauli_string": {"1": "Y"}, "text": "-0.5 Y_{1}"},
-                    {"coefficient": 0.5, "pauli_string": {"1": "X", "2": "Z"}, "text": "0.5 X_{1} Z_{2}"}
+                    {
+                        "coefficient": "0.5+0j",
+                        "pauli_string": {"1": "X", "2": "Z"},
+                        "text": "0.5 X_{1} Z_{2}"
+                    },
+                    {
+                        "coefficient": "-0.5j",
+                        "pauli_string": {"1": "Y"},
+                        "text": "-0.5i Y_{1}"
+                    }
                 ],
-                "text": "-0.5 Y_{1} + 0.5 X_{1} Z_{2}"
+                "text": "0.5 X_{1} Z_{2} - 0.5i Y_{1}"
             }
-        - Output: $-0.5 Y_{1} + 0.5 X_{1} Z_{2}$
+        - Output: $0.5 X_{1} Z_{2} - 0.5i Y_{1}$
     '''
     return Operator.from_obj(op1.to_obj() @ op2.to_obj())
+
+@mcp.tool()
+def unitary_transform(U: CliffordUnitary, O: Operator, direction: Literal["forward", "backward"] = "forward") -> Operator:
+    ''' Apply a Clifford unitary to a quantum operator.
+    This tool accepts a CliffordUnitary object and a quantum operator (Operator), and returns the result of applying the unitary to the operator.
+
+    Examples:
+        - Input: A Clifford unitary $U$ and a quantum operator $O$
+        - Input schema:
+            - either use text field to specify CliffordUnitary:
+                {
+                    "U": {"text": "X_1 -> + X_1 Y_2, Z_1 -> - X_1 Z_2, X_2 -> + X_2, Z_2 -> + Y_1 X_2"},
+                    "O": {"text": "X_1"}
+                }
+            - or use structured fields to specify CliffordUnitary:
+                {
+                    "U": {
+                        "clifford_map": {
+                            "X_1": {"coefficient": 1, "pauli_string": {"1": "X", "2": "Y"}},
+                            "Z_1": {"coefficient": -1, "pauli_string": {"1": "X", "2": "Z"}},
+                            "X_2": {"coefficient": 1, "pauli_string": {"2": "X"}},
+                            "Z_2": {"coefficient": 1, "pauli_string": {"1": "Y", "2": "X"}}
+                        }
+                    },
+                    "O": {"text": "X_1"}
+                }   
+        - Output schema:
+            {
+                "terms": [
+                    {"coefficient": "0.5+0j", "pauli_string": {"1": "X", "2": "Z"}, "text": "0.5 X_{1} Z_{2}"},
+                    {"coefficient": "-0.5j", "pauli_string": {"1": "Y"}, "text": "-0.5i Y_{1}"}
+                ],  
+                "text": "0.5 X_{1} Z_{2} - 0.5i Y_{1}"
+            }
+        - Output: $0.5 X_{1} Z_{2} - 0.5i Y_{1}$
+    '''
+    gate = U.to_obj()
+    op = O.to_obj()
+    if direction == "forward":
+        op, _ = gate.forward(op)
+    else:
+        op, _ = gate.backward(op)
+    return Operator.from_obj(op)
 
 # This is the main entry point for your server
 if __name__ == "__main__":
