@@ -202,25 +202,8 @@ class PauliTerm(BaseModel):
     
     @classmethod
     def from_obj(cls, obj) -> 'PauliTerm':
-        def pauli_string(g: list[int]) -> dict:
-            # convert a list of integers to a dictionary of operators
-            pauli_string = {}
-            N = g.shape[0]//2
-            for i in range(N):
-                x = g[2*i]
-                z = g[2*i+1]
-                if x == 1 and z == 0:
-                    pauli_string[i] = 'X'
-                elif x == 1 and z == 1:
-                    pauli_string[i] = 'Y'
-                elif x == 0 and z == 1:
-                    pauli_string[i] = 'Z'
-                # skip I operator (x=0, z=0)
-            return pauli_string
-        if isinstance(obj, pc.PauliMonomial):
-            return cls(coefficient=obj.c * 1j**obj.p, pauli_string=pauli_string(obj.g))
-        if isinstance(obj, pc.Pauli): # Don't move it before PauliMonomial check
-            return cls(coefficient=1j**obj.p, pauli_string=pauli_string(obj.g))
+        if isinstance(obj, (pc.Pauli, pc.PauliMonomial)):
+            return cls(text = str(obj))
         else:
             raise ValueError(f"Unsupported object type: {type(obj)}")
 
@@ -326,7 +309,7 @@ class Operator(BaseModel):
         return self
         
     def to_obj(self) -> pc.PauliPolynomial:
-        poly = pc.pauli_zero(0)
+        poly = pc.pauli_zero()
         for term in self.terms:
             poly += term.to_obj()
         return poly
@@ -344,7 +327,7 @@ class Operator(BaseModel):
 class CliffordUnitary(BaseModel):
     '''Represents a Clifford unitary transformation specifiedby its action on Pauli operators.
 
-    - A Clifford unitary $U$ is defined by its transformation (conjugation action) on any operator $O$ as $O -> U O U^H$.
+    - A Clifford unitary $U$ is defined by its transformation (conjugation action) on any operator $O$ as $O -> U^H O U$.
     - The action of $U$ is fully specified by its effect on the Pauli group generators (e.g., $X_i$, $Z_i$ for $i=1,...,N$).
     - The forward map is a dictionary mapping each generator (as a string representation of a PauliTerm) 
       to its image under unitary transformation (as a PauliTerm).
@@ -355,7 +338,7 @@ class CliffordUnitary(BaseModel):
         - This model is useful for representing, serializing, and communicating Clifford unitaries in a structured way.
 
     Example:
-        Generator forward map ($O -> U O U^H$):
+        Generator forward map ($O -> U^H O U$):
             X_1 -> + X_1 Y_2
             Z_1 -> - X_1 Z_2
             X_2 -> + X_2
@@ -468,37 +451,29 @@ class CliffordUnitary(BaseModel):
         qubits = sorted(qubits)
         if not qubits:
             return pc.CliffordGate()
-        i0 = min(qubits)
         ops = []
         for i in qubits:
             for op in ("X", "Z"):
                 key = f"{op}_{{{i}}}"
                 value = self.clifford_map.get(key, PauliTerm(text=key))
-                value.pauli_string = {int(i) - i0: op for i, op in value.pauli_string.items()}
+                value.pauli_string = {int(i): op for i, op in value.pauli_string.items()}
                 ops.append(value.to_obj())
-        ops = pc.paulis(ops)
-        clifford_map = pc.CliffordMap(ops.gs, ops.ps)
+        ops = pc.paulis(ops, qubits=qubits)
+        clifford_map = pc.CliffordMap(ops.gs, ops.ps, qubits=ops.qubits)
         gate = pc.CliffordGate(*qubits)
         gate.set_forward_map(clifford_map)
         return gate
         
     @classmethod
     def from_obj(cls, obj) -> 'CliffordUnitary':
-        def clifford_map(ops: pc.PauliList, i0: int = 0) -> dict:
-            print(f'i0 = {i0}')
-            keys, values = [], []
-            for i in range(ops.N):
-                for op in ("X", "Z"):
-                    keys.append(f"{op}_{{{i + i0}}}")
-            for op in ops:
-                value = PauliTerm.from_obj(op)
-                pauli_string = {int(i) + i0: op for i, op in value.pauli_string.items()}
-                value = value.model_copy(update={"pauli_string": pauli_string})
-                values.append(value)
-            return {key: value for key, value in zip(keys, values)}
         if isinstance(obj, pc.CliffordGate):
-            return cls(clifford_map=clifford_map(obj.forward_map, i0 =min(obj.qubits)))
+            text = str(obj.forward_map)
         elif isinstance(obj, pc.CliffordMap):
-            return cls(clifford_map=clifford_map(obj))
+            text = str(obj)
         else:
             raise ValueError(f"Unsupported object type: {type(obj)}")
+        text = text.strip()
+        if text.startswith('CliffordMap(') and text.endswith(')'):
+            text = text[13:-1]
+        text = ', '.join(line.strip() for line in text.split('\n'))
+        return cls(text=text)
