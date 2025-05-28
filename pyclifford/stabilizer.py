@@ -125,7 +125,7 @@ class CliffordMap(PauliList):
         gs_inv = z2inv(self.gs)
         _, ps_mis = pauli_combine(gs_inv, self.gs, self.ps)
         ps_inv = indc_mod(- ps_mis - ps0(gs_inv), 4)
-        return CliffordMap(gs_inv, ps_inv)
+        return CliffordMap(gs_inv, ps_inv, qubits=self.qubits)
 
 class StabilizerState(PauliList):
     '''Represents a stabilizer state. This is a subclass of PauliList.
