@@ -20,7 +20,3 @@ class ClassicalShadow(object):
             self.circuit.forward(snapshot)
             self.circuit.backward(snapshot)
             yield snapshot
-        # for povm in self.circuit.povm(nsample):
-        #     snapshot = self.state.copy()
-        #     snapshot.measure(povm)
-        #     yield snapshot
