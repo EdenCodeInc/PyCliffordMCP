@@ -82,17 +82,17 @@ class Pauli(object):
         return self.g.shape[0]//2
     
     def __neg__(self):
-        return type(self)(self.g, indc_mod(self.p + 2, 4))
+        return type(self)(self.g, indc_mod(self.p + 2, 4), qubits=self.qubits)
 
     def __rmul__(self, c):
         if c == 1:
             return self
         elif c == 1j:
-            return type(self)(self.g, indc_mod(self.p + 1, 4))
+            return type(self)(self.g, indc_mod(self.p + 1, 4), qubits=self.qubits)
         elif c == -1:
-            return type(self)(self.g, indc_mod(self.p + 2, 4))
+            return type(self)(self.g, indc_mod(self.p + 2, 4), qubits=self.qubits)
         elif c == -1j:
-            return type(self)(self.g, indc_mod(self.p + 3, 4))
+            return type(self)(self.g, indc_mod(self.p + 3, 4), qubits=self.qubits)
         else: # upgrade to PauliMonomial
             return c * self.as_monomial()
 
@@ -154,7 +154,7 @@ class Pauli(object):
         '''cast a Pauli operator to a Pauli list'''
         gs = numpy.expand_dims(self.g, 0)
         ps = numpy.array([self.p], dtype=indc_int_type)
-        return PauliList(gs, ps, self.qubits)
+        return PauliList(gs, ps, qubits=self.qubits)
 
     def rotate_by(self, generator):
         # see PauliList.rotate_by for details
