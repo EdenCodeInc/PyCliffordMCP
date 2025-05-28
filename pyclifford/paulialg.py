@@ -822,6 +822,28 @@ class PauliPolynomial(PauliList):
 # ---- constructors ----
 import re
 def pauli(obj, qubits = None):
+    ''' A universal constructor for Pauli. 
+
+        Parameters:
+        obj: accept a variety of inputs to parse into a Pauli operator.
+            - Pauli: return the input directly
+            - dict: {qubit: Pauli operator} - parse Pauli operators from a dictionary  
+                e.g. {1: 'Z', 5:'X', 'phase': 'i'}, 
+                     {1: 3, 5: 1, 'token': 6}, 
+                     {'1': 'Z', '5': 'X', 'phase': '+i'}
+            - str: parse Pauli operators from a string
+                e.g. 'i Z1 X5', '+i Z_1 X_5', 'iZ_{1}X_{5}', 'i Z(1) X(5)',
+                     'iIZIIIX', '+i IZIIIXII'
+            - tuple, list, numpy.ndarray: parse Pauli operators from a list of Pauli operators
+                e.g. ('i','I','Z','I','I','I','X'), (6,0,3,0,0,0,1), (0,3,0,0,0,1,6)
+                     (0,3,'+',0,'i','I',0,'X') # Pauli string order matters, phase can be put anywhere
+                     list, numpy.ndarray, dict values are also accepted and serialized as tuple.
+        qubits: int or list of int - qubits to be acted on.
+            - if not provided, inferred from the collected Pauli operators.
+
+        Returns:
+        Pauli - a Pauli operator.
+    '''
     qubits = as_qubits(qubits) # handle qubits argument
     if isinstance(obj, Pauli):
         if qubits is None: # if qubits not provided
@@ -914,6 +936,21 @@ def pauli(obj, qubits = None):
 
 import types
 def paulis(*objs, qubits = None):
+    ''' A universal constructor for PauliList. 
+        
+        Parameters:
+        objs: accecpt a variety of inputs, extracting Pauli operators can collect them into a PauliList.
+            - PauliList: return the input directly
+            - PauliPolynomial, PauliMonomial, Pauli: extract Pauli operators from them
+            - str, dict, tuple, list, numpy.ndarray, set, GeneratorType: parse Pauli operators from them
+            - CliffordMap: extract images of Pauli group generators under the Clifford map
+            - StabilizerState: extract full stabilizer frame (stabilizers and destabilizers).
+        qubits: int or list of int - qubits to be acted on.
+            - if not provided, inferred from the collected Pauli operators.
+
+        Returns:
+        PauliList - a list of Pauli operators.
+    '''
     qubits = as_qubits(qubits) # handle qubits argument
     # short cut if objs is empty
     if len(objs) == 0:
@@ -922,22 +959,26 @@ def paulis(*objs, qubits = None):
         return PauliList(gs, qubits=qubits)
     # short cut if PauliList is passed in
     if len(objs) == 1 :
-        if isinstance(objs[0], PauliList):
+        if type(objs[0]) == PauliList: # only match type, not instance
             return objs[0]
         if isinstance(objs[0], (tuple, list, set, numpy.ndarray, types.GeneratorType)):
             objs = objs[0]
     # otherwise construct data for Pauli operators
-    if qubits is None:
-        # construct operator with qubits free (auto determined)
-        ops = [pauli(obj) for obj in objs]
+    ops_list = []
+    for obj in objs:
+        if isinstance(obj, (PauliPolynomial, PauliMonomial, Pauli)):
+            ops_list.append(obj.as_list())
+        elif isinstance(obj, PauliList):
+            ops_list.append(obj)
+        else: # need to construct operator for general cases
+            ops_list.append(pauli(obj, qubits=qubits).as_list())
+    if qubits is None: # if qubits were not determined
         # find common qubits
-        qubits = numpy.unique(numpy.concatenate([op.qubits for op in ops])) 
-        for op in ops: # embed operators
-            op.embed_qubits(qubits) # in-place modification
-    else: # construct operator with qubits requirements
-        ops = [pauli(obj, qubits=qubits) for obj in objs]
-    gs = numpy.stack([op.g for op in ops], dtype=indc_int_type)
-    ps = numpy.array([op.p for op in ops], dtype=indc_int_type)
+        qubits = numpy.unique(numpy.concatenate([ops.qubits for ops in ops_list]))
+        for ops in ops_list: # embed operators
+            ops.embed_qubits(qubits) # in-place modification
+    gs = numpy.concatenate([ops.gs for ops in ops_list], axis=0)
+    ps = numpy.concatenate([ops.ps for ops in ops_list], axis=0)
     return PauliList(gs, ps, qubits=qubits)
 
 def pauli_identity(qubits = None):
