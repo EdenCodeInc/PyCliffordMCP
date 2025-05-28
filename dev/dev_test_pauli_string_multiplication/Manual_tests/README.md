@@ -1,1 +1,1 @@
-#### some manual test records.
+#### some manual test records in this folder
