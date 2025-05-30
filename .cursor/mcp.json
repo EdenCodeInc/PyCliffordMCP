@@ -20,7 +20,7 @@
                 "mcp[cli]",
                 "mcp",
                 "run",
-                "/Users/home/Documents/GitHub/PyCliffordMCP/mcp_server/server.py"
+                "/Users/home/Documents/GitHub/PyCliffordMCP/mcp_server/main.py"
             ]
         }
     }
