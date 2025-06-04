@@ -54,18 +54,39 @@ with open(CONFIG_PATH, 'r') as f:
 LLM_BACKEND = config['llm_backend']
 MODEL_NAME = config['model_name']
 
+# --- Set API keys ---
+if LLM_BACKEND == "openai":
+    os.environ['OPENAI_API_KEY'] = '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'
+elif LLM_BACKEND == "claude":
+    os.environ['ANTHROPIC_API_KEY'] = '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'
+elif LLM_BACKEND == "gemini":
+    os.environ['GOOGLE_API_KEY'] = 'your-google-api-key'
+else:
+    raise ValueError(f"Invalid LLM backend: {LLM_BACKEND}")
+
 # --- Import the LLM loader ---
 llm_module = importlib.import_module(f"dev.dev_test_pauli_string_multiplication.llm_{LLM_BACKEND}")
 query_llm = llm_module.query_llm
+
+# --- Get API key from environment ---
+if LLM_BACKEND == "openai":
+    API_KEY = os.getenv('OPENAI_API_KEY')
+elif LLM_BACKEND == "claude":
+    API_KEY = os.getenv('ANTHROPIC_API_KEY')
+elif LLM_BACKEND == "gemini":
+    API_KEY = os.getenv('GOOGLE_API_KEY')
+else:
+    raise ValueError(f"Unknown LLM_BACKEND: {LLM_BACKEND}")
 
 # --- Configurable parameters ---
 N = 1  # Length of Pauli strings
 batch_size = 10  # Number of questions per prompt
 num_iterations = 3  # Number of prompt rounds
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Set your OpenAI API key as env variable
 PROMPT_TEMPLATE_PATH = 'dev/dev_test_pauli_string_multiplication/prompt_template.txt'  # Path to prompt description file
 RECORDS_BASE_DIR = 'dev/dev_test_pauli_string_multiplication/records'
 SAVE_LLM_RESPONSE = False  # Set to True to save the full LLM response in the record
+L_irr = 0  # Number of words of irrelevant text to append to the prompt (0 = no irrelevant text)
+PROMPT_IRRELEVANT_PATH = 'dev/dev_test_pauli_string_multiplication/prompt_irrelevant.txt'  # Optional irrelevant text file
 
 # --- Load prompt template ---
 def load_prompt_template(path: str) -> str:
@@ -101,13 +122,22 @@ def append_accuracy_csv(row, filename, model_dir):
     with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'iteration', 'accuracy'])
+            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'iteration', 'accuracy', 'L_irr'])
         writer.writerow(row)
 
 # --- Main experiment loop ---
 def main():
     model_dir = ensure_records_dir(MODEL_NAME)
     prompt_template = load_prompt_template(PROMPT_TEMPLATE_PATH)
+    # Try to load irrelevant text if available
+    irrelevant_text = ""
+    if os.path.exists(PROMPT_IRRELEVANT_PATH) and L_irr > 0:
+        with open(PROMPT_IRRELEVANT_PATH, 'r') as f:
+            all_irrelevant_words = f.read().split()
+            # Use up to L_irr words
+            selected_words = all_irrelevant_words[:L_irr]
+            irrelevant_text = ("\n\nThe remainder of the prompt is irrelevant to the current task. Please ignore them.\n"
+                               + ' '.join(selected_words))
     all_accuracies = []
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     for it in range(num_iterations):
@@ -116,9 +146,12 @@ def main():
         # Compose full prompt
         questions_block = prompt.split('Questions (Compute and give your answer in the same format as above):')[-1].strip()
         full_prompt = prompt_template.replace('{{QUESTIONS_BLOCK}}', questions_block)
+        # Append irrelevant text if any
+        if irrelevant_text:
+            full_prompt += irrelevant_text
         # Query LLM
         print(f"[Iteration {it+1}] Querying LLM ({LLM_BACKEND}, {MODEL_NAME})...")
-        llm_response = query_llm(full_prompt, MODEL_NAME, OPENAI_API_KEY)
+        llm_response = query_llm(full_prompt, MODEL_NAME, API_KEY)
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
         # mark all answers as incorrect, set accuracy to 0.0, and record the error message for later analysis.
         try:
@@ -127,32 +160,48 @@ def main():
             is_correct_list = [LLM_answers_pc[i] == gt_answers[i] for i in range(min(len(LLM_answers_pc), len(gt_answers)))] if llm_answers else []
             acc = sum(is_correct_list) / len(is_correct_list) if is_correct_list else 0.0
             error_message = None
+            record = {
+                'timestamp': timestamp,
+                'model': MODEL_NAME,
+                'N': N,
+                'batch_size': batch_size,
+                'iteration': it+1,
+                'llm_answers': llm_answers,
+                'correct_answers': [str(a) for a in gt_answers],
+                'is_correct_list': is_correct_list,
+                'accuracy': acc,
+                'error_message': error_message,
+                'irrelevant_text_length': L_irr
+            }
+            if SAVE_LLM_RESPONSE:
+                record['llm_response'] = llm_response
         except Exception as e:
             print(f"Failed to extract answers: {e}")
             llm_answers = []
             is_correct_list = [False] * len(gt_answers)
             acc = 0.0
             error_message = str(e)
+            # Always save the full LLM response on extraction failure
+            record = {
+                'timestamp': timestamp,
+                'model': MODEL_NAME,
+                'N': N,
+                'batch_size': batch_size,
+                'iteration': it+1,
+                'llm_answers': llm_answers,
+                'correct_answers': [str(a) for a in gt_answers],
+                'is_correct_list': is_correct_list,
+                'accuracy': acc,
+                'error_message': error_message,
+                'irrelevant_text_length': L_irr,
+                'llm_response': llm_response
+            }
         all_accuracies.append(acc)
         print(f"N = {N}, batch_size = {batch_size}, iteration = {it+1}, accuracy = {acc}")
         # Save detailed record for this iteration
-        record = {
-            'timestamp': timestamp,
-            'model': MODEL_NAME,
-            'N': N,
-            'batch_size': batch_size,
-            'iteration': it+1,
-            'llm_answers': llm_answers,
-            'correct_answers': [str(a) for a in gt_answers],
-            'is_correct_list': is_correct_list,
-            'accuracy': acc,
-            'error_message': error_message
-        }
-        if SAVE_LLM_RESPONSE:
-            record['llm_response'] = llm_response
         save_experiment_record(record, f'record_N{N}_batch{batch_size}_iter{it+1}_{timestamp}.json', model_dir)
         # Save accuracy to CSV
-        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, it+1, acc], 'accuracy_summary.csv', model_dir)
+        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, it+1, acc, L_irr], 'accuracy_summary.csv', model_dir)
     print(f"Average accuracy over {num_iterations} iterations: {sum(all_accuracies)/len(all_accuracies) if all_accuracies else 0}")
 
 if __name__ == '__main__':
