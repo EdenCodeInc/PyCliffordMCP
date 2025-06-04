@@ -56,9 +56,9 @@ MODEL_NAME = config['model_name']
 
 # --- Set API keys ---
 if LLM_BACKEND == "openai":
-    os.environ['OPENAI_API_KEY'] = ''
+    os.environ['OPENAI_API_KEY'] = 'your-openai-api-key'
 elif LLM_BACKEND == "claude":
-    os.environ['ANTHROPIC_API_KEY'] = ''
+    os.environ['ANTHROPIC_API_KEY'] = 'your-anthropic-api-key'
 elif LLM_BACKEND == "gemini":
     os.environ['GOOGLE_API_KEY'] = 'your-google-api-key'
 else:
