@@ -56,9 +56,9 @@ MODEL_NAME = config['model_name']
 
 # --- Set API keys ---
 if LLM_BACKEND == "openai":
-    os.environ['OPENAI_API_KEY'] = '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'
+    os.environ['OPENAI_API_KEY'] = ''
 elif LLM_BACKEND == "claude":
-    os.environ['ANTHROPIC_API_KEY'] = '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'
+    os.environ['ANTHROPIC_API_KEY'] = ''
 elif LLM_BACKEND == "gemini":
     os.environ['GOOGLE_API_KEY'] = 'your-google-api-key'
 else:
