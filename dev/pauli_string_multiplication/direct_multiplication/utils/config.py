@@ -6,7 +6,7 @@ class BenchmarkConfig:
     """Configuration manager for LLM benchmarking."""
     
     def __init__(self, config_path: str = None):
-        self.config_path = config_path or "dev/pauli_string_multiplication/direct_multiplication/config.json"
+        self.config_path = config_path or "dev/pauli_string_multiplication/direct_multiplication/utils/config.json"
         self._config = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:

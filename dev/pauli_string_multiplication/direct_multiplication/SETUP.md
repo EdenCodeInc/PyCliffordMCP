@@ -4,11 +4,12 @@
 
 ### 1. Create Configuration File
 ```bash
+cd dev/pauli_string_multiplication/direct_multiplication/utils/
 cp config.json.template config.json
 ```
 
 ### 2. Add Your API Keys
-Edit `config.json` and replace the placeholder keys with your actual API keys:
+Edit `utils/config.json` and replace the placeholder keys with your actual API keys:
 
 ```json
 {
@@ -40,7 +41,7 @@ llm_pauli_benchmark.main()
 - **Google (Gemini)**: Get from https://aistudio.google.com/app/apikey
 
 ### Environment Variables (Alternative)
-Instead of `config.json`, you can set environment variables:
+Instead of `utils/config.json`, you can set environment variables:
 ```bash
 export OPENAI_API_KEY="your-key"
 export ANTHROPIC_API_KEY="your-key" 
@@ -70,7 +71,7 @@ export GOOGLE_API_KEY="your-key"
 
 ## Security Notes
 
-- ✅ **config.json** is gitignored - your API keys won't be committed
+- ✅ **utils/config.json** is gitignored - your API keys won't be committed
 - ✅ Environment variables are used as fallbacks
 - ✅ Hardcoded API keys have been removed from the code
 
@@ -100,12 +101,12 @@ timestamp,model,N,batch_size,L_irr,iteration,accuracy,input_tokens,output_tokens
 ## Troubleshooting
 
 ### "No API key found" Error
-1. Check your `config.json` has the correct key names
+1. Check your `utils/config.json` has the correct key names
 2. Verify API keys are valid and have sufficient credits
 3. Try setting environment variables as backup
 
 ### "Config file not found" Warning
-1. Copy `config.json.template` to `config.json`
+1. Copy `utils/config.json.template` to `utils/config.json`
 2. Or rely on environment variables (warning is harmless)
 
 ### Token Usage Shows "null"

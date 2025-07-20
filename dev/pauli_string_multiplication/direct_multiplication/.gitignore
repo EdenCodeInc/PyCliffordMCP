@@ -1,5 +1,5 @@
 # Configuration files with API keys
-config.json
+utils/config.json
 
 # Records and results
 records/
