@@ -1,0 +1,4 @@
+timestamp,model,N,batch_size,L_irr,iteration,accuracy
+20250719_200936,gemini-2.0-flash,1,10,450000,1,0.9
+20250719_200936,gemini-2.0-flash,1,10,450000,2,0.3
+20250719_200936,gemini-2.0-flash,1,10,450000,3,0.8

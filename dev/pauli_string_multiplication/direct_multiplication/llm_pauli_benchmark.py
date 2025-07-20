@@ -50,11 +50,11 @@ def generate_questions_and_answers(N_max, iterations):
 N = 1  # Length of Pauli strings
 batch_size = 10  # Number of questions per prompt
 num_iterations = 3  # Number of prompt rounds
-PROMPT_TEMPLATE_PATH = 'dev/Pauli_string_dev/dev_test_pauli_string_multiplication/prompt_template.txt'  # Path to prompt description file
-RECORDS_BASE_DIR = 'dev/Pauli_string_dev/dev_test_pauli_string_multiplication/records'
+PROMPT_TEMPLATE_PATH = 'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_template.txt'  # Path to prompt description file
+RECORDS_BASE_DIR = 'dev/pauli_string_multiplication/direct_multiplication/records'
 SAVE_LLM_RESPONSE = False  # Set to True to save the full LLM response in the record
 L_irr = 0  # Number of words of irrelevant text to append to the prompt (0 = no irrelevant text)
-PROMPT_IRRELEVANT_PATH = 'dev/Pauli_string_dev/dev_test_pauli_string_multiplication/prompt_irrelevant.txt'  # Optional irrelevant text file
+PROMPT_IRRELEVANT_PATH = 'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_irrelevant.txt'  # Optional irrelevant text file
 
 # --- Model configuration (must be set before running) ---
 LLM_BACKEND = None  # Must be set to "openai", "claude", or "gemini"
@@ -154,7 +154,7 @@ def main():
         raise ValueError(f"Invalid LLM backend: {LLM_BACKEND}")
     
     # Import the LLM loader
-    llm_module = importlib.import_module(f"dev.Pauli_string_dev.dev_test_pauli_string_multiplication.llm_{LLM_BACKEND}")
+    llm_module = importlib.import_module(f"dev.pauli_string_multiplication.direct_multiplication.utils.llm_{LLM_BACKEND}")
     query_llm = llm_module.query_llm
 
     model_dir = ensure_records_dir(MODEL_NAME)
