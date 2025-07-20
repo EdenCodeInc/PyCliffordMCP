@@ -1,6 +1,7 @@
 import google.generativeai as genai
+from typing import Tuple, Optional, Dict
 
-def query_llm(prompt: str, model: str, api_key: str, temperature: float = 0.7, max_output_tokens: int = None) -> str:
+def query_llm(prompt: str, model: str, api_key: str, temperature: float = 0.0, max_output_tokens: int = None) -> Tuple[str, Dict]:
     """
     Query the Gemini model with configurable parameters.
     
@@ -12,7 +13,7 @@ def query_llm(prompt: str, model: str, api_key: str, temperature: float = 0.7, m
         max_output_tokens (int): Maximum output length (None for model's maximum)
     
     Returns:
-        str: The model's response
+        Tuple of (response_text, token_metadata_dict)
     """
     genai.configure(api_key=api_key)
     model_obj = genai.GenerativeModel(model)
@@ -39,4 +40,21 @@ def query_llm(prompt: str, model: str, api_key: str, temperature: float = 0.7, m
         prompt,
         generation_config=generation_config
     )
-    return response.text 
+    
+    # Extract token usage metadata
+    token_metadata = {
+        'input_tokens': None,
+        'output_tokens': None,
+        'total_tokens': None,
+    }
+    
+    # Try to get token usage from response
+    if hasattr(response, 'usage_metadata') and response.usage_metadata:
+        usage = response.usage_metadata
+        token_metadata['input_tokens'] = getattr(usage, 'prompt_token_count', None)
+        token_metadata['output_tokens'] = getattr(usage, 'candidates_token_count', None) 
+        token_metadata['total_tokens'] = getattr(usage, 'total_token_count', None)
+    
+    return response.text, token_metadata
+
+ 

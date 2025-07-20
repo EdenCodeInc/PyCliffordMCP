@@ -10,6 +10,7 @@ import pyclifford as pc
 import mcp_server as mcp
 import numpy
 from math import ceil
+from utils.config import get_config
 
 # --- Pauli string question/answer generation utilities ---
 def sample_random_pauli_string(N):
@@ -50,11 +51,8 @@ def generate_questions_and_answers(N_max, iterations):
 N = 1  # Length of Pauli strings
 batch_size = 10  # Number of questions per prompt
 num_iterations = 3  # Number of prompt rounds
-PROMPT_TEMPLATE_PATH = 'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_template.txt'  # Path to prompt description file
-RECORDS_BASE_DIR = 'dev/pauli_string_multiplication/direct_multiplication/records'
 SAVE_LLM_RESPONSE = False  # Set to True to save the full LLM response in the record
 L_irr = 0  # Number of words of irrelevant text to append to the prompt (0 = no irrelevant text)
-PROMPT_IRRELEVANT_PATH = 'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_irrelevant.txt'  # Optional irrelevant text file
 
 # --- Model configuration (must be set before running) ---
 LLM_BACKEND = None  # Must be set to "openai", "claude", or "gemini"
@@ -113,12 +111,6 @@ def extract_llm_answers(response: str) -> List[str]:
     print(f"Debug: Extracted answers: {answers[:3]}...")  # Show first 3 answers
     return answers
 
-# --- Ensure records directory exists ---
-def ensure_records_dir(model_name):
-    model_dir = os.path.join(RECORDS_BASE_DIR, model_name)
-    os.makedirs(model_dir, exist_ok=True)
-    return model_dir
-
 # --- Save experiment record as JSON ---
 def save_experiment_record(record, filename, model_dir):
     with open(os.path.join(model_dir, filename), 'w') as f:
@@ -131,7 +123,7 @@ def append_accuracy_csv(row, filename, model_dir):
     with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'L_irr', 'iteration', 'accuracy'])
+            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'L_irr', 'iteration', 'accuracy', 'input_tokens', 'output_tokens', 'total_tokens'])
         writer.writerow(row)
 
 # --- Main experiment loop ---
@@ -140,29 +132,33 @@ def main():
     if LLM_BACKEND is None or MODEL_NAME is None:
         raise ValueError("LLM_BACKEND and MODEL_NAME must be set before running the script.")
     
-    # Set API keys based on backend
-    if LLM_BACKEND == "openai":
-        os.environ['OPENAI_API_KEY'] = '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'
-        API_KEY = os.getenv('OPENAI_API_KEY')
-    elif LLM_BACKEND == "claude":
-        os.environ['ANTHROPIC_API_KEY'] = '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'
-        API_KEY = os.getenv('ANTHROPIC_API_KEY')
-    elif LLM_BACKEND == "gemini":
-        os.environ['GOOGLE_API_KEY'] = 'AIzaSyDQzt4GTNNaXMsBHjofJkhb5u8fOZhPE1g'
-        API_KEY = os.getenv('GOOGLE_API_KEY')
-    else:
-        raise ValueError(f"Invalid LLM backend: {LLM_BACKEND}")
+    # Load configuration and get API key
+    config = get_config()
+    config.print_config_status()  # Show config status for debugging
+    
+    try:
+        API_KEY = config.get_api_key(LLM_BACKEND)
+    except ValueError as e:
+        print(f"❌ Configuration Error: {e}")
+        print("💡 Please check your config.json file or environment variables")
+        return
     
     # Import the LLM loader
     llm_module = importlib.import_module(f"dev.pauli_string_multiplication.direct_multiplication.utils.llm_{LLM_BACKEND}")
     query_llm = llm_module.query_llm
 
-    model_dir = ensure_records_dir(MODEL_NAME)
-    prompt_template = load_prompt_template(PROMPT_TEMPLATE_PATH)
+    # Use configured paths
+    records_base_dir = config.get_path('records_base_dir')
+    model_dir = os.path.join(records_base_dir, MODEL_NAME)
+    os.makedirs(model_dir, exist_ok=True)
+    
+    prompt_template = load_prompt_template(config.get_path('prompt_template'))
+    
     # Try to load irrelevant text if available
     irrelevant_text = ""
-    if os.path.exists(PROMPT_IRRELEVANT_PATH) and L_irr > 0:
-        with open(PROMPT_IRRELEVANT_PATH, 'r') as f:
+    irrelevant_path = config.get_path('prompt_irrelevant')
+    if os.path.exists(irrelevant_path) and L_irr > 0:
+        with open(irrelevant_path, 'r') as f:
             all_irrelevant_words = f.read().split()
             # Use up to L_irr words
             selected_words = all_irrelevant_words[:L_irr]
@@ -183,9 +179,22 @@ def main():
         # Append irrelevant text if any
         if irrelevant_text:
             full_prompt += irrelevant_text
+        # Initialize token metadata with null values (in case of errors)
+        token_metadata = {
+            'input_tokens': None,
+            'output_tokens': None,
+            'total_tokens': None,
+        }
+        
         # Query LLM
         print(f"[Iteration {it+1}] Querying LLM ({LLM_BACKEND}, {MODEL_NAME})...")
-        llm_response = query_llm(full_prompt, MODEL_NAME, API_KEY)
+        try:
+            llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY)
+            print(f"[Iteration {it+1}] Token usage: {token_metadata['input_tokens']} in, {token_metadata['output_tokens']} out")
+        except Exception as e:
+            print(f"[Iteration {it+1}] LLM call failed: {e}")
+            llm_response = f"LLM_ERROR: {str(e)}"
+        
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
         # mark all answers as incorrect, set accuracy to 0.0, and record the error message for later analysis.
         try:
@@ -224,7 +233,10 @@ def main():
                 'is_correct_list': is_correct_list,
                 'accuracy': acc,
                 'error_message': error_message,
-                'irrelevant_text_length': L_irr
+                'irrelevant_text_length': L_irr,
+                'input_tokens': token_metadata['input_tokens'],
+                'output_tokens': token_metadata['output_tokens'],
+                'total_tokens': token_metadata['total_tokens']
             }
             if SAVE_LLM_RESPONSE:
                 record['llm_response'] = llm_response
@@ -235,6 +247,7 @@ def main():
             is_correct_list = [False] * len(gt_answers)
             acc = 0.0
             error_message = str(e)
+            
             record = {
                 'timestamp': timestamp,
                 'model': MODEL_NAME,
@@ -247,14 +260,19 @@ def main():
                 'accuracy': acc,
                 'error_message': error_message,
                 'irrelevant_text_length': L_irr,
+                'input_tokens': token_metadata['input_tokens'],
+                'output_tokens': token_metadata['output_tokens'],
+                'total_tokens': token_metadata['total_tokens'],
                 'llm_response': llm_response
             }
         all_accuracies.append(acc)
         print(f"N = {N}, batch_size = {batch_size}, L_irr = {L_irr}, iteration = {it+1}, accuracy = {acc}")
         # Save detailed record for this iteration
         save_experiment_record(record, f'record_N{N}_batch{batch_size}_L_irr{L_irr}_iter{it+1}_{timestamp}.json', model_dir)
-        # Save accuracy to CSV
-        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, L_irr, it+1, acc], 'accuracy_summary.csv', model_dir)
+        # Save accuracy and token usage to CSV
+        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, L_irr, it+1, acc, 
+                           token_metadata['input_tokens'], token_metadata['output_tokens'], token_metadata['total_tokens']], 
+                          'accuracy_summary.csv', model_dir)
     print(f"Average accuracy over {num_iterations} iterations: {sum(all_accuracies)/len(all_accuracies) if all_accuracies else 0}")
 
 if __name__ == '__main__':
