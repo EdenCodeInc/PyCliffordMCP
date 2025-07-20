@@ -1,0 +1,47 @@
+You are given two strings of Pauli operators acting on qubits indexed by subscripts. Each operator string may also include a global phase factor from the set {±1,±i}. The Pauli operators obey the following multiplication rules:
+
+    X_{j}^2 = Y_{j}^2 = Z_{j}^2 = I  
+    X_{j}Y_{j} = iZ_{j}, Y_{j}Z_{j} = iX_{j}, Z_{j}X_{j} = iY_{j} (and cyclic permutations)  
+    Operators on the same qubit anticommute.  
+    Operators on different qubits commute.  
+
+Your task is to compute the product of the two operator strings by applying the Pauli algebra. The result should be a single simplified operator string, combining operators acting on the same qubit where applicable, and simplifying all coefficients to a single phase factor (±1, ±i). You must preserve the order of qubit indices in ascending order in your final expression.
+
+Format your answer as a single operator string, with phase factor in front (e.g., -i X_{1}Y_{2}Z_{3}), omitting identity operators. Do not include explanatory text or steps. Use LaTeX-style syntax, e.g., Z_{1}, X_{2} etc., and keep one space between operators.
+
+Examples:
+
+(1) Input: $(+iZ_{1})(−iX_{1})$  
+    Answer: +iY_{1}
+
+(2) Input: $(+iZ_{1}Y_{2})(Z_{1}X_{2})$  
+    Answer: Z_{2}
+
+Questions (Compute and give your answer in the same format as above):
+
+{{QUESTIONS_BLOCK}}
+
+---
+
+After answering all questions, pack your answers as a list of strings for easy validating.
+
+**REQUIRED FORMAT:** You MUST follow this exact format, including the <answers> and </answers> XML tags as shown (note: this is an example, not related to the above questions):
+
+<answers>
+```python
+LLM_answers = [
+    '-i Y_{0}',
+    '- X_{0} Z_{1}',
+    'X_{0} Y_{1} Y_{2}',
+    '- Y_{1} Z_{2} Y_{3}',
+    '- Y_{0} X_{1} Y_{4}',
+    '-i Z_{2} Z_{3} Z_{4} Z_{5} X_{6}',
+    '+i Y_{0} Z_{1} Y_{2} X_{3} X_{6}',
+    '+i Z_{0} Z_{1} Y_{2} Y_{3} Y_{4} Z_{6} Y_{8}',
+    'Z_{1} X_{5} Z_{6} X_{7} Y_{8}',
+    ...
+]
+```
+</answers>
+
+WARNING: Responses without proper XML tags cannot be automatically evaluated. 
