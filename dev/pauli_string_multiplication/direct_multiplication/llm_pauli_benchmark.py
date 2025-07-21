@@ -172,26 +172,28 @@ def main():
     all_accuracies = []
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     for it in range(num_iterations):
-        # Generate questions and answers
-        prompt, gt_answers = generate_questions_and_answers(N, batch_size)
-        # Compose full prompt
-        questions_block = prompt.split('Questions (Compute and give your answer in the same format as above):')[-1].strip()
-        full_prompt = prompt_template.replace('{{QUESTIONS_BLOCK}}', questions_block)
-        # Append irrelevant text if any
-        if irrelevant_text:
-            full_prompt += irrelevant_text
-        # Query LLM with simple retry
+        # Query LLM with retry (generate fresh questions each attempt)
         print(f"[Iteration {it+1}] Querying LLM ({LLM_BACKEND}, {MODEL_NAME})...")
         
         while True:
             try:
+                # Generate fresh questions for each attempt
+                prompt, gt_answers = generate_questions_and_answers(N, batch_size)
+                # Compose full prompt
+                questions_block = prompt.split('Questions (Compute and give your answer in the same format as above):')[-1].strip()
+                full_prompt = prompt_template.replace('{{QUESTIONS_BLOCK}}', questions_block)
+                # Append irrelevant text if any
+                if irrelevant_text:
+                    full_prompt += irrelevant_text
+                
                 llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY)
                 print(f"[Iteration {it+1}] Token usage: {token_metadata['input_tokens']} in, {token_metadata['output_tokens']} out")
                 time.sleep(8)  # Default delay after successful call
                 break  # Success, exit loop
             except Exception as e:
-                print(f"[Iteration {it+1}] API call failed, retrying in 5s...")
-                time.sleep(30)
+                print(f"[Iteration {it+1}] API call failed: {e}")
+                print(f"[Iteration {it+1}] Generating new questions and retrying in 10s...")
+                time.sleep(10)
         
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
         # mark all answers as incorrect, set accuracy to 0.0, and record the error message for later analysis.
