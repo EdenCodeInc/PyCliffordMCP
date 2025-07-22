@@ -1,9 +1,10 @@
 # Configuration files with API keys
 utils/config.json
 
-# Records and results
-records/
-*.csv
+# Records and results - Allow CSV summaries but not detailed JSON
+records/*/*.json
+# records/  # Commented out - allow records folder
+# *.csv     # Commented out - allow CSV files
 
 # Python cache
 __pycache__/
