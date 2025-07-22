@@ -2,7 +2,7 @@
 utils/config.json
 
 # Records and results - Allow CSV summaries but not detailed JSON
-records/*/*.json
+# records/*/*.json
 # records/  # Commented out - allow records folder
 # *.csv     # Commented out - allow CSV files
 
