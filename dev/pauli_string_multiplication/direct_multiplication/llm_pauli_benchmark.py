@@ -167,7 +167,7 @@ def main():
                 "\n\n<irrelevant>\n"
                 "The remainder of the prompt is irrelevant to the current task. Please ignore them.\n\n"
                 + ' '.join(selected_words) + 
-                "\n</irrelevant>"
+                "\n</irrelevant>" # switch to other content
             )
     all_accuracies = []
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
