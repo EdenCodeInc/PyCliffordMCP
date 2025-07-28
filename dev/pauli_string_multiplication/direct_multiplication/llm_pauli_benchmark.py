@@ -54,6 +54,7 @@ batch_size = 10  # Number of questions per prompt
 num_iterations = 3  # Number of prompt rounds
 SAVE_LLM_RESPONSE = False  # Set to True to save the full LLM response in the record
 L_irr = 0  # Number of words of irrelevant text to append to the prompt (0 = no irrelevant text)
+TEMPERATURE = 0.0  # Temperature for LLM sampling (0.0 = deterministic, higher = more random)
 
 # --- Model configuration (must be set before running) ---
 LLM_BACKEND = None  # Must be set to "openai", "claude", or "gemini"
@@ -124,7 +125,7 @@ def append_accuracy_csv(row, filename, model_dir):
     with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'L_irr', 'iteration', 'accuracy', 'input_tokens', 'output_tokens', 'total_tokens'])
+            writer.writerow(['timestamp', 'model', 'N', 'batch_size', 'L_irr', 'temperature', 'iteration', 'accuracy', 'input_tokens', 'output_tokens', 'total_tokens'])
         writer.writerow(row)
 
 # --- Main experiment loop ---
@@ -167,7 +168,7 @@ def main():
                 "\n\n<irrelevant>\n"
                 "The remainder of the prompt is irrelevant to the current task. Please ignore them.\n\n"
                 + ' '.join(selected_words) + 
-                "\n</irrelevant>" # switch to other content
+                "\n</irrelevant>"
             )
     all_accuracies = []
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -186,7 +187,7 @@ def main():
                 if irrelevant_text:
                     full_prompt += irrelevant_text
                 
-                llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY)
+                llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY, temperature=TEMPERATURE)
                 print(f"[Iteration {it+1}] Token usage: {token_metadata['input_tokens']} in, {token_metadata['output_tokens']} out")
                 time.sleep(8)  # Default delay after successful call
                 break  # Success, exit loop
@@ -236,7 +237,8 @@ def main():
                 'irrelevant_text_length': L_irr,
                 'input_tokens': token_metadata['input_tokens'],
                 'output_tokens': token_metadata['output_tokens'],
-                'total_tokens': token_metadata['total_tokens']
+                'total_tokens': token_metadata['total_tokens'],
+                'temperature': TEMPERATURE
             }
             if SAVE_LLM_RESPONSE:
                 record['llm_response'] = llm_response
@@ -263,14 +265,15 @@ def main():
                 'input_tokens': token_metadata['input_tokens'],
                 'output_tokens': token_metadata['output_tokens'],
                 'total_tokens': token_metadata['total_tokens'],
-                'llm_response': llm_response
+                'llm_response': llm_response,
+                'temperature': TEMPERATURE
             }
         all_accuracies.append(acc)
         print(f"N = {N}, batch_size = {batch_size}, L_irr = {L_irr}, iteration = {it+1}, accuracy = {acc}")
         # Save detailed record for this iteration
         save_experiment_record(record, f'record_N{N}_batch{batch_size}_L_irr{L_irr}_iter{it+1}_{timestamp}.json', model_dir)
         # Save accuracy and token usage to CSV
-        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, L_irr, it+1, acc, 
+        append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, L_irr, TEMPERATURE, it+1, acc, 
                            token_metadata['input_tokens'], token_metadata['output_tokens'], token_metadata['total_tokens']], 
                           'accuracy_summary.csv', model_dir)
     print(f"Average accuracy over {num_iterations} iterations: {sum(all_accuracies)/len(all_accuracies) if all_accuracies else 0}")
