@@ -35,5 +35,6 @@
   "input_tokens": 7107,
   "output_tokens": 0,
   "total_tokens": 72642,
-  "llm_response": ""
+  "llm_response": "",
+  "temperature": 0.0
 }

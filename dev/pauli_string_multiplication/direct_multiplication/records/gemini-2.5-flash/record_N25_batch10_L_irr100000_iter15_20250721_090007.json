@@ -45,5 +45,6 @@
   "irrelevant_text_length": 100000,
   "input_tokens": 119113,
   "output_tokens": 919,
-  "total_tokens": 147734
+  "total_tokens": 147734,
+  "temperature": 0.0
 }
