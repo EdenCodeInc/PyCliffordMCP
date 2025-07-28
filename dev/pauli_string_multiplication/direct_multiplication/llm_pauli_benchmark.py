@@ -271,7 +271,7 @@ def main():
         all_accuracies.append(acc)
         print(f"N = {N}, batch_size = {batch_size}, L_irr = {L_irr}, iteration = {it+1}, accuracy = {acc}")
         # Save detailed record for this iteration
-        save_experiment_record(record, f'record_N{N}_batch{batch_size}_L_irr{L_irr}_iter{it+1}_{timestamp}.json', model_dir)
+        save_experiment_record(record, f'record_N{N}_batch{batch_size}_L_irr{L_irr}_temp{TEMPERATURE}_iter{it+1}_{timestamp}.json', model_dir)
         # Save accuracy and token usage to CSV
         append_accuracy_csv([timestamp, MODEL_NAME, N, batch_size, L_irr, TEMPERATURE, it+1, acc, 
                            token_metadata['input_tokens'], token_metadata['output_tokens'], token_metadata['total_tokens']], 
