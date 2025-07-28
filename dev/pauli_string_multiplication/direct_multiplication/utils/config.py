@@ -110,12 +110,6 @@ class BenchmarkConfig:
             exists = os.path.exists(path) if path_name != 'records_base_dir' else True
             status = "✅" if exists else "⚠️ "
             print(f"{status} {path_name}: {path}")
-        
-        # Benchmark settings
-        print(f"\n⚙️  Benchmark Settings:")
-        print(f"   Temperature: {self.get_benchmark_setting('default_temperature')}")
-        print(f"   Max tokens: {self.get_benchmark_setting('default_max_tokens')}")
-        print()
 
 # Global config instance
 _config_instance = None

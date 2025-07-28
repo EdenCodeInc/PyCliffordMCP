@@ -192,8 +192,8 @@ def main():
                 time.sleep(1)  # Default delay after successful call
                 break  # Success, exit loop
             except Exception as e:
-                print(f"[Iteration {it+1}] API call failed: {e}")
-                print(f"[Iteration {it+1}] Generating new questions and retrying in 15s...")
+                print(f"[Iteration {it+1}] ❌ API call failed: {e}")
+                print(f"[Iteration {it+1}] 🔄 Generating new questions and retrying in 15s...")
                 time.sleep(15)
         
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
