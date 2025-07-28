@@ -1,0 +1,50 @@
+{
+  "timestamp": "20250727_225648",
+  "model": "gemini-2.0-flash",
+  "N": 3,
+  "batch_size": 10,
+  "iteration": 8,
+  "llm_answers": [
+    "- Y_{0} Z_{2}",
+    "- Z_{2}",
+    "-i X_{0} Y_{1}",
+    "-i X_{0}",
+    "-i Z_{0} X_{1}",
+    "+i X_{0} Y_{2}",
+    "+i Y_{0}",
+    "- X_{1}",
+    "+ Z_{0} Z_{1} X_{2}",
+    "+ Z_{0} Z_{2}"
+  ],
+  "correct_answers": [
+    "coefficient=-1j pauli_string={0: 'Y', 2: 'X'} text='-i Y_{0} X_{2}'",
+    "coefficient=(-1+0j) pauli_string={2: 'Z'} text='- Z_{2}'",
+    "coefficient=(-1+0j) pauli_string={0: 'X', 1: 'Y', 2: 'X'} text='- X_{0} Y_{1} X_{2}'",
+    "coefficient=-1j pauli_string={0: 'X', 2: 'Z'} text='-i X_{0} Z_{2}'",
+    "coefficient=(1+0j) pauli_string={0: 'X', 1: 'X'} text='X_{0} X_{1}'",
+    "coefficient=1j pauli_string={0: 'X', 2: 'Y'} text='+i X_{0} Y_{2}'",
+    "coefficient=1j pauli_string={0: 'Y'} text='+i Y_{0}'",
+    "coefficient=(-1+0j) pauli_string={1: 'X'} text='- X_{1}'",
+    "coefficient=(-1+0j) pauli_string={0: 'X', 1: 'X', 2: 'X'} text='- X_{0} X_{1} X_{2}'",
+    "coefficient=1j pauli_string={0: 'Z', 2: 'Y'} text='+i Z_{0} Y_{2}'"
+  ],
+  "is_correct_list": [
+    false,
+    true,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true,
+    false,
+    false
+  ],
+  "accuracy": 0.4,
+  "error_message": null,
+  "irrelevant_text_length": 0,
+  "input_tokens": 979,
+  "output_tokens": 141,
+  "total_tokens": 1120,
+  "temperature": 0.5
+}

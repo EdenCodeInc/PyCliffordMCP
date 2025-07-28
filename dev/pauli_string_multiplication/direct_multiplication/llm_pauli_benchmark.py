@@ -189,12 +189,12 @@ def main():
                 
                 llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY, temperature=TEMPERATURE)
                 print(f"[Iteration {it+1}] Token usage: {token_metadata['input_tokens']} in, {token_metadata['output_tokens']} out")
-                time.sleep(8)  # Default delay after successful call
+                time.sleep(1)  # Default delay after successful call
                 break  # Success, exit loop
             except Exception as e:
                 print(f"[Iteration {it+1}] API call failed: {e}")
-                print(f"[Iteration {it+1}] Generating new questions and retrying in 10s...")
-                time.sleep(10)
+                print(f"[Iteration {it+1}] Generating new questions and retrying in 15s...")
+                time.sleep(15)
         
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
         # mark all answers as incorrect, set accuracy to 0.0, and record the error message for later analysis.
@@ -269,7 +269,7 @@ def main():
                 'temperature': TEMPERATURE
             }
         all_accuracies.append(acc)
-        print(f"N = {N}, batch_size = {batch_size}, L_irr = {L_irr}, iteration = {it+1}, accuracy = {acc}")
+        print(f"N = {N}, batch_size = {batch_size}, L_irr = {L_irr}, temperature = {TEMPERATURE}, iteration = {it+1}, accuracy = {acc}")
         # Save detailed record for this iteration
         save_experiment_record(record, f'record_N{N}_batch{batch_size}_L_irr{L_irr}_temp{TEMPERATURE}_iter{it+1}_{timestamp}.json', model_dir)
         # Save accuracy and token usage to CSV
