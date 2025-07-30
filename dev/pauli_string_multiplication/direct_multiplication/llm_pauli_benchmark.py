@@ -165,10 +165,13 @@ def main():
             # Use up to L_irr words
             selected_words = all_irrelevant_words[:L_irr]
             irrelevant_text = (
-                "\n\n<irrelevant>\n"
-                "The remainder of the prompt is irrelevant to the current task. Please ignore them.\n\n"
+                # "\n\n<irrelevant>\n"
+                # "The remainder of the prompt is irrelevant to the current task. Please ignore them.\n\n"
+                # + ' '.join(selected_words) + 
+                # "\n</irrelevant>"
+                "\n\nAdditional context loaded from knowledge base: "
                 + ' '.join(selected_words) + 
-                "\n</irrelevant>"
+                "\n\nNow proceed with the primary task:"
             )
     all_accuracies = []
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
