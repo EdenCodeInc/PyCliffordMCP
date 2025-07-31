@@ -1,0 +1,50 @@
+{
+  "timestamp": "20250730_144813",
+  "model": "gemini-2.0-flash",
+  "N": 1,
+  "batch_size": 10,
+  "iteration": 3,
+  "llm_answers": [
+    "-i Y_{0}",
+    "- X_{0}",
+    "-1",
+    "- Y_{0}",
+    "-i Y_{0}",
+    "-1",
+    "+i X_{0}",
+    "+i",
+    "-1",
+    "-1"
+  ],
+  "correct_answers": [
+    "coefficient=-1j pauli_string={0: 'X'} text='-i X_{0}'",
+    "coefficient=(-1+0j) pauli_string={0: 'X'} text='- X_{0}'",
+    "coefficient=(-1+0j) pauli_string={} text='- I'",
+    "coefficient=1j pauli_string={0: 'Y'} text='+i Y_{0}'",
+    "coefficient=(1+0j) pauli_string={0: 'Y'} text='Y_{0}'",
+    "coefficient=(-1+0j) pauli_string={} text='- I'",
+    "coefficient=-1j pauli_string={0: 'X'} text='-i X_{0}'",
+    "coefficient=-1j pauli_string={} text='-i I'",
+    "coefficient=1j pauli_string={} text='+i I'",
+    "coefficient=(1+0j) pauli_string={} text='I'"
+  ],
+  "is_correct_list": [
+    false,
+    true,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+  ],
+  "accuracy": 0.3,
+  "error_message": null,
+  "irrelevant_text_length": 100000,
+  "input_tokens": 116064,
+  "output_tokens": 80,
+  "total_tokens": 116144,
+  "temperature": 0.0
+}
