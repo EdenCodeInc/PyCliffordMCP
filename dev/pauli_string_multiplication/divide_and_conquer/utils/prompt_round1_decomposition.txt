@@ -1,0 +1,58 @@
+Decompose {batch_size} Pauli string problems into chunks of {chunk_size} qubits each.
+
+PROBLEMS:
+{problems_block}
+
+CHUNKING RULES:
+1. Problem size: N={N} qubits, chunk size: {chunk_size} qubits each
+2. LAST chunk may be smaller if N not divisible by chunk_size
+3. Divide qubits sequentially: 0 to (chunk_size-1), chunk_size to (2*chunk_size-1), etc.
+4. Input format: All strings use indexed format like X_0 Y_1 Z_2
+5. Output format: ALL chunks must use indexed format X_i Y_j Z_k
+6. Phase handling: Put phase (+, -, i, -i) on FIRST chunk only
+7. CRITICAL: ALWAYS include Identity operators (I_i) in chunks - NEVER omit them
+8. Example: N=10, chunk_size=3 → Chunks: [0-2], [3-5], [6-8], [9-9] (last chunk has only 1 qubit)
+
+STEPS:
+1. Divide {N} qubits into chunks of {chunk_size} (last chunk may be smaller)
+2. For each chunk, extract the corresponding string parts INCLUDING Identity operators
+3. Apply original phase to chunk 1, no phase to other chunks
+4. ALWAYS explicitly show I_i operators in each chunk position
+
+EXAMPLE 1 (N=6, chunk_size=2 - evenly divisible):
+1. Input string: "-i X_0 I_1 Z_2 I_3 Y_4 Z_5"
+2. Chunking with global indices:
+  * Chunk 1 (qubits 0-1): "-i X_0 I_1"
+  * Chunk 2 (qubits 2-3): "Z_2 I_3"  
+  * Chunk 3 (qubits 4-5): "Y_4 Z_5"
+
+EXAMPLE 2 (N=7, chunk_size=3 - NOT evenly divisible):
+1. Input string: "+ X_0 Y_1 I_2 Z_3 I_4 Y_5 Z_6"
+2. Chunking with global indices:
+  * Chunk 1 (qubits 0-2): "+ X_0 Y_1 I_2"
+  * Chunk 2 (qubits 3-5): "Z_3 I_4 Y_5"
+  * Chunk 3 (qubits 6-6): "Z_6" (SMALLER LAST CHUNK - only 1 qubit)
+
+IMPORTANT: 
+1. ALL Pauli strings must ALWAYS use indexed format X_i Y_j Z_k I_l
+2. NEVER omit Identity operators (I_i) in any chunk
+3. Every qubit position must be explicitly represented
+4. Handle variable chunk sizes correctly (last chunk may be smaller)
+5. Use <batch_decomposition> XML tags with CHUNK_RANGES = [...] and PROBLEM_N_STR1_CHUNKS = [...] list assignment syntax inside, strictly as shown below (NOT nested XML)
+
+<batch_decomposition>
+CHUNK_RANGES = ["0-1", "2-3", "4-5"]
+
+PROBLEM_1_STR1_CHUNKS = ["-i X_0 I_1", "Z_2 I_3", "Y_4 Z_5"]
+PROBLEM_1_STR2_CHUNKS = ["Z_0 I_1", "I_2 Y_3", "X_4 I_5"]
+
+PROBLEM_2_STR1_CHUNKS = ["+ I_0 X_1", "I_2 Z_3", "Y_4 I_5"]
+PROBLEM_2_STR2_CHUNKS = ["Y_0 Z_1", "X_2 I_3", "I_4 Z_5"]
+
+STRATEGY = "Divide N={N} qubits into chunks of {chunk_size}. Handle remainder if N not divisible by chunk_size."
+</batch_decomposition>
+
+Warning:
+1. Responses without proper XML tags cannot be automatically processed
+2. MUST include Identity operators (I_i) in chunk results
+3. Use ONLY the global qubit indices for each chunk

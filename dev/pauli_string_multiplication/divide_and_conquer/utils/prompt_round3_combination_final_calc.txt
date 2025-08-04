@@ -1,0 +1,54 @@
+Combine {num_chunks} chunk results and compute final phases.
+
+ORIGINAL PROBLEMS:
+{original_problems_block}
+
+{all_chunk_results_block}
+
+TASK: For each problem, multiply all chunk results and compute the final phase.
+
+COMBINATION RULES:
+1. Combine all chunk operators into one Pauli string (INCLUDE ALL I_i in intermediate step)
+2. Multiply all chunk phases: final_phase = chunk1_phase × chunk2_phase × chunk3_phase × ...
+3. Apply final computed phase to the front
+4. Keep ALL operators including Identity operators (I_i) in final result
+5. Use indexed format X_i Y_j Z_k I_i for final output
+
+EXAMPLE:
+Original: + X_0 Y_1 Z_2 × + I_0 X_1 I_2
+Chunk 1 result: Y_0 Z_1 (phase: i)
+Chunk 2 result: I_2 (phase: -)
+Step 1: Combine chunks (INCLUDE ALL): Y_0 Z_1 I_2
+Step 2: Compute final phase: i × (-) = -i
+Step 3: Apply phase (KEEP ALL): -i Y_0 Z_1 I_2  
+Step 4: Final result: -i Y_0 Z_1 I_2
+
+STEPS FOR EACH PROBLEM:
+1. Collect all operators from all chunks (INCLUDE ALL I_i)
+2. Extract phases from each chunk result
+3. Multiply all chunk phases together
+4. Apply final computed phase to combined operators (KEEP ALL I_i)
+5. Final result: -i Y_0 Z_1 I_2
+
+CRITICAL: 
+1. Compute final phase by multiplying ALL chunk phases
+2. INCLUDE ALL Identity operators (I_i) in intermediate combination steps
+3. KEEP ALL identity operators (I_i) in final result
+4. Show X_i, Y_i, Z_i, I_i operators with their indices in final output
+5. Use <batch_combination> XML tags with FINAL_ANSWERS = [...] list assignment syntax inside, strictly as shown below (NOT nested XML)
+
+<batch_combination>
+FINAL_ANSWERS = [
+    "PROBLEM_1: -i Y_0 Z_1 I_2",
+    "PROBLEM_2: X_0 Z_2 I_3",
+    "PROBLEM_3: + I_0 Y_1 Z_2"
+]
+
+COMBINATION_NOTES = "Combined {num_chunks} chunks with final phase computation from all chunk phases."
+</batch_combination>
+
+WARNING: 
+1. Responses without proper XML tags cannot be automatically processed
+2. Must compute final phase by multiplying all chunk phases
+3. KEEP ALL identity operators in final result
+4. Format: Use XML structure with FINAL_ANSWERS list in <batch_combination> tags 

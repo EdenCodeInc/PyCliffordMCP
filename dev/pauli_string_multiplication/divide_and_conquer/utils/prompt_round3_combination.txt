@@ -1,0 +1,55 @@
+Combine {num_chunks} chunk results using pre-computed accumulated phases.
+
+ORIGINAL PROBLEMS:
+{original_problems_block}
+
+ALL CHUNK RESULTS:
+{all_chunk_results_block}
+
+ACCUMULATED PHASES:
+{accumulated_phases_block}
+
+TASK: For each problem, combine all chunk results and apply the final accumulated phase.
+
+COMBINATION RULES:
+1. Combine all chunk operators into one Pauli string (INCLUDE ALL I_i)
+2. Apply the accumulated phase to the front
+3. KEEP ALL identity operators (I_i) in the final result
+4. Output X_i, Y_i, Z_i, I_i operators in indexed format for final output
+
+EXAMPLE:
+Original: + X_0 Y_1 Z_2 × + I_0 X_1 I_2
+Chunk 1 result: Y_0 Z_1
+Chunk 2 result: I_2  
+Accumulated phase: -i
+Step 1: Combine chunks (INCLUDE ALL): Y_0 Z_1 I_2
+Step 2: Apply phase (KEEP ALL): -i Y_0 Z_1 I_2  
+Step 3: Final result (KEEP ALL): -i Y_0 Z_1 I_2
+
+STEPS FOR EACH PROBLEM:
+1. Collect all operators from all chunks (INCLUDE ALL I_i): Y_0 Z_1 I_2
+2. Apply the accumulated phase (KEEP ALL I_i): -i Y_0 Z_1 I_2
+3. Final result (KEEP ALL I_i): -i Y_0 Z_1 I_2
+
+CRITICAL: 
+1. Use the exact accumulated phase from the table
+2. INCLUDE ALL Identity operators (I_i) in intermediate combination steps
+3. KEEP ALL identity operators (I_i) in final result
+4. Show X_i, Y_i, Z_i, I_i operators with their indices in final output
+5. Use <batch_combination> XML tags with FINAL_ANSWERS = [...] list assignment syntax inside, strictly as shown below (NOT nested XML)
+
+<batch_combination>
+FINAL_ANSWERS = [
+    "PROBLEM_1: -i Y_0 Z_1 I_2",
+    "PROBLEM_2: X_0 I_1 Z_2",
+    "PROBLEM_3: + I_0 Y_1 Z_2"
+]
+
+COMBINATION_NOTES = "Combined {num_chunks} chunks using pre-computed accumulated phases for each problem."
+</batch_combination>
+
+WARNING: 
+1. Responses without proper XML tags cannot be automatically processed
+2. Must apply accumulated phase exactly as given
+3. KEEP ALL identity operators in final result
+4. Format: Use XML structure with FINAL_ANSWERS list in <batch_combination> tags
