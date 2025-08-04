@@ -4,6 +4,7 @@ import re
 import json
 import time
 import csv
+import importlib
 from datetime import datetime
 from typing import List, Dict, Any, Tuple
 import numpy as np
@@ -14,16 +15,14 @@ sys.path.insert(0, project_root)
 
 import pyclifford as pc
 import mcp_server as mcp
+from utils.config import get_config
 
 # === CONFIGURATION ===
-# Model configuration
-MODEL_BACKEND = "gemini"  # Options: "gemini", "openai", "claude"
-MODEL_NAME = "gemini-2.5-flash-preview-04-17-thinking"
+# Model configuration (must be set before running)
+LLM_BACKEND = None  # Must be set to "openai", "claude", or "gemini"
+MODEL_NAME = None   # Must be set to specific model name
 SAVE_LLM_RESPONSES = True
-RECORDS_BASE_DIR = 'records'
-
-# Phase computation strategy
-USE_PHASE_ACCUMULATION = True  # True: accumulate in Phase 2, False: compute all phases in Phase 3
+TEMPERATURE = 0.0  # Temperature for LLM sampling
 
 # === CSV TRACKING ===
 def append_accuracy_csv(row, filename, model_dir):
@@ -33,20 +32,14 @@ def append_accuracy_csv(row, filename, model_dir):
     with open(file_path, 'a', newline='') as f:
         writer = csv.writer(f)
         if write_header:
-            writer.writerow(['timestamp', 'model', 'N', 'chunk_size', 'batch_size', 'iteration', 'use_phase_accumulation', 'workflow_success', 'success_rate', 'duration_seconds', 'llm_calls'])
+            writer.writerow(['timestamp', 'model', 'N', 'chunk_size', 'batch_size', 'iteration', 'workflow_success', 'accuracy', 'duration_seconds', 'llm_calls', 'temperature', 'total_input_tokens', 'total_output_tokens', 'total_tokens'])
         writer.writerow(row)
 
 # === API KEY MANAGEMENT ===
 def get_api_key_for_backend(backend: str) -> str:
     """Get the correct API key for the specified backend."""
-    if backend == "gemini":
-        return "AIzaSyDQzt4GTNNaXMsBHjofJkhb5u8fOZhPE1g"
-    elif backend == "openai":
-        return "sk-proj-your-openai-key-here"  # Replace with your OpenAI API key
-    elif backend == "claude":
-        return "sk-ant-your-claude-key-here"  # Replace with your Claude API key
-    else:
-        raise ValueError(f"Unknown backend: {backend}")
+    config = get_config()
+    return config.get_api_key(backend)
 
 # === PAULI STRING UTILITIES ===
 
@@ -86,21 +79,15 @@ def semantic_pauli_equal(llm_result: str, expected: str) -> bool:
 
 # === LLM INTERFACE ===
 
-def get_llm_response(prompt: str, model: str, backend: str) -> str:
+def get_llm_response(prompt: str, model: str, backend: str) -> Tuple[str, Dict]:
     """Get LLM response using the appropriate backend module."""
     api_key = get_api_key_for_backend(backend)
     
-    if backend == "gemini":
-        import llm_gemini
-        return llm_gemini.query_llm(prompt, model, api_key)
-    elif backend == "openai":
-        import llm_openai
-        return llm_openai.query_llm(prompt, model, api_key)
-    elif backend == "claude":
-        import llm_claude
-        return llm_claude.query_llm(prompt, model, api_key)
-    else:
-        raise ValueError(f"Unknown backend: {backend}")
+    # Import the LLM module dynamically
+    llm_module = importlib.import_module(f"utils.llm_{backend}")
+    response, token_metadata = llm_module.query_llm(prompt, model, api_key, temperature=TEMPERATURE)
+    
+    return response, token_metadata
 
 # === PARSING FUNCTIONS ===
 
@@ -231,10 +218,7 @@ def extract_batch_chunk_results(response: str, chunk_number: int) -> List[Dict]:
         }
         
         # Add strategy-specific field for backward compatibility
-        if USE_PHASE_ACCUMULATION:
-            result_dict['new_accumulated_phase'] = phase_info
-        else:
-            result_dict['chunk_phase'] = phase_info
+        result_dict['new_accumulated_phase'] = phase_info
         
         results.append(result_dict)
     
@@ -291,6 +275,9 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
     workflow_result = {
         'success': False,
         'llm_calls': 0,
+        'total_input_tokens': 0,
+        'total_output_tokens': 0,
+        'total_tokens': 0,
         'decomposition': None,
         'chunk_results': {},
         'final_results': [],
@@ -338,7 +325,8 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
             for i, prob in enumerate(problems)
         ])
         
-        with open("prompt_round1_decomposition.txt", "r") as f:
+        config = get_config()
+        with open(config.get_path('prompt_round1_decomposition'), "r") as f:
             decomposition_prompt = f.read().format(
                 batch_size=batch_size,
                 problems_block=problems_block,
@@ -346,8 +334,27 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                 chunk_size=chunk_size
             )
         
-        decomposition_response = get_llm_response(decomposition_prompt, MODEL_NAME, MODEL_BACKEND)
-        workflow_result['llm_calls'] += 1
+        # Phase 1 with retry logic
+        while True:
+            try:
+                decomposition_response, token_metadata = get_llm_response(decomposition_prompt, MODEL_NAME, LLM_BACKEND)
+                workflow_result['llm_calls'] += 1
+                
+                # Accumulate token usage
+                if token_metadata.get('input_tokens'):
+                    workflow_result['total_input_tokens'] += token_metadata['input_tokens']
+                if token_metadata.get('output_tokens'):
+                    workflow_result['total_output_tokens'] += token_metadata['output_tokens']
+                if token_metadata.get('total_tokens'):
+                    workflow_result['total_tokens'] += token_metadata['total_tokens']
+                
+                print(f"    Phase 1 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+                time.sleep(2)  # Rate limit delay
+                break
+            except Exception as e:
+                print(f"    ❌ Phase 1 API call failed: {e}")
+                print(f"    🔄 Retrying in 15s...")
+                time.sleep(15)
         
         if SAVE_LLM_RESPONSES:
             workflow_result['phase1_prompt'] = decomposition_prompt
@@ -364,17 +371,13 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
         # === PHASE 2: CHUNK COMPUTATION ===
         print("=== PHASE 2: CHUNK COMPUTATION ===")
         
-        # Initialize phase tracking based on strategy
-        if USE_PHASE_ACCUMULATION:
-            accumulated_phases = {}
-            for problem in decomposition_result['problems']:
-                accumulated_phases[problem['problem_number']] = "1"
-            print(f"    Phase 2: Computing {num_chunks} chunks with LLM phase accumulation...")
-            chunk_template_file = "prompt_round2_chunk_calculation.txt"
-        else:
-            chunk_phases = {}  # Track individual chunk phases
-            print(f"    Phase 2: Computing {num_chunks} chunks independently...")
-            chunk_template_file = "prompt_round2_chunk_calculation_independent.txt"
+        # Initialize phase tracking for phase accumulation
+        accumulated_phases = {}
+        for problem in decomposition_result['problems']:
+            accumulated_phases[problem['problem_number']] = "1"
+        print(f"    Phase 2: Computing {num_chunks} chunks with LLM phase accumulation...")
+        
+        chunk_template_file = config.get_path('prompt_round2_chunk_calculation')
         
         with open(chunk_template_file, "r") as f:
             chunk_prompt_template = f.read()
@@ -399,33 +402,42 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
             
             chunk_problems_block = "\n".join(chunk_problems_list)
             
-            # Format prompt based on strategy
-            if USE_PHASE_ACCUMULATION:
-                # Format accumulated phases for this chunk
-                accumulated_phases_lines = []
-                accumulated_phases_lines.append("PREVIOUS ACCUMULATED PHASES:")
-                for prob_num in sorted(accumulated_phases.keys()):
-                    accumulated_phases_lines.append(f"  Problem {prob_num}: {accumulated_phases[prob_num]}")
-                accumulated_phases_block = "\n".join(accumulated_phases_lines)
-                
-                chunk_prompt = chunk_prompt_template.format(
-                    chunk_number=chunk_num,
-                    batch_size=batch_size,
-                    chunk_problems_block=chunk_problems_block,
-                    qubit_range=qubit_range,
-                    accumulated_phases_block=accumulated_phases_block
-                )
-            else:
-                # Independent chunk calculation - no accumulated phases
-                chunk_prompt = chunk_prompt_template.format(
-                    chunk_number=chunk_num,
-                    batch_size=batch_size,
-                    chunk_problems_block=chunk_problems_block,
-                    qubit_range=qubit_range
-                )
+            # Format accumulated phases for this chunk
+            accumulated_phases_lines = []
+            accumulated_phases_lines.append("PREVIOUS ACCUMULATED PHASES:")
+            for prob_num in sorted(accumulated_phases.keys()):
+                accumulated_phases_lines.append(f"  Problem {prob_num}: {accumulated_phases[prob_num]}")
+            accumulated_phases_block = "\n".join(accumulated_phases_lines)
             
-            chunk_response = get_llm_response(chunk_prompt, MODEL_NAME, MODEL_BACKEND)
-            workflow_result['llm_calls'] += 1
+            chunk_prompt = chunk_prompt_template.format(
+                chunk_number=chunk_num,
+                batch_size=batch_size,
+                chunk_problems_block=chunk_problems_block,
+                qubit_range=qubit_range,
+                accumulated_phases_block=accumulated_phases_block
+            )
+            
+            # Phase 2 chunk with retry logic
+            while True:
+                try:
+                    chunk_response, token_metadata = get_llm_response(chunk_prompt, MODEL_NAME, LLM_BACKEND)
+                    workflow_result['llm_calls'] += 1
+                    
+                    # Accumulate token usage
+                    if token_metadata.get('input_tokens'):
+                        workflow_result['total_input_tokens'] += token_metadata['input_tokens']
+                    if token_metadata.get('output_tokens'):
+                        workflow_result['total_output_tokens'] += token_metadata['output_tokens']
+                    if token_metadata.get('total_tokens'):
+                        workflow_result['total_tokens'] += token_metadata['total_tokens']
+                    
+                    print(f"      Chunk {chunk_num} token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+                    time.sleep(2)  # Rate limit delay
+                    break
+                except Exception as e:
+                    print(f"      ❌ Chunk {chunk_num} API call failed: {e}")
+                    print(f"      🔄 Retrying in 15s...")
+                    time.sleep(15)
             
             if SAVE_LLM_RESPONSES:
                 workflow_result['phase2_prompts_and_responses'].append({
@@ -438,21 +450,13 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
             if not chunk_results:
                 raise Exception(f"Failed to extract results for chunk {chunk_num}")
             
-            # Update phase tracking based on strategy
-            if USE_PHASE_ACCUMULATION:
-                for result in chunk_results:
-                    prob_num = result['problem_number']
-                    new_phase = result['new_accumulated_phase']
-                    print(f"      Problem {prob_num}: accumulated phase updated from {accumulated_phases[prob_num]} to {new_phase}")
-                    accumulated_phases[prob_num] = new_phase
-            else:
-                for result in chunk_results:
-                    prob_num = result['problem_number']
-                    chunk_phase = result['chunk_phase']
-                    if prob_num not in chunk_phases:
-                        chunk_phases[prob_num] = []
-                    chunk_phases[prob_num].append(chunk_phase)
-                    print(f"      Problem {prob_num}: chunk {chunk_num} phase = {chunk_phase}")
+            # Update phase tracking
+            for result in chunk_results:
+                prob_num = result['problem_number']
+                new_phase = result['new_accumulated_phase']
+                old_phase = accumulated_phases[prob_num]
+                print(f"      Problem {prob_num}: accumulated phase updated from {old_phase} to {new_phase}")
+                accumulated_phases[prob_num] = new_phase
             
             workflow_result['chunk_results'][chunk_num] = chunk_results
         
@@ -471,39 +475,46 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
         
         all_chunk_results_block = "\n".join(all_chunk_results_lines)
         
-        # Format Phase 3 prompt based on strategy
-        if USE_PHASE_ACCUMULATION:
-            # Format final accumulated phases for Phase 3
-            accumulated_phases_lines = []
-            accumulated_phases_lines.append("FINAL ACCUMULATED PHASES:")
-            for prob_num in sorted(accumulated_phases.keys()):
-                phase = accumulated_phases[prob_num]
-                accumulated_phases_lines.append(f"  Problem {prob_num}: {phase}")
-            accumulated_phases_block = "\n".join(accumulated_phases_lines)
-            
-            print(f"    Final accumulated phases: {accumulated_phases}")
-            
-            with open("prompt_round3_combination.txt", "r") as f:
-                combination_prompt = f.read().format(
-                    num_chunks=num_chunks,
-                    batch_size=batch_size,
-                    original_problems_block=problems_block,
-                    all_chunk_results_block=all_chunk_results_block,
-                    accumulated_phases_block=accumulated_phases_block
-                )
-        else:
-            print(f"    Final chunk phases: {chunk_phases}")
-            
-            with open("prompt_round3_combination_final_calc.txt", "r") as f:
-                combination_prompt = f.read().format(
-                    num_chunks=num_chunks,
-                    batch_size=batch_size,
-                    original_problems_block=problems_block,
-                    all_chunk_results_block=all_chunk_results_block
-                )
+        # Format final accumulated phases for Phase 3
+        accumulated_phases_lines = []
+        accumulated_phases_lines.append("FINAL ACCUMULATED PHASES:")
+        for prob_num in sorted(accumulated_phases.keys()):
+            phase = accumulated_phases[prob_num]
+            accumulated_phases_lines.append(f"  Problem {prob_num}: {phase}")
+        accumulated_phases_block = "\n".join(accumulated_phases_lines)
         
-        combination_response = get_llm_response(combination_prompt, MODEL_NAME, MODEL_BACKEND)
-        workflow_result['llm_calls'] += 1
+        print(f"    Final accumulated phases: {accumulated_phases}")
+        
+        with open(config.get_path('prompt_round3_combination'), "r") as f:
+            combination_prompt = f.read().format(
+                num_chunks=num_chunks,
+                batch_size=batch_size,
+                original_problems_block=problems_block,
+                all_chunk_results_block=all_chunk_results_block,
+                accumulated_phases_block=accumulated_phases_block
+            )
+        
+        # Phase 3 with retry logic
+        while True:
+            try:
+                combination_response, token_metadata = get_llm_response(combination_prompt, MODEL_NAME, LLM_BACKEND)
+                workflow_result['llm_calls'] += 1
+                
+                # Accumulate token usage
+                if token_metadata.get('input_tokens'):
+                    workflow_result['total_input_tokens'] += token_metadata['input_tokens']
+                if token_metadata.get('output_tokens'):
+                    workflow_result['total_output_tokens'] += token_metadata['output_tokens']
+                if token_metadata.get('total_tokens'):
+                    workflow_result['total_tokens'] += token_metadata['total_tokens']
+                
+                print(f"    Phase 3 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+                time.sleep(2)  # Rate limit delay
+                break
+            except Exception as e:
+                print(f"    ❌ Phase 3 API call failed: {e}")
+                print(f"    🔄 Retrying in 15s...")
+                time.sleep(15)
         
         if SAVE_LLM_RESPONSES:
             workflow_result['phase3_prompt'] = combination_prompt
@@ -517,6 +528,7 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
         workflow_result['success'] = True
         
         print(f"    Workflow completed! Total LLM calls: {workflow_result['llm_calls']}")
+        print(f"    Total token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
         
     except Exception as e:
         workflow_result['error_message'] = str(e)
@@ -526,19 +538,41 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
 
 # === EXPERIMENT MANAGEMENT ===
 
-def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list):
+def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list, temperature_list=None):
     """Run experiments with given parameters and save results."""
+    
+    # Check if model configuration is set
+    if LLM_BACKEND is None or MODEL_NAME is None:
+        raise ValueError("LLM_BACKEND and MODEL_NAME must be set before running the script.")
+    
+    # Load configuration and validate
+    config = get_config()
+    config.print_config_status()  # Show config status for debugging
+    
+    try:
+        api_key = config.get_api_key(LLM_BACKEND)
+    except ValueError as e:
+        print(f"❌ Configuration Error: {e}")
+        print("💡 Please check your config.json file or environment variables")
+        return
+    
+    # Handle temperature list
+    if temperature_list is None:
+        temperature_list = [TEMPERATURE]
     
     print("=== Divide-and-Conquer Pauli String Multiplication Benchmark ===")
     print(f"Problem sizes: {N_list}")
     print(f"Chunk sizes: {chunk_size_list}")
     print(f"Batch sizes: {batch_size_list}")
     print(f"Iterations: {num_iterations_list}")
+    print(f"Temperatures: {temperature_list}")
     print(f"Model: {MODEL_NAME}")
+    print(f"Backend: {LLM_BACKEND}")
     print()
     
-    # Ensure records directory exists
-    model_dir = os.path.join(RECORDS_BASE_DIR, MODEL_NAME)
+    # Use configured paths
+    records_base_dir = config.get_path('records_base_dir')
+    model_dir = os.path.join(records_base_dir, MODEL_NAME)
     os.makedirs(model_dir, exist_ok=True)
     
     all_results = []
@@ -547,76 +581,84 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
         for chunk_size in chunk_size_list:
             for batch_size in batch_size_list:
                 for num_iterations in num_iterations_list:
-                    if chunk_size >= N:
-                        print(f"Skipping N={N}, chunk_size={chunk_size} (chunk too large)")
-                        continue
+                    for temperature in temperature_list:
+                        # Set global temperature for this experiment run
+                        global TEMPERATURE
+                        TEMPERATURE = temperature
                         
-                    print(f"--- Testing N={N}, chunk_size={chunk_size}, batch_size={batch_size}, iterations={num_iterations} ---")
-                    
-                    for iteration in range(num_iterations):
-                        print(f"Iteration {iteration + 1}/{num_iterations}")
+                        if chunk_size >= N:
+                            print(f"Skipping N={N}, chunk_size={chunk_size}, temp={temperature} (chunk too large)")
+                            continue
+                            
+                        print(f"--- Testing N={N}, chunk_size={chunk_size}, batch_size={batch_size}, iterations={num_iterations}, temp={temperature} ---")
                         
-                        # Generate test problems
-                        problems = []
-                        for _ in range(batch_size):
-                            str1, str2 = generate_random_pauli_strings(N)
-                            problems.append({
-                                'str1': str1,
-                                'str2': str2,
-                                'expected_result': multiply_pauli_strings(str1, str2)
-                            })
+                        for iteration in range(num_iterations):
+                            print(f"Iteration {iteration + 1}/{num_iterations}")
+                            
+                            # Generate test problems
+                            problems = []
+                            for _ in range(batch_size):
+                                str1, str2 = generate_random_pauli_strings(N)
+                                problems.append({
+                                    'str1': str1,
+                                    'str2': str2,
+                                    'expected_result': multiply_pauli_strings(str1, str2)
+                                })
+                            
+                            # Create record ID
+                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            record_id = f"batch={batch_size}_N={N}_chunk={chunk_size}_temp={TEMPERATURE}_iter={iteration+1}_{timestamp}"
+                            
+                            print(f"  Record ID: {record_id}")
+                            print(f"  Problems:")
+                            for i, prob in enumerate(problems):
+                                print(f"    {i+1}. {prob['str1']} × {prob['str2']} = {prob['expected_result']}")
+                            
+                            # Run workflow
+                            start_time = time.time()
+                            workflow_result = run_batch_divide_conquer_workflow(problems, chunk_size, N)
+                            end_time = time.time()
+                            
+                            # Handle None workflow_result (workflow failed completely)
+                            if workflow_result is None:
+                                workflow_result = {
+                                    'success': False, 
+                                    'llm_calls': 0, 
+                                    'error_message': 'Workflow failed completely',
+                                    'decomposition': None,
+                                    'chunk_results': {},
+                                    'final_results': []
+                                }
+                            
+                            # Check results
+                            correct_count = 0
+                            workflow_success = workflow_result['success']
+                            
+                            if workflow_success:
+                                print(f"  Results:")
+                                for result in workflow_result['final_results']:
+                                    prob_num = result['problem_number']
+                                    llm_result = result['result']
+                                    expected = problems[prob_num - 1]['expected_result']
+                                    
+                                    is_correct = semantic_pauli_equal(llm_result, expected)
+                                    if is_correct:
+                                        correct_count += 1
+                                    
+                                    status = "✓" if is_correct else "✗"
+                                    print(f"    {prob_num}. {llm_result} {status} (expected: {expected})")
+                            else:
+                                print(f"  Workflow failed: {workflow_result.get('error_message', 'Unknown error')}")
                         
-                        # Create record ID
-                        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                        record_id = f"batch={batch_size}_N={N}_chunk={chunk_size}_iter={iteration+1}_{timestamp}"
-                        
-                        print(f"  Record ID: {record_id}")
-                        print(f"  Problems:")
-                        for i, prob in enumerate(problems):
-                            print(f"    {i+1}. {prob['str1']} × {prob['str2']} = {prob['expected_result']}")
-                        
-                        # Run workflow
-                        start_time = time.time()
-                        workflow_result = run_batch_divide_conquer_workflow(problems, chunk_size, N)
-                        end_time = time.time()
-                        
-                        # Handle None workflow_result (workflow failed completely)
-                        if workflow_result is None:
-                            workflow_result = {
-                                'success': False, 
-                                'llm_calls': 0, 
-                                'error_message': 'Workflow failed completely',
-                                'decomposition': None,
-                                'chunk_results': {},
-                                'final_results': []
-                            }
-                        
-                        # Check results
-                        correct_count = 0
-                        workflow_success = workflow_result['success']
-                        
-                        if workflow_success:
-                            print(f"  Results:")
-                            for result in workflow_result['final_results']:
-                                prob_num = result['problem_number']
-                                llm_result = result['result']
-                                expected = problems[prob_num - 1]['expected_result']
-                                
-                                is_correct = semantic_pauli_equal(llm_result, expected)
-                                if is_correct:
-                                    correct_count += 1
-                                
-                                status = "✓" if is_correct else "✗"
-                                print(f"    {prob_num}. {llm_result} {status} (expected: {expected})")
-                        else:
-                            print(f"  Workflow failed: {workflow_result.get('error_message', 'Unknown error')}")
-                        
-                        # Calculate success rate: 0 for failed workflows, actual rate for successful ones
-                        success_rate = correct_count / batch_size if workflow_success and batch_size > 0 else 0
+                        # Calculate accuracy: 0 for failed workflows, actual rate for successful ones
+                        accuracy = correct_count / batch_size if workflow_success and batch_size > 0 else 0
                         
                         # Save accuracy to CSV for tracking
                         timestamp_str = timestamp
-                        append_accuracy_csv([timestamp_str, MODEL_NAME, N, chunk_size, batch_size, iteration + 1, USE_PHASE_ACCUMULATION, workflow_success, success_rate, end_time - start_time, workflow_result['llm_calls']], 'accuracy_summary.csv', model_dir)
+                        append_accuracy_csv([timestamp_str, MODEL_NAME, N, chunk_size, batch_size, iteration + 1, 
+                                           workflow_success, accuracy, end_time - start_time, workflow_result['llm_calls'], 
+                                           TEMPERATURE, workflow_result['total_input_tokens'], workflow_result['total_output_tokens'], 
+                                           workflow_result['total_tokens']], 'accuracy_summary.csv', model_dir)
                         
                         # Create problems_detailed format for easy debugging
                         problems_detailed = []
@@ -692,16 +734,19 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
                                 'batch_size': batch_size,
                                 'iteration': iteration + 1,
                                 'model_name': MODEL_NAME,
-                                'model_backend': MODEL_BACKEND,
-                                'use_phase_accumulation': USE_PHASE_ACCUMULATION
+                                'model_backend': LLM_BACKEND,
+                                'temperature': TEMPERATURE
                             },
                             'problems_detailed': problems_detailed,
                             'workflow_summary': {
                                 'total_llm_calls': workflow_result['llm_calls'],
-                                'success_rate': success_rate,
+                                'accuracy': accuracy,
                                 'correct_count': correct_count,
                                 'total_count': batch_size,
-                                'duration_seconds': end_time - start_time
+                                'duration_seconds': end_time - start_time,
+                                'total_input_tokens': workflow_result['total_input_tokens'],
+                                'total_output_tokens': workflow_result['total_output_tokens'],
+                                'total_tokens': workflow_result['total_tokens']
                             }
                         }
                         
@@ -736,7 +781,8 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
                             'chunk_size': chunk_size,
                             'batch_size': batch_size,
                             'iteration': iteration + 1,
-                            'success_rate': success_rate,
+                            'temperature': temperature,
+                            'accuracy': accuracy,
                             'duration': end_time - start_time,
                             'llm_calls': workflow_result['llm_calls'],
                             'workflow_success': workflow_success,
@@ -745,11 +791,12 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
                         
                         print(f"  Duration: {end_time - start_time:.1f}s")
                         print(f"  LLM calls: {workflow_result['llm_calls']}")
+                        print(f"  Token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
                         print(f"  Workflow Success: {workflow_success}")
                         if workflow_success:
-                            print(f"  Success Rate: {success_rate:.1%} ({correct_count}/{batch_size})")
+                            print(f"  Accuracy: {accuracy:.1%} ({correct_count}/{batch_size})")
                         else:
-                            print(f"  Success Rate: 0.0% (workflow failed)")
+                            print(f"  Accuracy: 0.0% (workflow failed)")
                         print()
     
     return all_results
@@ -757,26 +804,26 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
 # === MAIN FUNCTION ===
 
 def main():
-    """Test new parsing approach for improved workflow success rate."""
-    global USE_PHASE_ACCUMULATION
+    """Test phase accumulation approach for divide-and-conquer workflow."""
+    global LLM_BACKEND, MODEL_NAME
     
-    # Test parameters: N=7, chunk_size=2, batch_size=3, 2 iterations each
+    # Set model configuration (must be set before running)
+    LLM_BACKEND = "gemini"  # Options: "gemini", "openai", "claude"
+    MODEL_NAME = "gemini-2.5-flash-preview-04-17-thinking"
+    
+    # Test parameters: N=7, chunk_size=2, batch_size=3, 5 iterations
     N_list = [7]
     chunk_size_list = [2] 
     batch_size_list = [3]
     num_iterations_list = [5]  # Testing 5 iterations to get better statistics
     
-    print("=== Testing NEW PARSING APPROACH ===")
-    print("Parameters: N=7, chunk_size=2, batch_size=3, 5 iterations each")
+    print("=== PHASE ACCUMULATION DIVIDE-AND-CONQUER BENCHMARK ===")
+    print("Parameters: N=7, chunk_size=2, batch_size=3, 5 iterations")
     print("Expected chunks: [0-1], [2-3], [4-5], [6-6] (last chunk has only 1 qubit)")
-    print("Goal: Achieve 100% workflow success rate with improved parsing")
+    print("Method: Phase accumulation throughout chunk computation")
     print()
     
-    # Test both strategies
-    for strategy_name, use_accumulation in [("Phase_Accumulation", True), ("Independent_Phase", False)]:
-        USE_PHASE_ACCUMULATION = use_accumulation
-        print(f"\n=== Testing {strategy_name} Strategy ===")
-        run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list)
+    run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list)
 
 if __name__ == "__main__":
     main()

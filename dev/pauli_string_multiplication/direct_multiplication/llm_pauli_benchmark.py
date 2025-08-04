@@ -192,12 +192,12 @@ def main():
                 
                 llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY, temperature=TEMPERATURE)
                 print(f"[Iteration {it+1}] Token usage: {token_metadata['input_tokens']} in, {token_metadata['output_tokens']} out")
-                time.sleep(1)  # Default delay after successful call
+                time.sleep(6)  # Default delay after successful call
                 break  # Success, exit loop
             except Exception as e:
                 print(f"[Iteration {it+1}] ❌ API call failed: {e}")
                 print(f"[Iteration {it+1}] 🔄 Generating new questions and retrying in 15s...")
-                time.sleep(15)
+                time.sleep(30)
         
         # Try to extract answers from the LLM response. If the LLM fails to pack answers as instructed (e.g., does not provide a Python list),
         # mark all answers as incorrect, set accuracy to 0.0, and record the error message for later analysis.

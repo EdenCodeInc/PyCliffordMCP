@@ -54,12 +54,16 @@ class BenchmarkConfig:
             config['paths'] = {}
         
         paths = config['paths']
-        paths['prompt_template'] = paths.get('prompt_template', 
-                                           'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_template.txt')
-        paths['prompt_irrelevant'] = paths.get('prompt_irrelevant',
-                                              'dev/pauli_string_multiplication/direct_multiplication/utils/prompt_irrelevant.txt')
         paths['records_base_dir'] = paths.get('records_base_dir',
-                                            'dev/pauli_string_multiplication/direct_multiplication/records')
+                                            'dev/pauli_string_multiplication/divide_and_conquer/records')
+        paths['prompt_round1_decomposition'] = paths.get('prompt_round1_decomposition',
+                                                       'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round1_decomposition.txt')
+        paths['prompt_round2_chunk_calculation'] = paths.get('prompt_round2_chunk_calculation',
+                                                           'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round2_chunk_calculation.txt')
+        paths['prompt_round3_combination'] = paths.get('prompt_round3_combination',
+                                                     'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round3_combination.txt')
+        paths['prompt_round3_combination_final_calc'] = paths.get('prompt_round3_combination_final_calc',
+                                                                'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round3_combination_final_calc.txt')
     
     def get_api_key(self, backend: str) -> Optional[str]:
         """Get API key for the specified backend."""
@@ -105,7 +109,7 @@ class BenchmarkConfig:
         
         # Paths status
         print(f"\n📁 Paths:")
-        for path_name in ['prompt_template', 'prompt_irrelevant', 'records_base_dir']:
+        for path_name in ['records_base_dir', 'prompt_round1_decomposition', 'prompt_round2_chunk_calculation', 'prompt_round3_combination']:
             path = self.get_path(path_name)
             exists = os.path.exists(path) if path_name != 'records_base_dir' else True
             status = "✅" if exists else "⚠️ "
