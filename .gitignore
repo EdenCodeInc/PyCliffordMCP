@@ -44,4 +44,8 @@ ENV/
 htmlcov/
 .pytest_cache/
 
+# Configuration files with API keys
+config.json
+**/config.json
+
 uv.lock

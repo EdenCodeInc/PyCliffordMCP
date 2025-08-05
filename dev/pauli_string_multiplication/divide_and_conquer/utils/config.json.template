@@ -9,8 +9,9 @@
     "default_max_tokens": null
   },
   "paths": {
-    "prompt_template": "dev/pauli_string_multiplication/direct_multiplication/utils/prompt_template.txt",
-    "prompt_irrelevant": "dev/pauli_string_multiplication/direct_multiplication/utils/prompt_irrelevant.txt",
-    "records_base_dir": "dev/pauli_string_multiplication/direct_multiplication/records"
+    "records_base_dir": "records",
+    "prompt_round1_decomposition": "utils/prompt_round1_decomposition.txt",
+    "prompt_round2_chunk_calculation": "utils/prompt_round2_chunk_calculation.txt",
+    "prompt_round3_combination": "utils/prompt_round3_combination.txt"
   }
 } 

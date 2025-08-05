@@ -2,7 +2,7 @@
   "api_keys": {
     "openai": "your-openai-api-key-here",
     "anthropic": "your-anthropic-api-key-here",
-    "google": "AIzaSyDQzt4GTNNaXMsBHjofJkhb5u8fOZhPE1g"
+    "google": "your-google-api-key-here"
   },
   "benchmark_settings": {
     "default_temperature": 0.0,
