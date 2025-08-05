@@ -6,7 +6,7 @@ class BenchmarkConfig:
     """Configuration manager for LLM benchmarking."""
     
     def __init__(self, config_path: str = None):
-        self.config_path = config_path or "dev/pauli_string_multiplication/direct_multiplication/utils/config.json"
+        self.config_path = config_path or "utils/config.json"
         self._config = self._load_config()
     
     def _load_config(self) -> Dict[str, Any]:
@@ -54,16 +54,13 @@ class BenchmarkConfig:
             config['paths'] = {}
         
         paths = config['paths']
-        paths['records_base_dir'] = paths.get('records_base_dir',
-                                            'dev/pauli_string_multiplication/divide_and_conquer/records')
+        paths['records_base_dir'] = paths.get('records_base_dir', 'records')
         paths['prompt_round1_decomposition'] = paths.get('prompt_round1_decomposition',
-                                                       'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round1_decomposition.txt')
+                                                       'utils/prompt_round1_decomposition.txt')
         paths['prompt_round2_chunk_calculation'] = paths.get('prompt_round2_chunk_calculation',
-                                                           'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round2_chunk_calculation.txt')
+                                                           'utils/prompt_round2_chunk_calculation.txt')
         paths['prompt_round3_combination'] = paths.get('prompt_round3_combination',
-                                                     'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round3_combination.txt')
-        paths['prompt_round3_combination_final_calc'] = paths.get('prompt_round3_combination_final_calc',
-                                                                'dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round3_combination_final_calc.txt')
+                                                     'utils/prompt_round3_combination.txt')
     
     def get_api_key(self, backend: str) -> Optional[str]:
         """Get API key for the specified backend."""

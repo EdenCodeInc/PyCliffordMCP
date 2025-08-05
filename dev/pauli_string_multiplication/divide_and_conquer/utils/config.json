@@ -9,9 +9,9 @@
     "default_max_tokens": null
   },
   "paths": {
-    "records_base_dir": "dev/pauli_string_multiplication/divide_and_conquer/records",
-    "prompt_round1_decomposition": "dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round1_decomposition.txt",
-    "prompt_round2_chunk_calculation": "dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round2_chunk_calculation.txt",
-    "prompt_round3_combination": "dev/pauli_string_multiplication/divide_and_conquer/utils/prompt_round3_combination.txt"
+    "records_base_dir": "records",
+    "prompt_round1_decomposition": "utils/prompt_round1_decomposition.txt",
+    "prompt_round2_chunk_calculation": "utils/prompt_round2_chunk_calculation.txt",
+    "prompt_round3_combination": "utils/prompt_round3_combination.txt"
   }
 } 

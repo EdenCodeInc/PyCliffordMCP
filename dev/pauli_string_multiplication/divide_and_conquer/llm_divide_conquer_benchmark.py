@@ -24,6 +24,12 @@ MODEL_NAME = None   # Must be set to specific model name
 SAVE_LLM_RESPONSES = True
 TEMPERATURE = 0.0  # Temperature for LLM sampling
 
+# --- Configurable parameters ---
+N = 7  # Length of Pauli strings (number of qubits)
+chunk_size = 2  # Chunk size for divide-and-conquer
+batch_size = 3  # Number of problems per batch
+num_iterations = 3  # Number of iterations per experiment
+
 # === CSV TRACKING ===
 def append_accuracy_csv(row, filename, model_dir):
     """Append accuracy data to CSV file."""
@@ -538,9 +544,8 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
 
 # === EXPERIMENT MANAGEMENT ===
 
-def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list, temperature_list=None):
-    """Run experiments with given parameters and save results."""
-    
+def main():
+    """Run divide-and-conquer experiment with current global configuration."""
     # Check if model configuration is set
     if LLM_BACKEND is None or MODEL_NAME is None:
         raise ValueError("LLM_BACKEND and MODEL_NAME must be set before running the script.")
@@ -556,274 +561,223 @@ def run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list
         print("💡 Please check your config.json file or environment variables")
         return
     
-    # Handle temperature list
-    if temperature_list is None:
-        temperature_list = [TEMPERATURE]
-    
     print("=== Divide-and-Conquer Pauli String Multiplication Benchmark ===")
-    print(f"Problem sizes: {N_list}")
-    print(f"Chunk sizes: {chunk_size_list}")
-    print(f"Batch sizes: {batch_size_list}")
-    print(f"Iterations: {num_iterations_list}")
-    print(f"Temperatures: {temperature_list}")
+    print(f"Problem size: N={N}")
+    print(f"Chunk size: {chunk_size}")
+    print(f"Batch size: {batch_size}")
+    print(f"Iterations: {num_iterations}")
+    print(f"Temperature: {TEMPERATURE}")
     print(f"Model: {MODEL_NAME}")
     print(f"Backend: {LLM_BACKEND}")
     print()
+    
+    if chunk_size >= N:
+        print(f"❌ Invalid configuration: chunk_size ({chunk_size}) >= N ({N})")
+        return
     
     # Use configured paths
     records_base_dir = config.get_path('records_base_dir')
     model_dir = os.path.join(records_base_dir, MODEL_NAME)
     os.makedirs(model_dir, exist_ok=True)
     
-    all_results = []
+    all_accuracies = []
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     
-    for N in N_list:
-        for chunk_size in chunk_size_list:
-            for batch_size in batch_size_list:
-                for num_iterations in num_iterations_list:
-                    for temperature in temperature_list:
-                        # Set global temperature for this experiment run
-                        global TEMPERATURE
-                        TEMPERATURE = temperature
-                        
-                        if chunk_size >= N:
-                            print(f"Skipping N={N}, chunk_size={chunk_size}, temp={temperature} (chunk too large)")
-                            continue
-                            
-                        print(f"--- Testing N={N}, chunk_size={chunk_size}, batch_size={batch_size}, iterations={num_iterations}, temp={temperature} ---")
-                        
-                        for iteration in range(num_iterations):
-                            print(f"Iteration {iteration + 1}/{num_iterations}")
-                            
-                            # Generate test problems
-                            problems = []
-                            for _ in range(batch_size):
-                                str1, str2 = generate_random_pauli_strings(N)
-                                problems.append({
-                                    'str1': str1,
-                                    'str2': str2,
-                                    'expected_result': multiply_pauli_strings(str1, str2)
-                                })
-                            
-                            # Create record ID
-                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                            record_id = f"batch={batch_size}_N={N}_chunk={chunk_size}_temp={TEMPERATURE}_iter={iteration+1}_{timestamp}"
-                            
-                            print(f"  Record ID: {record_id}")
-                            print(f"  Problems:")
-                            for i, prob in enumerate(problems):
-                                print(f"    {i+1}. {prob['str1']} × {prob['str2']} = {prob['expected_result']}")
-                            
-                            # Run workflow
-                            start_time = time.time()
-                            workflow_result = run_batch_divide_conquer_workflow(problems, chunk_size, N)
-                            end_time = time.time()
-                            
-                            # Handle None workflow_result (workflow failed completely)
-                            if workflow_result is None:
-                                workflow_result = {
-                                    'success': False, 
-                                    'llm_calls': 0, 
-                                    'error_message': 'Workflow failed completely',
-                                    'decomposition': None,
-                                    'chunk_results': {},
-                                    'final_results': []
-                                }
-                            
-                            # Check results
-                            correct_count = 0
-                            workflow_success = workflow_result['success']
-                            
-                            if workflow_success:
-                                print(f"  Results:")
-                                for result in workflow_result['final_results']:
-                                    prob_num = result['problem_number']
-                                    llm_result = result['result']
-                                    expected = problems[prob_num - 1]['expected_result']
-                                    
-                                    is_correct = semantic_pauli_equal(llm_result, expected)
-                                    if is_correct:
-                                        correct_count += 1
-                                    
-                                    status = "✓" if is_correct else "✗"
-                                    print(f"    {prob_num}. {llm_result} {status} (expected: {expected})")
-                            else:
-                                print(f"  Workflow failed: {workflow_result.get('error_message', 'Unknown error')}")
-                        
-                        # Calculate accuracy: 0 for failed workflows, actual rate for successful ones
-                        accuracy = correct_count / batch_size if workflow_success and batch_size > 0 else 0
-                        
-                        # Save accuracy to CSV for tracking
-                        timestamp_str = timestamp
-                        append_accuracy_csv([timestamp_str, MODEL_NAME, N, chunk_size, batch_size, iteration + 1, 
-                                           workflow_success, accuracy, end_time - start_time, workflow_result['llm_calls'], 
-                                           TEMPERATURE, workflow_result['total_input_tokens'], workflow_result['total_output_tokens'], 
-                                           workflow_result['total_tokens']], 'accuracy_summary.csv', model_dir)
-                        
-                        # Create problems_detailed format for easy debugging
-                        problems_detailed = []
-                        for i, prob in enumerate(problems):
-                            prob_num = i + 1
-                            
-                            # Get decomposition for this problem
-                            prob_decomposition = None
-                            if workflow_result['success'] and 'decomposition' in workflow_result:
-                                for decomp_prob in workflow_result['decomposition']['problems']:
-                                    if decomp_prob['problem_number'] == prob_num:
-                                        prob_decomposition = decomp_prob
-                                        break
-                            
-                            # Extract LLM decomposition
-                            decomposition_data = workflow_result.get('decomposition') or {}
-                            llm_decomposition = {
-                                "str1_chunks": [],
-                                "str2_chunks": [],
-                                "chunk_definitions": [],
-                                "chunk_ranges": decomposition_data.get('chunk_ranges', [])
-                            }
-                            
-                            if prob_decomposition:
-                                for chunk in prob_decomposition['chunks']:
-                                    llm_decomposition["str1_chunks"].append(chunk['str1'])
-                                    llm_decomposition["str2_chunks"].append(chunk['str2'])
-                                    llm_decomposition["chunk_definitions"].append(chunk['definition'])
-                            
-                            # Extract LLM chunk results for this problem
-                            llm_computed_results = []
-                            if workflow_result['success'] and 'chunk_results' in workflow_result:
-                                for chunk_num in sorted(workflow_result['chunk_results'].keys()):
-                                    for chunk_result in workflow_result['chunk_results'][chunk_num]:
-                                        if chunk_result['problem_number'] == prob_num:
-                                            llm_computed_results.append(chunk_result['result'])
-                                            break
-                            
-                            # Extract LLM final result for this problem
-                            llm_final_result = None
-                            if workflow_result['success'] and 'final_results' in workflow_result:
-                                for final_result in workflow_result['final_results']:
-                                    if final_result['problem_number'] == prob_num:
-                                        llm_final_result = final_result['result']
-                                        break
-                            
-                            # Check correctness
-                            is_correct = semantic_pauli_equal(llm_final_result or "", prob['expected_result'])
-                            
-                            problem_detail = {
-                                "problem_number": prob_num,
-                                "original_problem": f"Input: ({prob['str1']}) * ({prob['str2']})",
-                                "expected_result": prob['expected_result'],
-                                "llm_decomposition": llm_decomposition,
-                                "llm_computed_results": llm_computed_results,
-                                "llm_combined_result": llm_final_result,
-                                "verification_summary": {
-                                    "is_correct": is_correct,
-                                    "expected": prob['expected_result'],
-                                    "actual": llm_final_result or "None"
-                                }
-                            }
-                            
-                            problems_detailed.append(problem_detail)
-                        
-                        # Create new record format
-                        record = {
-                            'record_id': record_id,
-                            'timestamp': timestamp,
-                            'configuration': {
-                                'N': N,
-                                'chunk_size': chunk_size,
-                                'batch_size': batch_size,
-                                'iteration': iteration + 1,
-                                'model_name': MODEL_NAME,
-                                'model_backend': LLM_BACKEND,
-                                'temperature': TEMPERATURE
-                            },
-                            'problems_detailed': problems_detailed,
-                            'workflow_summary': {
-                                'total_llm_calls': workflow_result['llm_calls'],
-                                'accuracy': accuracy,
-                                'correct_count': correct_count,
-                                'total_count': batch_size,
-                                'duration_seconds': end_time - start_time,
-                                'total_input_tokens': workflow_result['total_input_tokens'],
-                                'total_output_tokens': workflow_result['total_output_tokens'],
-                                'total_tokens': workflow_result['total_tokens']
-                            }
-                        }
-                        
-                        # Add raw LLM prompts and responses if saving them
-                        if SAVE_LLM_RESPONSES:
-                            record['raw_llm_interactions'] = {}
-                            if 'phase1_prompt' in workflow_result and 'phase1_response' in workflow_result:
-                                record['raw_llm_interactions']['phase1_decomposition'] = {
-                                    'prompt': workflow_result['phase1_prompt'],
-                                    'response': workflow_result['phase1_response']
-                                }
-                            if 'phase2_prompts_and_responses' in workflow_result:
-                                record['raw_llm_interactions']['phase2_chunk_calculations'] = workflow_result['phase2_prompts_and_responses']
-                            if 'phase3_prompt' in workflow_result and 'phase3_response' in workflow_result:
-                                record['raw_llm_interactions']['phase3_combination'] = {
-                                    'prompt': workflow_result['phase3_prompt'],
-                                    'response': workflow_result['phase3_response']
-                                }
-                        
-                        # Save to file
-                        filename = f"{'full' if SAVE_LLM_RESPONSES else 'light'}_{record_id}.json"
-                        filepath = os.path.join(model_dir, filename)
-                        
-                        with open(filepath, 'w') as f:
-                            json.dump(record, f, indent=2)
-                        
-                        print(f"  Record saved: {filename}")
-                        
-                        # Add to results
-                        all_results.append({
-                            'N': N,
-                            'chunk_size': chunk_size,
-                            'batch_size': batch_size,
-                            'iteration': iteration + 1,
-                            'temperature': temperature,
-                            'accuracy': accuracy,
-                            'duration': end_time - start_time,
-                            'llm_calls': workflow_result['llm_calls'],
-                            'workflow_success': workflow_success,
-                            'record_id': record_id
-                        })
-                        
-                        print(f"  Duration: {end_time - start_time:.1f}s")
-                        print(f"  LLM calls: {workflow_result['llm_calls']}")
-                        print(f"  Token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
-                        print(f"  Workflow Success: {workflow_success}")
-                        if workflow_success:
-                            print(f"  Accuracy: {accuracy:.1%} ({correct_count}/{batch_size})")
-                        else:
-                            print(f"  Accuracy: 0.0% (workflow failed)")
-                        print()
+    for iteration in range(num_iterations):
+        print(f"--- Iteration {iteration + 1}/{num_iterations} ---")
+        
+        # Generate test problems
+        problems = []
+        for _ in range(batch_size):
+            str1, str2 = generate_random_pauli_strings(N)
+            problems.append({
+                'str1': str1,
+                'str2': str2,
+                'expected_result': multiply_pauli_strings(str1, str2)
+            })
+        
+        # Create record ID
+        record_id = f"batch={batch_size}_N={N}_chunk={chunk_size}_temp={TEMPERATURE}_iter={iteration+1}_{timestamp}"
+        
+        print(f"Record ID: {record_id}")
+        print(f"Problems:")
+        for i, prob in enumerate(problems):
+            print(f"  {i+1}. {prob['str1']} × {prob['str2']} = {prob['expected_result']}")
+        
+        # Run workflow
+        start_time = time.time()
+        workflow_result = run_batch_divide_conquer_workflow(problems, chunk_size, N)
+        end_time = time.time()
+        
+        # Handle None workflow_result (workflow failed completely)
+        if workflow_result is None:
+            workflow_result = {
+                'success': False,
+                'llm_calls': 0,
+                'total_input_tokens': 0,
+                'total_output_tokens': 0,
+                'total_tokens': 0,
+                'error_message': 'Workflow failed completely',
+                'decomposition': None,
+                'chunk_results': {},
+                'final_results': []
+            }
+        
+        # Check results
+        correct_count = 0
+        workflow_success = workflow_result['success']
+        
+        if workflow_success:
+            print(f"Results:")
+            for result in workflow_result['final_results']:
+                prob_num = result['problem_number']
+                llm_result = result['result']
+                expected = problems[prob_num - 1]['expected_result']
+                
+                is_correct = semantic_pauli_equal(llm_result, expected)
+                if is_correct:
+                    correct_count += 1
+                
+                status = "✓" if is_correct else "✗"
+                print(f"  {prob_num}. {llm_result} {status} (expected: {expected})")
+        else:
+            print(f"Workflow failed: {workflow_result.get('error_message', 'Unknown error')}")
+        
+        # Calculate accuracy: 0 for failed workflows, actual rate for successful ones
+        accuracy = correct_count / batch_size if workflow_success and batch_size > 0 else 0
+        
+        # Save accuracy to CSV for tracking
+        timestamp_str = timestamp
+        append_accuracy_csv([timestamp_str, MODEL_NAME, N, chunk_size, batch_size, iteration + 1,
+                            workflow_success, accuracy, end_time - start_time, workflow_result['llm_calls'],
+                            TEMPERATURE, workflow_result['total_input_tokens'], workflow_result['total_output_tokens'],
+                            workflow_result['total_tokens']], 'accuracy_summary.csv', model_dir)
+        
+        # Create problems_detailed format for easy debugging
+        problems_detailed = []
+        for i, prob in enumerate(problems):
+            prob_num = i + 1
+            
+            # Get decomposition for this problem
+            prob_decomposition = None
+            if workflow_result['success'] and 'decomposition' in workflow_result:
+                for decomp_prob in workflow_result['decomposition']['problems']:
+                    if decomp_prob['problem_number'] == prob_num:
+                        prob_decomposition = decomp_prob
+                        break
+            
+            # Extract LLM decomposition
+            decomposition_data = workflow_result.get('decomposition') or {}
+            llm_decomposition = {
+                "str1_chunks": [],
+                "str2_chunks": [],
+                "chunk_definitions": [],
+                "chunk_ranges": decomposition_data.get('chunk_ranges', [])
+            }
+            
+            if prob_decomposition:
+                for chunk in prob_decomposition['chunks']:
+                    llm_decomposition["str1_chunks"].append(chunk['str1'])
+                    llm_decomposition["str2_chunks"].append(chunk['str2'])
+                    llm_decomposition["chunk_definitions"].append(chunk['definition'])
+            
+            # Extract LLM chunk results for this problem
+            llm_computed_results = []
+            if workflow_result['success'] and 'chunk_results' in workflow_result:
+                for chunk_num in sorted(workflow_result['chunk_results'].keys()):
+                    for chunk_result in workflow_result['chunk_results'][chunk_num]:
+                        if chunk_result['problem_number'] == prob_num:
+                            llm_computed_results.append(chunk_result['result'])
+                            break
+            
+            # Extract LLM final result for this problem
+            llm_final_result = None
+            if workflow_result['success'] and 'final_results' in workflow_result:
+                for final_result in workflow_result['final_results']:
+                    if final_result['problem_number'] == prob_num:
+                        llm_final_result = final_result['result']
+                        break
+            
+            # Check correctness
+            is_correct = semantic_pauli_equal(llm_final_result or "", prob['expected_result'])
+            
+            problem_detail = {
+                "problem_number": prob_num,
+                "original_problem": f"Input: ({prob['str1']}) * ({prob['str2']})",
+                "expected_result": prob['expected_result'],
+                "llm_decomposition": llm_decomposition,
+                "llm_computed_results": llm_computed_results,
+                "llm_combined_result": llm_final_result,
+                "verification_summary": {
+                    "is_correct": is_correct,
+                    "expected": prob['expected_result'],
+                    "actual": llm_final_result or "None"
+                }
+            }
+            
+            problems_detailed.append(problem_detail)
+        
+        # Create new record format
+        record = {
+            'record_id': record_id,
+            'timestamp': timestamp,
+            'configuration': {
+                'N': N,
+                'chunk_size': chunk_size,
+                'batch_size': batch_size,
+                'iteration': iteration + 1,
+                'model_name': MODEL_NAME,
+                'model_backend': LLM_BACKEND,
+                'temperature': TEMPERATURE
+            },
+            'problems_detailed': problems_detailed,
+            'workflow_summary': {
+                'total_llm_calls': workflow_result['llm_calls'],
+                'accuracy': accuracy,
+                'correct_count': correct_count,
+                'total_count': batch_size,
+                'duration_seconds': end_time - start_time,
+                'total_input_tokens': workflow_result['total_input_tokens'],
+                'total_output_tokens': workflow_result['total_output_tokens'],
+                'total_tokens': workflow_result['total_tokens']
+            }
+        }
+        
+        # Add raw LLM prompts and responses if saving them
+        if SAVE_LLM_RESPONSES:
+            record['raw_llm_interactions'] = {}
+            if 'phase1_prompt' in workflow_result and 'phase1_response' in workflow_result:
+                record['raw_llm_interactions']['phase1_decomposition'] = {
+                    'prompt': workflow_result['phase1_prompt'],
+                    'response': workflow_result['phase1_response']
+                }
+            if 'phase2_prompts_and_responses' in workflow_result:
+                record['raw_llm_interactions']['phase2_chunk_calculations'] = workflow_result['phase2_prompts_and_responses']
+            if 'phase3_prompt' in workflow_result and 'phase3_response' in workflow_result:
+                record['raw_llm_interactions']['phase3_combination'] = {
+                    'prompt': workflow_result['phase3_prompt'],
+                    'response': workflow_result['phase3_response']
+                }
+        
+        # Save to file
+        filename = f"{'full' if SAVE_LLM_RESPONSES else 'light'}_{record_id}.json"
+        filepath = os.path.join(model_dir, filename)
+        
+        with open(filepath, 'w') as f:
+            json.dump(record, f, indent=2)
+        
+        print(f"Record saved: {filename}")
+        
+        print(f"Duration: {end_time - start_time:.1f}s")
+        print(f"LLM calls: {workflow_result['llm_calls']}")
+        print(f"Token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
+        print(f"Workflow Success: {workflow_success}")
+        if workflow_success:
+            print(f"Accuracy: {accuracy:.1%} ({correct_count}/{batch_size})")
+        else:
+            print(f"Accuracy: 0.0% (workflow failed)")
+        print()
+        
+        all_accuracies.append(accuracy)
     
-    return all_results
-
-# === MAIN FUNCTION ===
-
-def main():
-    """Test phase accumulation approach for divide-and-conquer workflow."""
-    global LLM_BACKEND, MODEL_NAME
-    
-    # Set model configuration (must be set before running)
-    LLM_BACKEND = "gemini"  # Options: "gemini", "openai", "claude"
-    MODEL_NAME = "gemini-2.5-flash-preview-04-17-thinking"
-    
-    # Test parameters: N=7, chunk_size=2, batch_size=3, 5 iterations
-    N_list = [7]
-    chunk_size_list = [2] 
-    batch_size_list = [3]
-    num_iterations_list = [5]  # Testing 5 iterations to get better statistics
-    
-    print("=== PHASE ACCUMULATION DIVIDE-AND-CONQUER BENCHMARK ===")
-    print("Parameters: N=7, chunk_size=2, batch_size=3, 5 iterations")
-    print("Expected chunks: [0-1], [2-3], [4-5], [6-6] (last chunk has only 1 qubit)")
-    print("Method: Phase accumulation throughout chunk computation")
-    print()
-    
-    run_experiment(N_list, chunk_size_list, batch_size_list, num_iterations_list)
-
-if __name__ == "__main__":
-    main()
+    print(f"Average accuracy over {num_iterations} iterations: {sum(all_accuracies)/len(all_accuracies) if all_accuracies else 0:.1%}")
