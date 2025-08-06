@@ -1,4 +1,0 @@
-timestamp,model,N,chunk_size,batch_size,iteration,workflow_success,accuracy,duration_seconds,llm_calls,temperature,total_input_tokens,total_output_tokens,total_tokens
-20250805_125619,gemini-2.5-pro,7,2,3,1,True,1.0,141.60584092140198,6,0.0,5760,1189,19558
-20250805_125619,gemini-2.5-pro,7,2,3,2,True,1.0,128.9682731628418,6,0.0,5758,884,18441
-20250805_125619,gemini-2.5-pro,7,2,3,3,True,1.0,125.3342170715332,6,0.0,5758,880,17686
