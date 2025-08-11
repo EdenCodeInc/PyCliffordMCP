@@ -1,0 +1,235 @@
+{
+  "record_id": "batch=10_N=18_chunk=9_temp=0.0_iter=6_20250809_005705",
+  "timestamp": "20250809_005705",
+  "configuration": {
+    "N": 18,
+    "chunk_size": 9,
+    "batch_size": 10,
+    "iteration": 6,
+    "model_name": "gemini-2.5-pro",
+    "model_backend": "gemini",
+    "temperature": 0.0
+  },
+  "problems_detailed": [
+    {
+      "problem_number": 1,
+      "original_problem": "Input: (iIZZIIYYXIYXXIXIIYI) * (-IXXYIYIIYXYZIIXXZI)",
+      "expected_result": "+i Y_{1} Y_{2} Y_{3} Y_{6} X_{7} Y_{8} Z_{9} Z_{10} Y_{11} X_{13} X_{14} X_{15} X_{16}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Y_{1} Y_{2} Y_{3} Y_{6} X_{7} Y_{8} Z_{9} Z_{10} Y_{11} X_{13} X_{14} X_{15} X_{16}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 2,
+      "original_problem": "Input: (-iYXXZZXXXXIZZYYIIYI) * (-ZXIXYXXZZXYIYYYYZY)",
+      "expected_result": "X_{0} X_{2} Y_{3} X_{4} Y_{7} Y_{8} X_{9} X_{10} Z_{11} Y_{14} Y_{15} X_{16} Y_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "X_{0} X_{2} Y_{3} X_{4} Y_{7} Y_{8} X_{9} X_{10} Z_{11} Y_{14} Y_{15} X_{16} Y_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 3,
+      "original_problem": "Input: (-ZZYYYIYZXZZXXZXZZX) * (iZXXZZIYIIYXYXYYIZX)",
+      "expected_result": "- Y_{1} Z_{2} X_{3} X_{4} Z_{7} X_{8} X_{9} Y_{10} Z_{11} X_{13} Z_{14} Z_{15}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "- Y_{1} Z_{2} X_{3} X_{4} Z_{7} X_{8} X_{9} Y_{10} Z_{11} X_{13} Z_{14} Z_{15}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 4,
+      "original_problem": "Input: (-XZYYXXYXIZIYZYYIYI) * (+ZZZYIZYZXIZIYZXZZY)",
+      "expected_result": "Y_{0} X_{2} X_{4} Y_{5} Y_{7} X_{8} Z_{9} Z_{10} Y_{11} X_{12} X_{13} Z_{14} Z_{15} X_{16} Y_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Y_{0} X_{2} X_{4} Y_{5} Y_{7} X_{8} Z_{9} Z_{10} Y_{11} X_{12} X_{13} Z_{14} Z_{15} X_{16} Y_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 5,
+      "original_problem": "Input: (iYXXZZXYXIYZIXIZXZX) * (-iZXZXIYYZIIZXXIIYXY)",
+      "expected_result": "X_{0} Y_{2} Y_{3} Z_{4} Z_{5} Y_{7} Y_{9} X_{11} Z_{14} Z_{15} Y_{16} Z_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "X_{0} Y_{2} Y_{3} Z_{4} Z_{5} Y_{7} Y_{9} X_{11} Z_{14} Z_{15} Y_{16} Z_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 6,
+      "original_problem": "Input: (-iXYYXYIYYIIIYYXIIIY) * (iYIZZIZYYIZZXYZYYZZ)",
+      "expected_result": "Z_{0} Y_{1} X_{2} Y_{3} Y_{4} Z_{5} Z_{9} Z_{10} Z_{11} Y_{13} Y_{14} Y_{15} Z_{16} X_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Z_{0} Y_{1} X_{2} Y_{3} Y_{4} Z_{5} Z_{9} Z_{10} Z_{11} Y_{13} Y_{14} Y_{15} Z_{16} X_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 7,
+      "original_problem": "Input: (+ZYIIIZYYIXYIXYXIYZ) * (iZYXZXYZXYYYYZZYZXY)",
+      "expected_result": "X_{2} Z_{3} X_{4} X_{5} X_{6} Z_{7} Y_{8} Z_{9} Y_{11} Y_{12} X_{13} Z_{14} Z_{15} Z_{16} X_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "X_{2} Z_{3} X_{4} X_{5} X_{6} Z_{7} Y_{8} Z_{9} Y_{11} Y_{12} X_{13} Z_{14} Z_{15} Z_{16} X_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 8,
+      "original_problem": "Input: (-iYIZXYZZYZZYXIZIZZX) * (+XXYZXYIXXIYYXZIXII)",
+      "expected_result": "Z_{0} X_{1} X_{2} Y_{3} Z_{4} X_{5} Z_{6} Z_{7} Y_{8} Z_{9} Z_{11} X_{12} Y_{15} Z_{16} X_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Z_{0} X_{1} X_{2} Y_{3} Z_{4} X_{5} Z_{6} Z_{7} Y_{8} Z_{9} Z_{11} X_{12} Y_{15} Z_{16} X_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 9,
+      "original_problem": "Input: (-XXXZIIYIYYIIZZXZXX) * (iZXIYZIXXXZYZYIYXZI)",
+      "expected_result": "Y_{0} X_{2} X_{3} Z_{4} Z_{6} X_{7} Z_{8} X_{9} Y_{10} Z_{11} X_{12} Z_{13} Z_{14} Y_{15} Y_{16} X_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Y_{0} X_{2} X_{3} Z_{4} Z_{6} X_{7} Z_{8} X_{9} Y_{10} Z_{11} X_{12} Z_{13} Z_{14} Y_{15} Y_{16} X_{17}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 10,
+      "original_problem": "Input: (iIYYYYXYIIXZXXZZYZZ) * (iXYYXYIIXZIZYIIIYYI)",
+      "expected_result": "+i X_{0} Z_{3} X_{5} Y_{6} X_{7} Z_{8} X_{9} Z_{11} X_{12} Z_{13} Z_{14} X_{16} Z_{17}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-8",
+          "9-17"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i X_{0} Z_{3} X_{5} Y_{6} X_{7} Z_{8} X_{9} Z_{11} X_{12} Z_{13} Z_{14} X_{16} Z_{17}",
+        "actual": "None"
+      }
+    }
+  ],
+  "workflow_summary": {
+    "total_llm_calls": 4,
+    "accuracy": 0,
+    "correct_count": 0,
+    "total_count": 10,
+    "duration_seconds": 288.0429608821869,
+    "total_input_tokens": 8511,
+    "total_output_tokens": 3405,
+    "total_tokens": 38141
+  }
+}
