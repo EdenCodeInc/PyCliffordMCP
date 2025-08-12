@@ -1,0 +1,355 @@
+{
+  "record_id": "batch=10_N=4_chunk=2_temp=0.0_iter=8_20250811_195422",
+  "timestamp": "20250811_195422",
+  "configuration": {
+    "N": 4,
+    "chunk_size": 2,
+    "batch_size": 10,
+    "iteration": 8,
+    "model_name": "gemini-2.0-flash",
+    "model_backend": "gemini",
+    "temperature": 0.0
+  },
+  "problems_detailed": [
+    {
+      "problem_number": 1,
+      "original_problem": "Input: (-iXXIY) * (-iZIXZ)",
+      "expected_result": "- Y_{0} X_{1} X_{2} X_{3}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "-i X_0 X_1",
+          "I_2 Y_3"
+        ],
+        "str2_chunks": [
+          "-i Z_0 I_1",
+          "X_2 Z_3"
+        ],
+        "chunk_definitions": [
+          "(-i X_0 X_1) (-i Z_0 I_1)",
+          "(I_2 Y_3) (X_2 Z_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "- X_0 X_1",
+        "i X_2 Y_3"
+      ],
+      "llm_combined_result": "+ X_0 X_1 X_2 Y_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "- Y_{0} X_{1} X_{2} X_{3}",
+        "actual": "+ X_0 X_1 X_2 Y_3"
+      }
+    },
+    {
+      "problem_number": 2,
+      "original_problem": "Input: (iXYXZ) * (-IYYX)",
+      "expected_result": "+i X_{0} Z_{2} Y_{3}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i X_0 Y_1",
+          "X_2 Z_3"
+        ],
+        "str2_chunks": [
+          "- I_0 Y_1",
+          "Y_2 X_3"
+        ],
+        "chunk_definitions": [
+          "(i X_0 Y_1) (- I_0 Y_1)",
+          "(X_2 Z_3) (Y_2 X_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "- Z_0 I_1",
+        "- Z_2 I_3"
+      ],
+      "llm_combined_result": "+ Z_0 I_1 Z_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i X_{0} Z_{2} Y_{3}",
+        "actual": "+ Z_0 I_1 Z_2 I_3"
+      }
+    },
+    {
+      "problem_number": 3,
+      "original_problem": "Input: (+ZXII) * (+XXYI)",
+      "expected_result": "+i Y_{0} Y_{2}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "+ Z_0 X_1",
+          "I_2 I_3"
+        ],
+        "str2_chunks": [
+          "+ X_0 X_1",
+          "Y_2 I_3"
+        ],
+        "chunk_definitions": [
+          "(+ Z_0 X_1) (+ X_0 X_1)",
+          "(I_2 I_3) (Y_2 I_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "+ I_0 I_1",
+        "+ Y_2 I_3"
+      ],
+      "llm_combined_result": "+ I_0 I_1 Y_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Y_{0} Y_{2}",
+        "actual": "+ I_0 I_1 Y_2 I_3"
+      }
+    },
+    {
+      "problem_number": 4,
+      "original_problem": "Input: (-ZZIZ) * (+IYZZ)",
+      "expected_result": "+i Z_{0} X_{1} Z_{2}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "- Z_0 Z_1",
+          "I_2 Z_3"
+        ],
+        "str2_chunks": [
+          "+ I_0 Y_1",
+          "Z_2 Z_3"
+        ],
+        "chunk_definitions": [
+          "(- Z_0 Z_1) (+ I_0 Y_1)",
+          "(I_2 Z_3) (Z_2 Z_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "+ Z_0 X_1",
+        "+ Z_2 I_3"
+      ],
+      "llm_combined_result": "+ Z_0 X_1 Z_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Z_{0} X_{1} Z_{2}",
+        "actual": "+ Z_0 X_1 Z_2 I_3"
+      }
+    },
+    {
+      "problem_number": 5,
+      "original_problem": "Input: (iYXXY) * (iIYZY)",
+      "expected_result": "- Y_{0} Z_{1} Y_{2}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i Y_0 X_1",
+          "X_2 Y_3"
+        ],
+        "str2_chunks": [
+          "i I_0 Y_1",
+          "Z_2 Y_3"
+        ],
+        "chunk_definitions": [
+          "(i Y_0 X_1) (i I_0 Y_1)",
+          "(X_2 Y_3) (Z_2 Y_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "- I_0 X_1",
+        "+ i I_2 I_3"
+      ],
+      "llm_combined_result": "- i I_0 X_1 I_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "- Y_{0} Z_{1} Y_{2}",
+        "actual": "- i I_0 X_1 I_2 I_3"
+      }
+    },
+    {
+      "problem_number": 6,
+      "original_problem": "Input: (iIZXZ) * (-iIZYZ)",
+      "expected_result": "+i Z_{2}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i I_0 Z_1",
+          "X_2 Z_3"
+        ],
+        "str2_chunks": [
+          "-i I_0 Z_1",
+          "Y_2 Z_3"
+        ],
+        "chunk_definitions": [
+          "(i I_0 Z_1) (-i I_0 Z_1)",
+          "(X_2 Z_3) (Y_2 Z_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "+ I_0 I_1",
+        "- Z_2 I_3"
+      ],
+      "llm_combined_result": "+ I_0 I_1 Z_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Z_{2}",
+        "actual": "+ I_0 I_1 Z_2 I_3"
+      }
+    },
+    {
+      "problem_number": 7,
+      "original_problem": "Input: (-YYXZ) * (-XYII)",
+      "expected_result": "-i Z_{0} X_{2} Z_{3}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "- Y_0 Y_1",
+          "X_2 Z_3"
+        ],
+        "str2_chunks": [
+          "- X_0 Y_1",
+          "I_2 I_3"
+        ],
+        "chunk_definitions": [
+          "(- Y_0 Y_1) (- X_0 Y_1)",
+          "(X_2 Z_3) (I_2 I_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "+ Z_0 I_1",
+        "+ X_2 Z_3"
+      ],
+      "llm_combined_result": "+ Z_0 I_1 X_2 Z_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "-i Z_{0} X_{2} Z_{3}",
+        "actual": "+ Z_0 I_1 X_2 Z_3"
+      }
+    },
+    {
+      "problem_number": 8,
+      "original_problem": "Input: (-YIIX) * (iIYZX)",
+      "expected_result": "-i Y_{0} Y_{1} Z_{2}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "- Y_0 I_1",
+          "I_2 X_3"
+        ],
+        "str2_chunks": [
+          "i I_0 Y_1",
+          "Z_2 X_3"
+        ],
+        "chunk_definitions": [
+          "(- Y_0 I_1) (i I_0 Y_1)",
+          "(I_2 X_3) (Z_2 X_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "- Y_0 X_1",
+        "+ Z_2 I_3"
+      ],
+      "llm_combined_result": "+ Y_0 X_1 Z_2 I_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "-i Y_{0} Y_{1} Z_{2}",
+        "actual": "+ Y_0 X_1 Z_2 I_3"
+      }
+    },
+    {
+      "problem_number": 9,
+      "original_problem": "Input: (-iXIXZ) * (-ZZXI)",
+      "expected_result": "Y_{0} Z_{1} Z_{3}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "-i X_0 I_1",
+          "X_2 Z_3"
+        ],
+        "str2_chunks": [
+          "- Z_0 Z_1",
+          "X_2 I_3"
+        ],
+        "chunk_definitions": [
+          "(-i X_0 I_1) (- Z_0 Z_1)",
+          "(X_2 Z_3) (X_2 I_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "i X_0 Z_1",
+        "+ I_2 Z_3"
+      ],
+      "llm_combined_result": "- i X_0 Z_1 I_2 Z_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Y_{0} Z_{1} Z_{3}",
+        "actual": "- i X_0 Z_1 I_2 Z_3"
+      }
+    },
+    {
+      "problem_number": 10,
+      "original_problem": "Input: (iYZYZ) * (-XIYX)",
+      "expected_result": "-i Z_{0} Z_{1} Y_{3}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i Y_0 Z_1",
+          "Y_2 Z_3"
+        ],
+        "str2_chunks": [
+          "- X_0 I_1",
+          "Y_2 X_3"
+        ],
+        "chunk_definitions": [
+          "(i Y_0 Z_1) (- X_0 I_1)",
+          "(Y_2 Z_3) (Y_2 X_3)"
+        ],
+        "chunk_ranges": [
+          "0-1",
+          "2-3"
+        ]
+      },
+      "llm_computed_results": [
+        "- Y_0 I_1",
+        "- I_2 X_3"
+      ],
+      "llm_combined_result": "- Y_0 I_1 I_2 X_3",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "-i Z_{0} Z_{1} Y_{3}",
+        "actual": "- Y_0 I_1 I_2 X_3"
+      }
+    }
+  ],
+  "workflow_summary": {
+    "total_llm_calls": 4,
+    "accuracy": 0.0,
+    "correct_count": 0,
+    "total_count": 10,
+    "duration_seconds": 41.98970127105713,
+    "total_input_tokens": 5013,
+    "total_output_tokens": 1454,
+    "total_tokens": 6467
+  }
+}
