@@ -1,0 +1,235 @@
+{
+  "record_id": "batch=10_N=118_chunk=59_temp=0.0_iter=9_20250828_072516",
+  "timestamp": "20250828_072516",
+  "configuration": {
+    "N": 118,
+    "chunk_size": 59,
+    "batch_size": 10,
+    "iteration": 9,
+    "model_name": "gemini-2.5-flash",
+    "model_backend": "gemini",
+    "temperature": 0.0
+  },
+  "problems_detailed": [
+    {
+      "problem_number": 1,
+      "original_problem": "Input: (-XIIIXYYIIXIYIXZYXXZIYXXIIZXZZIZZZZIZXIZIYYZXZXIYIXYYIYXIYYIZXIXZXYIXYIZYYYZZIZZIIYXXXYXIIZZZZYIZZZIIZXXZXXYZYIYZZXZXXY) * (iXXYYIIIYYIIZIZIZXYIXXIYXYZZYIYXYIYZZIIXYZXZIIZXXYIXZIXIIZZIIYYIZXYYIXXIIZYYZIYIXXIXYIXZXIXYXIYXZIIIIIXIXIZYZYXIYZZXYZY)",
+      "expected_result": "X_{1} Y_{2} Y_{3} X_{4} Y_{5} Y_{6} Y_{7} Y_{8} X_{9} X_{11} Y_{13} Z_{14} X_{15} Z_{17} Z_{18} X_{19} Z_{20} X_{21} Z_{22} X_{23} Y_{24} Y_{26} X_{27} Z_{28} Y_{29} Y_{30} X_{31} Z_{32} X_{33} Z_{34} X_{36} Y_{38} Y_{39} X_{40} Z_{41} X_{43} Z_{44} Y_{45} X_{46} Z_{47} Y_{48} X_{49} Z_{50} X_{51} Z_{53} X_{54} X_{56} X_{57} Z_{59} Z_{60} Y_{61} X_{62} Y_{66} X_{67} Z_{68} X_{69} Z_{70} Y_{71} X_{72} X_{74} X_{77} Z_{78} X_{79} X_{80} Y_{81} Z_{83} X_{84} Z_{85} Y_{86} X_{87} Y_{89} X_{90} Y_{91} Z_{92} X_{94} Z_{96} Z_{97} Z_{100} X_{102} Y_{103} X_{104} Y_{105} X_{109} Y_{110} X_{111} Y_{113} Y_{114} Z_{115} Y_{116}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "X_{1} Y_{2} Y_{3} X_{4} Y_{5} Y_{6} Y_{7} Y_{8} X_{9} X_{11} Y_{13} Z_{14} X_{15} Z_{17} Z_{18} X_{19} Z_{20} X_{21} Z_{22} X_{23} Y_{24} Y_{26} X_{27} Z_{28} Y_{29} Y_{30} X_{31} Z_{32} X_{33} Z_{34} X_{36} Y_{38} Y_{39} X_{40} Z_{41} X_{43} Z_{44} Y_{45} X_{46} Z_{47} Y_{48} X_{49} Z_{50} X_{51} Z_{53} X_{54} X_{56} X_{57} Z_{59} Z_{60} Y_{61} X_{62} Y_{66} X_{67} Z_{68} X_{69} Z_{70} Y_{71} X_{72} X_{74} X_{77} Z_{78} X_{79} X_{80} Y_{81} Z_{83} X_{84} Z_{85} Y_{86} X_{87} Y_{89} X_{90} Y_{91} Z_{92} X_{94} Z_{96} Z_{97} Z_{100} X_{102} Y_{103} X_{104} Y_{105} X_{109} Y_{110} X_{111} Y_{113} Y_{114} Z_{115} Y_{116}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 2,
+      "original_problem": "Input: (+ZZZZIIYIYYZIXIZZIIYYZYZXIXYXYIZYYZIXXIIZIXZYZYXXYIIYIZYZZYZZYIZYXIXYZZZIXIZXXZIYYYXZIYIIIYIIZZXIIZZXZYYXIYIXIZIIIIZIXZ) * (iZIZIYYYYIYZIZZYYXIIYZXXXIZXYYIYIYXXZXIXZYXXYXXYZYYXIXZXZYYZZYZYIZXXXXXXZYYZZXZIIIXZIZIXXIZYZYIIXXXIZIZYZYYYYYYIYIXYYYY)",
+      "expected_result": "Z_{1} Z_{3} Y_{4} Y_{5} Y_{7} Y_{8} Y_{12} Z_{13} X_{14} X_{15} X_{16} Y_{18} Z_{21} Y_{22} Y_{25} Z_{26} Z_{27} X_{30} Y_{31} Y_{33} X_{34} Y_{35} X_{38} Y_{40} Y_{42} Y_{44} Z_{45} Z_{46} Y_{47} Y_{49} X_{50} Y_{51} X_{52} Z_{54} X_{56} Z_{61} X_{62} Y_{63} Y_{64} X_{65} Z_{67} Y_{68} Y_{69} Y_{70} Z_{71} Z_{72} Y_{73} Y_{75} Y_{79} Y_{80} Z_{81} Y_{82} Z_{83} Z_{84} Y_{85} X_{86} X_{87} X_{89} Y_{90} Z_{91} X_{92} Z_{93} X_{94} X_{95} X_{96} Y_{97} Z_{98} Y_{99} Z_{100} X_{101} Y_{103} Y_{104} Y_{106} Z_{107} Y_{108} X_{109} Y_{111} X_{113} X_{114} Y_{115} Z_{116} X_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Z_{1} Z_{3} Y_{4} Y_{5} Y_{7} Y_{8} Y_{12} Z_{13} X_{14} X_{15} X_{16} Y_{18} Z_{21} Y_{22} Y_{25} Z_{26} Z_{27} X_{30} Y_{31} Y_{33} X_{34} Y_{35} X_{38} Y_{40} Y_{42} Y_{44} Z_{45} Z_{46} Y_{47} Y_{49} X_{50} Y_{51} X_{52} Z_{54} X_{56} Z_{61} X_{62} Y_{63} Y_{64} X_{65} Z_{67} Y_{68} Y_{69} Y_{70} Z_{71} Z_{72} Y_{73} Y_{75} Y_{79} Y_{80} Z_{81} Y_{82} Z_{83} Z_{84} Y_{85} X_{86} X_{87} X_{89} Y_{90} Z_{91} X_{92} Z_{93} X_{94} X_{95} X_{96} Y_{97} Z_{98} Y_{99} Z_{100} X_{101} Y_{103} Y_{104} Y_{106} Z_{107} Y_{108} X_{109} Y_{111} X_{113} X_{114} Y_{115} Z_{116} X_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 3,
+      "original_problem": "Input: (iYYYYYIZIYIZZYIZIIYYIIZIXZZIIXXYYZIIIYYZZIZIXYXIXYYIYYZIZIXYZXYZZIIZZZYXXXIIXXZIZXYIZIYYZXXYZYZZIXZYZZZIXXYIYXZXXIYYIYZ) * (+YZZXIZIZYYZXXYIXYZIYZIXXXYZZYXZXXZIIXYXIXIXXZXYZYXIXYZYYZIIYIIXZZZXYYZYXIYZYIZZIIZIIXZIIZZIZZXZIXIZZIIYXIZXYXIIXIZYZZI)",
+      "expected_result": "- X_{1} X_{2} Z_{3} Y_{4} Z_{5} Z_{6} Z_{7} Y_{9} Y_{11} Z_{12} Y_{13} Z_{14} X_{15} Y_{16} X_{17} Y_{18} Y_{19} Z_{20} Z_{21} X_{22} Y_{24} X_{25} Z_{26} Z_{27} Z_{28} X_{30} Z_{31} Y_{32} Z_{33} Z_{36} Y_{38} Z_{39} X_{40} Z_{41} X_{42} X_{44} Y_{46} Y_{47} Z_{49} Z_{51} Y_{54} X_{55} Z_{56} X_{57} Y_{58} X_{59} X_{60} Y_{61} Y_{62} Z_{64} Z_{65} Y_{66} X_{67} X_{68} X_{69} Z_{70} X_{72} Y_{73} Z_{74} Z_{75} X_{76} Z_{78} Z_{79} X_{80} X_{81} Z_{83} X_{84} X_{85} Y_{86} Z_{87} Y_{88} Y_{89} Y_{90} X_{92} Y_{93} Z_{97} X_{98} Z_{100} Z_{101} Y_{102} X_{104} X_{105} X_{106} Z_{109} X_{110} X_{113} Z_{115} X_{116} Z_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "- X_{1} X_{2} Z_{3} Y_{4} Z_{5} Z_{6} Z_{7} Y_{9} Y_{11} Z_{12} Y_{13} Z_{14} X_{15} Y_{16} X_{17} Y_{18} Y_{19} Z_{20} Z_{21} X_{22} Y_{24} X_{25} Z_{26} Z_{27} Z_{28} X_{30} Z_{31} Y_{32} Z_{33} Z_{36} Y_{38} Z_{39} X_{40} Z_{41} X_{42} X_{44} Y_{46} Y_{47} Z_{49} Z_{51} Y_{54} X_{55} Z_{56} X_{57} Y_{58} X_{59} X_{60} Y_{61} Y_{62} Z_{64} Z_{65} Y_{66} X_{67} X_{68} X_{69} Z_{70} X_{72} Y_{73} Z_{74} Z_{75} X_{76} Z_{78} Z_{79} X_{80} X_{81} Z_{83} X_{84} X_{85} Y_{86} Z_{87} Y_{88} Y_{89} Y_{90} X_{92} Y_{93} Z_{97} X_{98} Z_{100} Z_{101} Y_{102} X_{104} X_{105} X_{106} Z_{109} X_{110} X_{113} Z_{115} X_{116} Z_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 4,
+      "original_problem": "Input: (-ZZXYZZYYXIXXYZIYZYXYIZIYYIXYXZYZYYZIYIIYXYXXYYXIIZYXXYZXZIZXYIYZYIXXXYXYIXZIZXIXYXZIXXYZZYIXXIYXZIZYZXZIYIIXXIXZZXYZZZ) * (-YIXXZZZXXXYIIXIZXIXZZYXZIXXXZZIZZZXZZYXIZXZIXIYYZYIZIXZYXIYZXIYIZYXZYXXIZYIZZZYXYYXZIXXIYYZXYXXXIXYXYZZZIXZYYZYYIYYYIX)",
+      "expected_result": "+i X_{0} Z_{1} Z_{3} X_{6} Z_{7} X_{9} Z_{10} X_{11} Y_{12} Y_{13} X_{15} Y_{16} Y_{17} X_{19} Z_{20} X_{21} X_{22} X_{23} Y_{24} X_{25} Z_{27} Y_{28} Y_{30} X_{32} X_{33} Y_{34} Z_{35} X_{36} Y_{37} X_{38} Y_{39} Y_{40} Z_{41} Y_{42} X_{43} Z_{44} Y_{45} Z_{46} Y_{47} Z_{48} X_{49} Y_{50} Y_{51} X_{52} Z_{53} Z_{55} Y_{56} X_{58} Y_{59} Z_{60} Z_{63} X_{64} Y_{65} Y_{67} Z_{68} Z_{69} Y_{71} Z_{72} Z_{73} Z_{74} Z_{75} Y_{77} Y_{78} Z_{81} Y_{82} Z_{83} X_{84} Z_{86} Z_{87} X_{88} Z_{90} Z_{92} X_{93} Z_{94} Z_{96} X_{97} X_{98} Z_{99} X_{100} Y_{101} Z_{103} Y_{104} X_{105} Z_{106} Z_{107} Z_{108} Z_{109} Z_{110} X_{111} Z_{112} Z_{113} X_{115} Z_{116} Y_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i X_{0} Z_{1} Z_{3} X_{6} Z_{7} X_{9} Z_{10} X_{11} Y_{12} Y_{13} X_{15} Y_{16} Y_{17} X_{19} Z_{20} X_{21} X_{22} X_{23} Y_{24} X_{25} Z_{27} Y_{28} Y_{30} X_{32} X_{33} Y_{34} Z_{35} X_{36} Y_{37} X_{38} Y_{39} Y_{40} Z_{41} Y_{42} X_{43} Z_{44} Y_{45} Z_{46} Y_{47} Z_{48} X_{49} Y_{50} Y_{51} X_{52} Z_{53} Z_{55} Y_{56} X_{58} Y_{59} Z_{60} Z_{63} X_{64} Y_{65} Y_{67} Z_{68} Z_{69} Y_{71} Z_{72} Z_{73} Z_{74} Z_{75} Y_{77} Y_{78} Z_{81} Y_{82} Z_{83} X_{84} Z_{86} Z_{87} X_{88} Z_{90} Z_{92} X_{93} Z_{94} Z_{96} X_{97} X_{98} Z_{99} X_{100} Y_{101} Z_{103} Y_{104} X_{105} Z_{106} Z_{107} Z_{108} Z_{109} Z_{110} X_{111} Z_{112} Z_{113} X_{115} Z_{116} Y_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 5,
+      "original_problem": "Input: (+XIZZYIIIXYIXZYXYXXXZIIIXZZYXIXXIXYIYZXZIXZIIZZYYIYYIYXXZXYXXXXXZZXXZIZZIZIYZYZXIZIXXZXIYXXIIXXIYYXYZZYYXIIYIZZIZXIXXXZ) * (+ZIXIIYXIYXIYYZZZXYYIXYXXXXIYZIZZYZYXZXIXIZZIXYZZYXXYXIZYIYYYZZIIYZIXYZIXZIZIYZZYXZZXIIZXZYXIZZIYIZIIIZIYYIYXIIYZZXIYIZ)",
+      "expected_result": "Y_{0} Y_{2} Z_{3} Y_{4} Y_{5} X_{6} Z_{8} Z_{9} Z_{11} X_{12} X_{13} Y_{14} X_{15} Z_{17} Z_{18} Z_{19} X_{20} Y_{21} X_{22} Y_{24} Y_{25} Y_{26} Z_{27} Z_{28} X_{29} Y_{30} Z_{31} Z_{32} X_{33} Y_{34} Z_{35} Z_{38} X_{39} X_{40} Z_{42} Y_{44} X_{45} X_{46} X_{47} Y_{48} Z_{49} Z_{50} Y_{51} Z_{52} X_{53} Y_{54} X_{55} X_{56} Z_{58} Z_{59} Y_{60} Y_{61} X_{62} Z_{63} X_{64} Y_{65} X_{66} Y_{67} Y_{68} Z_{70} X_{71} X_{74} Z_{75} Y_{78} Y_{79} Y_{80} Z_{81} Y_{82} Z_{84} X_{85} Z_{86} Z_{87} Y_{88} Z_{89} X_{90} Y_{92} Y_{93} Y_{96} Y_{97} Y_{98} Z_{99} Z_{100} X_{101} Y_{102} Z_{103} Y_{104} X_{107} Z_{108} Z_{109} Y_{110} Y_{112} X_{113} X_{114} Z_{115} X_{116}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Y_{0} Y_{2} Z_{3} Y_{4} Y_{5} X_{6} Z_{8} Z_{9} Z_{11} X_{12} X_{13} Y_{14} X_{15} Z_{17} Z_{18} Z_{19} X_{20} Y_{21} X_{22} Y_{24} Y_{25} Y_{26} Z_{27} Z_{28} X_{29} Y_{30} Z_{31} Z_{32} X_{33} Y_{34} Z_{35} Z_{38} X_{39} X_{40} Z_{42} Y_{44} X_{45} X_{46} X_{47} Y_{48} Z_{49} Z_{50} Y_{51} Z_{52} X_{53} Y_{54} X_{55} X_{56} Z_{58} Z_{59} Y_{60} Y_{61} X_{62} Z_{63} X_{64} Y_{65} X_{66} Y_{67} Y_{68} Z_{70} X_{71} X_{74} Z_{75} Y_{78} Y_{79} Y_{80} Z_{81} Y_{82} Z_{84} X_{85} Z_{86} Z_{87} Y_{88} Z_{89} X_{90} Y_{92} Y_{93} Y_{96} Y_{97} Y_{98} Z_{99} Z_{100} X_{101} Y_{102} Z_{103} Y_{104} X_{107} Z_{108} Z_{109} Y_{110} Y_{112} X_{113} X_{114} Z_{115} X_{116}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 6,
+      "original_problem": "Input: (+IZYYXIXIZZIIYZYZZZXYXIZIIZIZYIYIYXIXZIZXZZZZZZXYIYIYZIIYYXXZYYZXZIXIIYYZXYYZIZIYZIXZYZXZIZIXIIXIXYYIXXIYZZIXIIZXIXIIXY) * (-YZXXXXIIXIIIXIXIYZXIZIZXIIIZIXZZZYXYZYIXZYXXZXIZXIYIIYZZYZYZIYIYZXIXYZYIZXYZIXZXXYIYIYZZIZIYIXIIXXXZXXXIXIYZXYIXZZXIII)",
+      "expected_result": "+i Y_{0} Z_{2} Z_{3} X_{5} X_{6} Y_{8} Z_{9} Z_{12} Z_{13} Z_{14} Z_{15} X_{16} Y_{19} Y_{20} X_{23} Z_{25} Y_{28} X_{29} X_{30} Z_{31} X_{32} Z_{33} X_{34} Z_{35} Y_{37} Z_{38} X_{41} Y_{42} Y_{43} Y_{45} X_{46} X_{47} X_{48} Y_{49} Y_{50} Y_{51} Z_{52} Y_{53} Z_{54} X_{55} Y_{57} Z_{58} Y_{60} Z_{62} Z_{63} X_{65} X_{66} X_{67} Y_{68} X_{69} Z_{71} Y_{72} Z_{73} Y_{77} Z_{78} Z_{79} Y_{80} Y_{81} X_{82} X_{83} Y_{84} X_{85} Y_{86} Z_{91} X_{93} X_{94} Z_{97} Z_{98} Z_{99} X_{102} Y_{103} Y_{104} Z_{105} Y_{106} Y_{107} X_{108} Y_{109} Z_{110} Z_{112} Y_{113} X_{114} X_{116} Y_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Y_{0} Z_{2} Z_{3} X_{5} X_{6} Y_{8} Z_{9} Z_{12} Z_{13} Z_{14} Z_{15} X_{16} Y_{19} Y_{20} X_{23} Z_{25} Y_{28} X_{29} X_{30} Z_{31} X_{32} Z_{33} X_{34} Z_{35} Y_{37} Z_{38} X_{41} Y_{42} Y_{43} Y_{45} X_{46} X_{47} X_{48} Y_{49} Y_{50} Y_{51} Z_{52} Y_{53} Z_{54} X_{55} Y_{57} Z_{58} Y_{60} Z_{62} Z_{63} X_{65} X_{66} X_{67} Y_{68} X_{69} Z_{71} Y_{72} Z_{73} Y_{77} Z_{78} Z_{79} Y_{80} Y_{81} X_{82} X_{83} Y_{84} X_{85} Y_{86} Z_{91} X_{93} X_{94} Z_{97} Z_{98} Z_{99} X_{102} Y_{103} Y_{104} Z_{105} Y_{106} Y_{107} X_{108} Y_{109} Z_{110} Z_{112} Y_{113} X_{114} X_{116} Y_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 7,
+      "original_problem": "Input: (iZYYXYZYZYZZXZXXXXIIYXIZZXZZYZYIIXZZYIXXIZIXZYXYIIIXZIIXZXXYZYIXYXXIXIIXIZZZYIYZXIZZXZIZIYIXZYZZXXZIZIXYZYZZZYYIZIIZIIZ) * (iYZYXXYIXYYYZYZZZYYYXXIYYXZIIZYZYIXYIXXIYXIZIYXIZIXZIYZYXYYIYYXZYXXIZIZYIZXYXXXIYIZXYZZZYIYZZZXZXIYIZYZZXXXXZYXXIIXXIIY)",
+      "expected_result": "-i X_{0} X_{1} Z_{4} X_{5} Y_{6} Y_{7} X_{9} X_{10} Y_{11} X_{12} Y_{13} Y_{14} Y_{15} Z_{16} Y_{17} Y_{18} Z_{19} X_{22} X_{23} Z_{26} Y_{27} Z_{30} Y_{31} X_{32} Y_{33} X_{34} Y_{35} X_{36} X_{38} Y_{39} Y_{40} Y_{42} Z_{43} Y_{46} Z_{47} X_{49} Y_{50} Z_{51} Y_{52} Z_{53} Z_{54} Y_{55} Z_{56} Z_{57} Y_{58} X_{59} X_{61} Y_{62} Y_{67} Z_{69} Z_{70} Y_{73} X_{74} Z_{75} X_{76} Z_{77} Z_{78} Z_{79} Y_{82} Z_{83} Z_{85} Y_{87} Y_{88} Y_{89} Y_{90} X_{92} Y_{93} X_{96} X_{97} Y_{100} Y_{101} X_{102} Y_{103} Z_{104} Y_{105} Y_{106} Z_{109} X_{110} Z_{111} X_{113} Y_{114} X_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "-i X_{0} X_{1} Z_{4} X_{5} Y_{6} Y_{7} X_{9} X_{10} Y_{11} X_{12} Y_{13} Y_{14} Y_{15} Z_{16} Y_{17} Y_{18} Z_{19} X_{22} X_{23} Z_{26} Y_{27} Z_{30} Y_{31} X_{32} Y_{33} X_{34} Y_{35} X_{36} X_{38} Y_{39} Y_{40} Y_{42} Z_{43} Y_{46} Z_{47} X_{49} Y_{50} Z_{51} Y_{52} Z_{53} Z_{54} Y_{55} Z_{56} Z_{57} Y_{58} X_{59} X_{61} Y_{62} Y_{67} Z_{69} Z_{70} Y_{73} X_{74} Z_{75} X_{76} Z_{77} Z_{78} Z_{79} Y_{82} Z_{83} Z_{85} Y_{87} Y_{88} Y_{89} Y_{90} X_{92} Y_{93} X_{96} X_{97} Y_{100} Y_{101} X_{102} Y_{103} Z_{104} Y_{105} Y_{106} Z_{109} X_{110} Z_{111} X_{113} Y_{114} X_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 8,
+      "original_problem": "Input: (+ZXIZYYXYZXIIYIXYIIYYYIXIZXZYIXZYZZZZYYXXXZZIIZIYIZZYXIYYXIYIXXZXZXZYYZXYIZIIZXIXZIZIYIZZZIZXIIXIXXYYZIXIXYYZYYXZZXIYII) * (-iIIXIIIXXXXXZIZYXZIYXXXIIZXIZYYYZIZYIIZIZYYYYYXYIYZXYIIXIYZYYXZIZXXIXYYIXYYZIZYYYZYYYXXIXZYZZZIXZXIYYXXXIYXIXIYYYYXZZZX)",
+      "expected_result": "Z_{0} X_{1} X_{2} Z_{3} Y_{4} Y_{5} Z_{7} Y_{8} X_{10} Z_{11} Y_{12} Z_{13} Z_{14} Z_{15} Z_{16} Z_{19} Z_{20} X_{21} X_{22} Z_{26} X_{27} Y_{28} Z_{29} X_{30} X_{31} Z_{32} X_{34} Z_{35} Y_{36} X_{37} X_{38} Y_{39} Z_{40} X_{41} X_{42} Y_{43} Y_{44} Y_{45} Y_{46} Y_{47} Y_{48} Y_{50} X_{52} Z_{54} Y_{55} Z_{56} Z_{57} Y_{59} Y_{61} Z_{62} Y_{63} Y_{64} Z_{66} Z_{67} X_{69} X_{70} Z_{71} Y_{72} X_{73} Z_{74} Z_{77} Y_{78} Z_{79} Y_{81} X_{82} Y_{83} Z_{84} X_{85} Z_{86} Y_{87} Y_{89} Y_{91} Z_{92} Z_{95} X_{97} Y_{100} X_{101} Z_{104} Z_{105} Y_{106} Y_{107} Y_{108} Z_{110} X_{111} X_{112} Z_{114} X_{115} Z_{116} X_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "Z_{0} X_{1} X_{2} Z_{3} Y_{4} Y_{5} Z_{7} Y_{8} X_{10} Z_{11} Y_{12} Z_{13} Z_{14} Z_{15} Z_{16} Z_{19} Z_{20} X_{21} X_{22} Z_{26} X_{27} Y_{28} Z_{29} X_{30} X_{31} Z_{32} X_{34} Z_{35} Y_{36} X_{37} X_{38} Y_{39} Z_{40} X_{41} X_{42} Y_{43} Y_{44} Y_{45} Y_{46} Y_{47} Y_{48} Y_{50} X_{52} Z_{54} Y_{55} Z_{56} Z_{57} Y_{59} Y_{61} Z_{62} Y_{63} Y_{64} Z_{66} Z_{67} X_{69} X_{70} Z_{71} Y_{72} X_{73} Z_{74} Z_{77} Y_{78} Z_{79} Y_{81} X_{82} Y_{83} Z_{84} X_{85} Z_{86} Y_{87} Y_{89} Y_{91} Z_{92} Z_{95} X_{97} Y_{100} X_{101} Z_{104} Z_{105} Y_{106} Y_{107} Y_{108} Z_{110} X_{111} X_{112} Z_{114} X_{115} Z_{116} X_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 9,
+      "original_problem": "Input: (+YIIIIXXIZIIXYXXYIZZXZYYZYIIYYYXZXXZZYIXXXZZYXZYIYXZYXZXZIZYYYXYXIXZZYIZXYZXXYZZYZYZXIZYZYIZIIZZIIZXZXXZXIYXZXZXZZIYZZI) * (-ZXYZXXIIXZIZIYYXIZXYYIYIXYIXXYZIYXZIYYZYXIIZYXIIXXIXYXIZZIYZIXXXZYYYXIZXXYIYYYXXXZYXIIZXYYYYXYYYIYIYIYXIYIYXZXXXXIIIZX)",
+      "expected_result": "+i X_{0} X_{1} Y_{2} Z_{3} X_{4} X_{6} Y_{8} Z_{9} Y_{11} Y_{12} Z_{13} Z_{14} Z_{15} Y_{18} Z_{19} X_{20} Y_{21} Z_{23} Z_{24} Y_{25} Z_{27} Z_{28} Y_{30} Z_{31} Z_{32} Z_{35} Y_{37} Y_{38} Z_{39} Z_{41} Z_{42} X_{43} Z_{44} Y_{45} Y_{46} Z_{48} Z_{50} Z_{51} Z_{52} Y_{53} X_{54} Z_{56} Z_{57} X_{59} Y_{60} Z_{62} Z_{64} Z_{65} X_{66} X_{67} Z_{68} Z_{72} X_{73} X_{74} Z_{75} X_{77} Y_{78} Z_{79} Y_{80} X_{81} X_{82} Z_{85} X_{86} Y_{87} Y_{89} X_{90} Y_{91} X_{92} X_{93} X_{94} Y_{95} X_{97} X_{98} X_{99} X_{100} Z_{101} Y_{102} X_{103} Y_{104} Y_{105} Z_{106} Y_{107} Y_{108} Y_{109} Y_{111} Y_{112} Y_{114} Z_{115} X_{117}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i X_{0} X_{1} Y_{2} Z_{3} X_{4} X_{6} Y_{8} Z_{9} Y_{11} Y_{12} Z_{13} Z_{14} Z_{15} Y_{18} Z_{19} X_{20} Y_{21} Z_{23} Z_{24} Y_{25} Z_{27} Z_{28} Y_{30} Z_{31} Z_{32} Z_{35} Y_{37} Y_{38} Z_{39} Z_{41} Z_{42} X_{43} Z_{44} Y_{45} Y_{46} Z_{48} Z_{50} Z_{51} Z_{52} Y_{53} X_{54} Z_{56} Z_{57} X_{59} Y_{60} Z_{62} Z_{64} Z_{65} X_{66} X_{67} Z_{68} Z_{72} X_{73} X_{74} Z_{75} X_{77} Y_{78} Z_{79} Y_{80} X_{81} X_{82} Z_{85} X_{86} Y_{87} Y_{89} X_{90} Y_{91} X_{92} X_{93} X_{94} Y_{95} X_{97} X_{98} X_{99} X_{100} Z_{101} Y_{102} X_{103} Y_{104} Y_{105} Z_{106} Y_{107} Y_{108} Y_{109} Y_{111} Y_{112} Y_{114} Z_{115} X_{117}",
+        "actual": "None"
+      }
+    },
+    {
+      "problem_number": 10,
+      "original_problem": "Input: (iXYIYXXZZXXXYXZIIZXXYIZYIZXIYXXZZIIIYIIIXZYYZYXIIXZYIIIXYYYIIIYYIYXZYZYZZZIYYXZYIIXYYZXXYXYXXXIXIXIZIXZZYZZZZYIXIZXZIXZ) * (-iYXYXZZIZZIZZIXZZXIXXYZIIZXIYIXIIIXYZYYYXZIIZIXIXZIIYZZXIZYXYIYYXZXXXZYIIIIIYYZXXZIIXYYYYXYZXZZXIYIZIIIIIZYIYZYIZXXZIZZ)",
+      "expected_result": "+i Z_{0} Z_{1} Y_{2} Z_{3} Y_{4} Y_{5} Z_{6} Y_{8} X_{9} Y_{10} X_{11} X_{12} Y_{13} Z_{14} Z_{15} Y_{16} X_{17} Z_{19} Y_{20} Y_{22} X_{28} Z_{30} Z_{31} X_{33} Y_{34} X_{35} Y_{36} Y_{37} Y_{38} Y_{41} Y_{42} Y_{44} X_{47} Y_{48} Z_{49} Y_{50} Y_{51} Z_{52} Z_{53} Y_{55} X_{56} X_{58} Y_{59} X_{63} X_{64} Y_{66} Z_{67} Z_{70} Z_{71} Z_{72} Y_{74} Z_{76} Z_{78} X_{79} Z_{80} X_{81} Y_{82} Z_{83} X_{84} Z_{85} Z_{86} Y_{90} Y_{92} Z_{93} Z_{96} X_{100} Z_{101} Z_{102} Y_{103} X_{105} Z_{106} X_{107} X_{108} Y_{109} X_{110} Z_{111} Y_{112} Y_{116}",
+      "llm_decomposition": {
+        "str1_chunks": [],
+        "str2_chunks": [],
+        "chunk_definitions": [],
+        "chunk_ranges": [
+          "0-58",
+          "59-117"
+        ]
+      },
+      "llm_computed_results": [],
+      "llm_combined_result": null,
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i Z_{0} Z_{1} Y_{2} Z_{3} Y_{4} Y_{5} Z_{6} Y_{8} X_{9} Y_{10} X_{11} X_{12} Y_{13} Z_{14} Z_{15} Y_{16} X_{17} Z_{19} Y_{20} Y_{22} X_{28} Z_{30} Z_{31} X_{33} Y_{34} X_{35} Y_{36} Y_{37} Y_{38} Y_{41} Y_{42} Y_{44} X_{47} Y_{48} Z_{49} Y_{50} Y_{51} Z_{52} Z_{53} Y_{55} X_{56} X_{58} Y_{59} X_{63} X_{64} Y_{66} Z_{67} Z_{70} Z_{71} Z_{72} Y_{74} Z_{76} Z_{78} X_{79} Z_{80} X_{81} Y_{82} Z_{83} X_{84} Z_{85} Z_{86} Y_{90} Y_{92} Z_{93} Z_{96} X_{100} Z_{101} Z_{102} Y_{103} X_{105} Z_{106} X_{107} X_{108} Y_{109} X_{110} Z_{111} Y_{112} Y_{116}",
+        "actual": "None"
+      }
+    }
+  ],
+  "workflow_summary": {
+    "total_llm_calls": 2,
+    "accuracy": 0,
+    "correct_count": 0,
+    "total_count": 10,
+    "duration_seconds": 243.56767916679382,
+    "total_input_tokens": 16312,
+    "total_output_tokens": 12480,
+    "total_tokens": 69407
+  }
+}

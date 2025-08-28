@@ -7,8 +7,9 @@ CHUNK {chunk_number} PROBLEMS (qubits {qubit_range}):
 
 TASK: 
 1. Multiply the two strings for each problem using Pauli algebra
-2. Accumulate phases: new_accumulated_phase = previous_accumulated_phase × chunk_result_phase
+2. Operators on the same qubit anticommute; operators on different qubits commute
 3. KEEP Identity operators (I_i) in chunk results - NEVER omit them during calculation
+4. Accumulate phases: new_accumulated_phase = previous_accumulated_phase × chunk_result_phase
 
 NOTE: This chunk covers qubits {qubit_range}. Chunk sizes may vary (last chunk may be smaller).
 
@@ -21,9 +22,9 @@ PAULI RULES:
 
 PHASE RULES:
 1. (+)×(+) = +, (+)×(-) = -, (-)×(-) = +
-2. (+)×(i) = i, (+)×(-i) = -i
-3. i×i = -, i×(-i) = +, (-i)×(-i) = -
-4. Phase factors: +, -, i, -i (four possible values)
+2. (+)×(+i) = +i, (+)×(-i) = -i
+3. (+i)×(+i) = -, (+i)×(-i) = +, (-i)×(-i) = -
+4. Phase factors: +, -, +i, -i (four possible values)
 
 STEPS FOR EACH PROBLEM:
 1. Extract phases from both strings
@@ -31,19 +32,19 @@ STEPS FOR EACH PROBLEM:
 3. Multiply operators position by position (INCLUDE Identity results)
 4. Get chunk result with its phase (KEEP all I_i operators)
 5. Accumulate: new_accumulated = previous_accumulated × chunk_phase
-6. Use GLOBAL indices {qubit_range}
+6. Use only global indices within {qubit_range}
 
 EXAMPLE (chunk for qubits {qubit_range}):
-Problem: i X_2 Y_3 × Z_2 I_3, Previous accumulated: -
-1. Phases: i × + = i
+Problem: +i X_2 Y_3 × + Z_2 I_3, Previous accumulated: -
+1. Phases: +i × + = +i
 2. Position 2: X_2 × Z_2 = -i Y_2, Position 3: Y_3 × I_3 = Y_3
 3. Operator phase: -i
-4. Final: i × (-i) = +, so chunk result is Y_2 Y_3 (phase = +)
+4. Final: +i × (-i) = +, so chunk result is Y_2 Y_3 (phase = +)
    NOTE: If there were Identity operators, keep them: "Y_2 Y_3 I_4" not "Y_2 Y_3"
 5. New accumulated: - × + = -
 
 CRITICAL: 
-1. Input and output must ALL use indexed format X_i Y_j Z_k I_i
+1. Input and output must ALL use indexed format I_i X_j Y_k Z_l
 2. ALWAYS include Identity operators (I_i) in chunk results
 3. Never omit Identity operators during calculation steps
 4. Work with the exact qubit range {qubit_range} (may be smaller for last chunk)

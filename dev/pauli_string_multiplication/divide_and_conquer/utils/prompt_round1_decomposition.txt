@@ -8,9 +8,9 @@ CHUNKING RULES:
 2. LAST chunk may be smaller if N not divisible by chunk_size
 3. Divide qubits sequentially: 0 to (chunk_size-1), chunk_size to (2*chunk_size-1), etc.
 4. Input format: All strings use indexed format like X_0 Y_1 Z_2
-5. Output format: ALL chunks must use indexed format X_i Y_j Z_k
-6. Phase handling: Put phase (+, -, i, -i) on FIRST chunk only
-7. CRITICAL: ALWAYS include Identity operators (I_i) in chunks - NEVER omit them
+5. Output format: ALL chunks must use indexed format I_i X_j Y_k Z_l
+6. Phase handling: Put phase (+, -, +i, -i) on FIRST chunk of each string only; no phase on later chunks
+7. ALWAYS include Identity operators (I_i) in chunks - NEVER omit them
 8. Example: N=10, chunk_size=3 → Chunks: [0-2], [3-5], [6-8], [9-9] (last chunk has only 1 qubit)
 
 STEPS:
@@ -33,8 +33,8 @@ EXAMPLE 2 (N=7, chunk_size=3 - NOT evenly divisible):
   * Chunk 2 (qubits 3-5): "Z_3 I_4 Y_5"
   * Chunk 3 (qubits 6-6): "Z_6" (SMALLER LAST CHUNK - only 1 qubit)
 
-IMPORTANT: 
-1. ALL Pauli strings must ALWAYS use indexed format X_i Y_j Z_k I_l
+CRITICAL: 
+1. ALL Pauli strings must ALWAYS use indexed format I_i X_j Y_k Z_l
 2. NEVER omit Identity operators (I_i) in any chunk
 3. Every qubit position must be explicitly represented
 4. Handle variable chunk sizes correctly (last chunk may be smaller)

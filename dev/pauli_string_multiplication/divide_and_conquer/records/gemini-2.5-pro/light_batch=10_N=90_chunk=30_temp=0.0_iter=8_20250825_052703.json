@@ -1,0 +1,405 @@
+{
+  "record_id": "batch=10_N=90_chunk=30_temp=0.0_iter=8_20250825_052703",
+  "timestamp": "20250825_052703",
+  "configuration": {
+    "N": 90,
+    "chunk_size": 30,
+    "batch_size": 10,
+    "iteration": 8,
+    "model_name": "gemini-2.5-pro",
+    "model_backend": "gemini",
+    "temperature": 0.0
+  },
+  "problems_detailed": [
+    {
+      "problem_number": 1,
+      "original_problem": "Input: (+XIYXZXIXXYZXYYIZIXZZYZIIZXXZYZYYZZXXZYZXYYIZYIXZYXXIYYZYYYYIXXYXYXZXIYXXIYIIXZZIXZYZZYYIYX) * (-iXZXXIZIZYIZXXZXIIIZXIYIZZXYXXZXZIXXIXZIXXXYIXXIXZYXXZXZYXZYXIYZYZXZXZZXXYYIZYZYXXIZXZIZIYI)",
+      "expected_result": "+i Z_{1} Z_{2} Z_{4} Y_{5} Y_{7} Z_{8} Y_{9} Z_{12} X_{13} X_{14} Z_{15} X_{17} Y_{19} Y_{20} X_{21} Z_{23} Z_{26} Y_{27} Z_{28} Z_{30} X_{31} Z_{32} Y_{33} X_{35} Y_{36} X_{37} Z_{38} Z_{40} Z_{41} Y_{42} Z_{43} Z_{44} X_{45} X_{46} Y_{47} X_{48} Z_{49} X_{51} X_{52} Z_{53} Z_{56} X_{57} X_{59} X_{60} Z_{61} X_{62} Z_{63} X_{64} Z_{68} X_{69} Y_{72} Z_{75} Z_{76} X_{78} X_{79} Z_{81} X_{82} Y_{83} Y_{85} X_{86} X_{89}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "+ X_0 I_1 Y_2 X_3 Z_4 X_5 I_6 X_7 X_8 Y_9 Z_10 X_11 Y_12 Y_13 I_14 Z_15 I_16 X_17 Z_18 Z_19 Y_20 Z_21 I_22 I_23 Z_24 X_25 X_26 Z_27 Y_28 Z_29",
+          "Y_30 Y_31 Z_32 Z_33 X_34 X_35 Z_36 Y_37 Z_38 X_39 Y_40 Y_41 I_42 Z_43 Y_44 I_45 X_46 Z_47 Y_48 X_49 X_50 I_51 Y_52 Y_53 Z_54 Y_55 Y_56 Y_57 Y_58 I_59",
+          "X_60 X_61 Y_62 X_63 Y_64 X_65 Z_66 X_67 I_68 Y_69 X_70 X_71 I_72 Y_73 I_74 I_75 X_76 Z_77 Z_78 I_79 X_80 Z_81 Y_82 Z_83 Z_84 Y_85 Y_86 I_87 Y_88 X_89"
+        ],
+        "str2_chunks": [
+          "-i X_0 Z_1 X_2 X_3 I_4 Z_5 I_6 Z_7 Y_8 I_9 Z_10 X_11 X_12 Z_13 X_14 I_15 I_16 I_17 Z_18 X_19 I_20 Y_21 I_22 Z_23 Z_24 X_25 Y_26 X_27 X_28 Z_29",
+          "X_30 Z_31 I_32 X_33 X_34 I_35 X_36 Z_37 I_38 X_39 X_40 X_41 Y_42 I_43 X_44 X_45 I_46 X_47 Z_48 Y_49 X_50 X_51 Z_52 X_53 Z_54 Y_55 X_56 Z_57 Y_58 X_59",
+          "I_60 Y_61 Z_62 Y_63 Z_64 X_65 Z_66 X_67 Z_68 Z_69 X_70 X_71 Y_72 Y_73 I_74 Z_75 Y_76 Z_77 Y_78 X_79 X_80 I_81 Z_82 X_83 Z_84 I_85 Z_86 I_87 Y_88 I_89"
+        ],
+        "chunk_definitions": [
+          "(+ X_0 I_1 Y_2 X_3 Z_4 X_5 I_6 X_7 X_8 Y_9 Z_10 X_11 Y_12 Y_13 I_14 Z_15 I_16 X_17 Z_18 Z_19 Y_20 Z_21 I_22 I_23 Z_24 X_25 X_26 Z_27 Y_28 Z_29) (-i X_0 Z_1 X_2 X_3 I_4 Z_5 I_6 Z_7 Y_8 I_9 Z_10 X_11 X_12 Z_13 X_14 I_15 I_16 I_17 Z_18 X_19 I_20 Y_21 I_22 Z_23 Z_24 X_25 Y_26 X_27 X_28 Z_29)",
+          "(Y_30 Y_31 Z_32 Z_33 X_34 X_35 Z_36 Y_37 Z_38 X_39 Y_40 Y_41 I_42 Z_43 Y_44 I_45 X_46 Z_47 Y_48 X_49 X_50 I_51 Y_52 Y_53 Z_54 Y_55 Y_56 Y_57 Y_58 I_59) (X_30 Z_31 I_32 X_33 X_34 I_35 X_36 Z_37 I_38 X_39 X_40 X_41 Y_42 I_43 X_44 X_45 I_46 X_47 Z_48 Y_49 X_50 X_51 Z_52 X_53 Z_54 Y_55 X_56 Z_57 Y_58 X_59)",
+          "(X_60 X_61 Y_62 X_63 Y_64 X_65 Z_66 X_67 I_68 Y_69 X_70 X_71 I_72 Y_73 I_74 I_75 X_76 Z_77 Z_78 I_79 X_80 Z_81 Y_82 Z_83 Z_84 Y_85 Y_86 I_87 Y_88 X_89) (I_60 Y_61 Z_62 Y_63 Z_64 X_65 Z_66 X_67 Z_68 Z_69 X_70 X_71 Y_72 Y_73 I_74 Z_75 Y_76 Z_77 Y_78 X_79 X_80 I_81 Z_82 X_83 Z_84 I_85 Z_86 I_87 Y_88 I_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "- I_0 Z_1 Z_2 I_3 Z_4 Y_5 I_6 Y_7 Z_8 Y_9 I_10 I_11 Z_12 X_13 X_14 Z_15 I_16 X_17 I_18 Y_19 Y_20 X_21 I_22 Z_23 I_24 I_25 Z_26 Y_27 Z_28 I_29",
+        "-i Z_30 X_31 Z_32 Y_33 I_34 X_35 Y_36 X_37 Z_38 I_39 Z_40 Z_41 Y_42 Z_43 Z_44 X_45 X_46 Y_47 X_48 Z_49 I_50 X_51 X_52 Z_53 I_54 I_55 Z_56 X_57 I_58 X_59",
+        "+ X_60 Z_61 X_62 Z_63 X_64 I_65 I_66 I_67 Z_68 X_69 I_70 I_71 Y_72 I_73 I_74 Z_75 Z_76 I_77 X_78 X_79 I_80 Z_81 X_82 Y_83 I_84 Y_85 X_86 I_87 I_88 X_89"
+      ],
+      "llm_combined_result": "i I_0 Z_1 Z_2 I_3 Z_4 Y_5 I_6 Y_7 Z_8 Y_9 I_10 I_11 Z_12 X_13 X_14 Z_15 I_16 X_17 I_18 Y_19 Y_20 X_21 I_22 Z_23 I_24 I_25 Z_26 Y_27 Z_28 I_29 Z_30 X_31 Z_32 Y_33 I_34 X_35 Y_36 X_37 Z_38 I_39 Z_40 Z_41 Y_42 Z_43 Z_44 X_45 X_46 Y_47 X_48 Z_49 I_50 X_51 X_52 Z_53 I_54 I_55 Z_56 X_57 I_58 X_59 X_60 Z_61 X_62 Z_63 X_64 I_65 I_66 I_67 Z_68 X_69 I_70 I_71 Y_72 I_73 I_74 Z_75 Z_76 I_77 X_78 X_79 I_80 Z_81 X_82 Y_83 I_84 Y_85 X_86 I_87 I_88 X_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "+i Z_{1} Z_{2} Z_{4} Y_{5} Y_{7} Z_{8} Y_{9} Z_{12} X_{13} X_{14} Z_{15} X_{17} Y_{19} Y_{20} X_{21} Z_{23} Z_{26} Y_{27} Z_{28} Z_{30} X_{31} Z_{32} Y_{33} X_{35} Y_{36} X_{37} Z_{38} Z_{40} Z_{41} Y_{42} Z_{43} Z_{44} X_{45} X_{46} Y_{47} X_{48} Z_{49} X_{51} X_{52} Z_{53} Z_{56} X_{57} X_{59} X_{60} Z_{61} X_{62} Z_{63} X_{64} Z_{68} X_{69} Y_{72} Z_{75} Z_{76} X_{78} X_{79} Z_{81} X_{82} Y_{83} Y_{85} X_{86} X_{89}",
+        "actual": "i I_0 Z_1 Z_2 I_3 Z_4 Y_5 I_6 Y_7 Z_8 Y_9 I_10 I_11 Z_12 X_13 X_14 Z_15 I_16 X_17 I_18 Y_19 Y_20 X_21 I_22 Z_23 I_24 I_25 Z_26 Y_27 Z_28 I_29 Z_30 X_31 Z_32 Y_33 I_34 X_35 Y_36 X_37 Z_38 I_39 Z_40 Z_41 Y_42 Z_43 Z_44 X_45 X_46 Y_47 X_48 Z_49 I_50 X_51 X_52 Z_53 I_54 I_55 Z_56 X_57 I_58 X_59 X_60 Z_61 X_62 Z_63 X_64 I_65 I_66 I_67 Z_68 X_69 I_70 I_71 Y_72 I_73 I_74 Z_75 Z_76 I_77 X_78 X_79 I_80 Z_81 X_82 Y_83 I_84 Y_85 X_86 I_87 I_88 X_89"
+      }
+    },
+    {
+      "problem_number": 2,
+      "original_problem": "Input: (+IIYYXYYZIIIXZYIZXIZXZYZIXIYXXZYYZXZZZZYYYYZIZXXIXZIIXZXZYIXXZIXXXIIIIIZZZZIIYYYIXYZYYYIYYX) * (-iZYXZZZZYZIIYYZYIZZYIXXXYIIIIXXZIXXIYYXYXXZZXXZIIIIZIZXIZYYZYIZYXYIZYYYXIIXZXXXYXXXIZXZIXXZ)",
+      "expected_result": "-i Z_{0} Y_{1} Z_{2} X_{3} Y_{4} X_{5} X_{6} X_{7} Z_{8} Z_{11} X_{12} X_{13} Y_{14} Z_{15} Y_{16} Z_{17} X_{18} X_{19} Y_{20} Z_{21} Y_{22} Y_{23} X_{24} Y_{26} X_{27} Y_{29} X_{30} Y_{31} Y_{32} Z_{34} X_{35} X_{36} Y_{37} Z_{39} Z_{40} X_{41} X_{43} Y_{44} Y_{45} X_{46} X_{48} Z_{49} Z_{50} Y_{52} Y_{53} X_{54} Y_{57} Y_{58} Z_{59} Z_{60} Z_{61} Z_{62} Z_{64} Z_{66} Y_{67} Y_{68} Y_{69} Y_{70} Z_{71} Z_{72} Y_{73} Z_{74} X_{75} Z_{76} Z_{77} X_{79} Z_{81} Z_{82} X_{83} Z_{84} X_{85} Z_{87} Z_{88} Y_{89}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "+ I_0 I_1 Y_2 Y_3 X_4 Y_5 Y_6 Z_7 I_8 I_9 I_10 X_11 Z_12 Y_13 I_14 Z_15 X_16 I_17 Z_18 X_19 Z_20 Y_21 Z_22 I_23 X_24 I_25 Y_26 X_27 X_28 Z_29",
+          "Y_30 Y_31 Z_32 X_33 Z_34 Z_35 Z_36 Z_37 Y_38 Y_39 Y_40 Y_41 Z_42 I_43 Z_44 X_45 X_46 I_47 X_48 Z_49 I_50 I_51 X_52 Z_53 X_54 Z_55 Y_56 I_57 X_58 X_59",
+          "Z_60 I_61 X_62 X_63 X_64 I_65 I_66 I_67 I_68 I_69 Z_70 Z_71 Z_72 Z_73 I_74 I_75 Y_76 Y_77 Y_78 I_79 X_80 Y_81 Z_82 Y_83 Y_84 Y_85 I_86 Y_87 Y_88 X_89"
+        ],
+        "str2_chunks": [
+          "-i Z_0 Y_1 X_2 Z_3 Z_4 Z_5 Z_6 Y_7 Z_8 I_9 I_10 Y_11 Y_12 Z_13 Y_14 I_15 Z_16 Z_17 Y_18 I_19 X_20 X_21 X_22 Y_23 I_24 I_25 I_26 I_27 X_28 X_29",
+          "Z_30 I_31 X_32 X_33 I_34 Y_35 Y_36 X_37 Y_38 X_39 X_40 Z_41 Z_42 X_43 X_44 Z_45 I_46 I_47 I_48 I_49 Z_50 I_51 Z_52 X_53 I_54 Z_55 Y_56 Y_57 Z_58 Y_59",
+          "I_60 Z_61 Y_62 X_63 Y_64 I_65 Z_66 Y_67 Y_68 Y_69 X_70 I_71 I_72 X_73 Z_74 X_75 X_76 X_77 Y_78 X_79 X_80 X_81 I_82 Z_83 X_84 Z_85 I_86 X_87 X_88 Z_89"
+        ],
+        "chunk_definitions": [
+          "(+ I_0 I_1 Y_2 Y_3 X_4 Y_5 Y_6 Z_7 I_8 I_9 I_10 X_11 Z_12 Y_13 I_14 Z_15 X_16 I_17 Z_18 X_19 Z_20 Y_21 Z_22 I_23 X_24 I_25 Y_26 X_27 X_28 Z_29) (-i Z_0 Y_1 X_2 Z_3 Z_4 Z_5 Z_6 Y_7 Z_8 I_9 I_10 Y_11 Y_12 Z_13 Y_14 I_15 Z_16 Z_17 Y_18 I_19 X_20 X_21 X_22 Y_23 I_24 I_25 I_26 I_27 X_28 X_29)",
+          "(Y_30 Y_31 Z_32 X_33 Z_34 Z_35 Z_36 Z_37 Y_38 Y_39 Y_40 Y_41 Z_42 I_43 Z_44 X_45 X_46 I_47 X_48 Z_49 I_50 I_51 X_52 Z_53 X_54 Z_55 Y_56 I_57 X_58 X_59) (Z_30 I_31 X_32 X_33 I_34 Y_35 Y_36 X_37 Y_38 X_39 X_40 Z_41 Z_42 X_43 X_44 Z_45 I_46 I_47 I_48 I_49 Z_50 I_51 Z_52 X_53 I_54 Z_55 Y_56 Y_57 Z_58 Y_59)",
+          "(Z_60 I_61 X_62 X_63 X_64 I_65 I_66 I_67 I_68 I_69 Z_70 Z_71 Z_72 Z_73 I_74 I_75 Y_76 Y_77 Y_78 I_79 X_80 Y_81 Z_82 Y_83 Y_84 Y_85 I_86 Y_87 Y_88 X_89) (I_60 Z_61 Y_62 X_63 Y_64 I_65 Z_66 Y_67 Y_68 Y_69 X_70 I_71 I_72 X_73 Z_74 X_75 X_76 X_77 Y_78 X_79 X_80 X_81 I_82 Z_83 X_84 Z_85 I_86 X_87 X_88 Z_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "+ Z_0 Y_1 Z_2 X_3 Y_4 X_5 X_6 X_7 Z_8 I_9 I_10 Z_11 X_12 X_13 Y_14 Z_15 Y_16 Z_17 X_18 X_19 Y_20 Z_21 Y_22 Y_23 X_24 I_25 Y_26 X_27 I_28 Y_29",
+        "+ X_30 Y_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 I_38 Z_39 Z_40 X_41 I_42 X_43 Y_44 Y_45 X_46 I_47 X_48 Z_49 Z_50 I_51 Y_52 Y_53 X_54 I_55 I_56 Y_57 Y_58 Z_59",
+        "+ Z_60 Z_61 Z_62 I_63 Z_64 I_65 Z_66 Y_67 Y_68 Y_69 Y_70 Z_71 Z_72 Y_73 Z_74 X_75 Z_76 Z_77 I_78 X_79 I_80 Z_81 Z_82 X_83 Z_84 X_85 I_86 Z_87 Z_88 Y_89"
+      ],
+      "llm_combined_result": "+ Z_0 Y_1 Z_2 X_3 Y_4 X_5 X_6 X_7 Z_8 I_9 I_10 Z_11 X_12 X_13 Y_14 Z_15 Y_16 Z_17 X_18 X_19 Y_20 Z_21 Y_22 Y_23 X_24 I_25 Y_26 X_27 I_28 Y_29 X_30 Y_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 I_38 Z_39 Z_40 X_41 I_42 X_43 Y_44 Y_45 X_46 I_47 X_48 Z_49 Z_50 I_51 Y_52 Y_53 X_54 I_55 I_56 Y_57 Y_58 Z_59 Z_60 Z_61 Z_62 I_63 Z_64 I_65 Z_66 Y_67 Y_68 Y_69 Y_70 Z_71 Z_72 Y_73 Z_74 X_75 Z_76 Z_77 I_78 X_79 I_80 Z_81 Z_82 X_83 Z_84 X_85 I_86 Z_87 Z_88 Y_89",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "-i Z_{0} Y_{1} Z_{2} X_{3} Y_{4} X_{5} X_{6} X_{7} Z_{8} Z_{11} X_{12} X_{13} Y_{14} Z_{15} Y_{16} Z_{17} X_{18} X_{19} Y_{20} Z_{21} Y_{22} Y_{23} X_{24} Y_{26} X_{27} Y_{29} X_{30} Y_{31} Y_{32} Z_{34} X_{35} X_{36} Y_{37} Z_{39} Z_{40} X_{41} X_{43} Y_{44} Y_{45} X_{46} X_{48} Z_{49} Z_{50} Y_{52} Y_{53} X_{54} Y_{57} Y_{58} Z_{59} Z_{60} Z_{61} Z_{62} Z_{64} Z_{66} Y_{67} Y_{68} Y_{69} Y_{70} Z_{71} Z_{72} Y_{73} Z_{74} X_{75} Z_{76} Z_{77} X_{79} Z_{81} Z_{82} X_{83} Z_{84} X_{85} Z_{87} Z_{88} Y_{89}",
+        "actual": "+ Z_0 Y_1 Z_2 X_3 Y_4 X_5 X_6 X_7 Z_8 I_9 I_10 Z_11 X_12 X_13 Y_14 Z_15 Y_16 Z_17 X_18 X_19 Y_20 Z_21 Y_22 Y_23 X_24 I_25 Y_26 X_27 I_28 Y_29 X_30 Y_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 I_38 Z_39 Z_40 X_41 I_42 X_43 Y_44 Y_45 X_46 I_47 X_48 Z_49 Z_50 I_51 Y_52 Y_53 X_54 I_55 I_56 Y_57 Y_58 Z_59 Z_60 Z_61 Z_62 I_63 Z_64 I_65 Z_66 Y_67 Y_68 Y_69 Y_70 Z_71 Z_72 Y_73 Z_74 X_75 Z_76 Z_77 I_78 X_79 I_80 Z_81 Z_82 X_83 Z_84 X_85 I_86 Z_87 Z_88 Y_89"
+      }
+    },
+    {
+      "problem_number": 3,
+      "original_problem": "Input: (-IYXXXYYXZYXXIIYIXZXZIZXXYXYIYZYXXIYIZIYZXYYXZZZYIZXXZZIXXIIYIYXYYXYZZYIIXXXYZZXYXIIIYXZZIX) * (iXXYZXXXIYZXZIXZZZXZZYIYZYIIZIYIXXXYZYZYXIXYIIXXXIIYXYXIYYYYZXXZIYXYXIZIIXXXZZZYXZZIXYXXYXZ)",
+      "expected_result": "+i X_{0} Z_{1} Z_{2} Y_{3} Z_{5} Z_{6} X_{7} X_{8} X_{9} Y_{11} X_{13} X_{14} Z_{15} Y_{16} Y_{17} Y_{18} Y_{20} Z_{21} Z_{22} Y_{23} X_{25} Y_{26} Z_{27} Y_{28} X_{29} Y_{30} X_{33} Z_{35} X_{36} Z_{37} Y_{39} X_{40} Z_{41} X_{43} Z_{44} Y_{45} Y_{46} Z_{47} Z_{49} Z_{50} X_{52} Y_{53} Z_{55} Z_{56} Y_{57} Y_{58} X_{59} X_{60} Z_{61} Y_{62} Y_{63} Y_{67} Z_{68} X_{69} X_{75} Z_{78} Z_{79} Y_{80} Z_{81} X_{83} Y_{86} X_{87} X_{88} Y_{89}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "- I_0 Y_1 X_2 X_3 X_4 Y_5 Y_6 X_7 Z_8 Y_9 X_10 X_11 I_12 I_13 Y_14 I_15 X_16 Z_17 X_18 Z_19 I_20 Z_21 X_22 X_23 Y_24 X_25 Y_26 I_27 Y_28 Z_29",
+          "Y_30 X_31 X_32 I_33 Y_34 I_35 Z_36 I_37 Y_38 Z_39 X_40 Y_41 Y_42 X_43 Z_44 Z_45 Z_46 Y_47 I_48 Z_49 X_50 X_51 Z_52 Z_53 I_54 X_55 X_56 I_57 I_58 Y_59",
+          "I_60 Y_61 X_62 Y_63 Y_64 X_65 Y_66 Z_67 Z_68 Y_69 I_70 I_71 X_72 X_73 X_74 Y_75 Z_76 Z_77 X_78 Y_79 X_80 I_81 I_82 I_83 Y_84 X_85 Z_86 Z_87 I_88 X_89"
+        ],
+        "str2_chunks": [
+          "i X_0 X_1 Y_2 Z_3 X_4 X_5 X_6 I_7 Y_8 Z_9 X_10 Z_11 I_12 X_13 Z_14 Z_15 Z_16 X_17 Z_18 Z_19 Y_20 I_21 Y_22 Z_23 Y_24 I_25 I_26 Z_27 I_28 Y_29",
+          "I_30 X_31 X_32 X_33 Y_34 Z_35 Y_36 Z_37 Y_38 X_39 I_40 X_41 Y_42 I_43 I_44 X_45 X_46 X_47 I_48 I_49 Y_50 X_51 Y_52 X_53 I_54 Y_55 Y_56 Y_57 Y_58 Z_59",
+          "X_60 X_61 Z_62 I_63 Y_64 X_65 Y_66 X_67 I_68 Z_69 I_70 I_71 X_72 X_73 X_74 Z_75 Z_76 Z_77 Y_78 X_79 Z_80 Z_81 I_82 X_83 Y_84 X_85 X_86 Y_87 X_88 Z_89"
+        ],
+        "chunk_definitions": [
+          "(- I_0 Y_1 X_2 X_3 X_4 Y_5 Y_6 X_7 Z_8 Y_9 X_10 X_11 I_12 I_13 Y_14 I_15 X_16 Z_17 X_18 Z_19 I_20 Z_21 X_22 X_23 Y_24 X_25 Y_26 I_27 Y_28 Z_29) (i X_0 X_1 Y_2 Z_3 X_4 X_5 X_6 I_7 Y_8 Z_9 X_10 Z_11 I_12 X_13 Z_14 Z_15 Z_16 X_17 Z_18 Z_19 Y_20 I_21 Y_22 Z_23 Y_24 I_25 I_26 Z_27 I_28 Y_29)",
+          "(Y_30 X_31 X_32 I_33 Y_34 I_35 Z_36 I_37 Y_38 Z_39 X_40 Y_41 Y_42 X_43 Z_44 Z_45 Z_46 Y_47 I_48 Z_49 X_50 X_51 Z_52 Z_53 I_54 X_55 X_56 I_57 I_58 Y_59) (I_30 X_31 X_32 X_33 Y_34 Z_35 Y_36 Z_37 Y_38 X_39 I_40 X_41 Y_42 I_43 I_44 X_45 X_46 X_47 I_48 I_49 Y_50 X_51 Y_52 X_53 I_54 Y_55 Y_56 Y_57 Y_58 Z_59)",
+          "(I_60 Y_61 X_62 Y_63 Y_64 X_65 Y_66 Z_67 Z_68 Y_69 I_70 I_71 X_72 X_73 X_74 Y_75 Z_76 Z_77 X_78 Y_79 X_80 I_81 I_82 I_83 Y_84 X_85 Z_86 Z_87 I_88 X_89) (X_60 X_61 Z_62 I_63 Y_64 X_65 Y_66 X_67 I_68 Z_69 I_70 I_71 X_72 X_73 X_74 Z_75 Z_76 Z_77 Y_78 X_79 Z_80 Z_81 I_82 X_83 Y_84 X_85 X_86 Y_87 X_88 Z_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "-i X_0 Z_1 Z_2 Y_3 I_4 Z_5 Z_6 X_7 X_8 X_9 I_10 Y_11 I_12 X_13 X_14 Z_15 Y_16 Y_17 Y_18 I_19 Y_20 Z_21 Z_22 Y_23 I_24 X_25 Y_26 Z_27 Y_28 X_29",
+        "+ Y_30 I_31 I_32 X_33 I_34 Z_35 X_36 Z_37 I_38 Y_39 X_40 Z_41 I_42 X_43 Z_44 Y_45 Y_46 Z_47 I_48 Z_49 Z_50 I_51 X_52 Y_53 I_54 Z_55 Z_56 Y_57 Y_58 X_59",
+        "-i X_60 Z_61 Y_62 Y_63 I_64 I_65 I_66 Y_67 Z_68 X_69 I_70 I_71 I_72 I_73 I_74 X_75 I_76 I_77 Z_78 Z_79 Y_80 Z_81 I_82 X_83 I_84 I_85 Y_86 X_87 X_88 Y_89"
+      ],
+      "llm_combined_result": "- X_0 Z_1 Z_2 Y_3 I_4 Z_5 Z_6 X_7 X_8 X_9 I_10 Y_11 I_12 X_13 X_14 Z_15 Y_16 Y_17 Y_18 I_19 Y_20 Z_21 Z_22 Y_23 I_24 X_25 Y_26 Z_27 Y_28 X_29 Y_30 I_31 I_32 X_33 I_34 Z_35 X_36 Z_37 I_38 Y_39 X_40 Z_41 I_42 X_43 Z_44 Y_45 Y_46 Z_47 I_48 Z_49 Z_50 I_51 X_52 Y_53 I_54 Z_55 Z_56 Y_57 Y_58 X_59 X_60 Z_61 Y_62 Y_63 I_64 I_65 I_66 Y_67 Z_68 X_69 I_70 I_71 I_72 I_73 I_74 X_75 I_76 I_77 Z_78 Z_79 Y_80 Z_81 I_82 X_83 I_84 I_85 Y_86 X_87 X_88 Y_89",
+      "verification_summary": {
+        "is_correct": false,
+        "expected": "+i X_{0} Z_{1} Z_{2} Y_{3} Z_{5} Z_{6} X_{7} X_{8} X_{9} Y_{11} X_{13} X_{14} Z_{15} Y_{16} Y_{17} Y_{18} Y_{20} Z_{21} Z_{22} Y_{23} X_{25} Y_{26} Z_{27} Y_{28} X_{29} Y_{30} X_{33} Z_{35} X_{36} Z_{37} Y_{39} X_{40} Z_{41} X_{43} Z_{44} Y_{45} Y_{46} Z_{47} Z_{49} Z_{50} X_{52} Y_{53} Z_{55} Z_{56} Y_{57} Y_{58} X_{59} X_{60} Z_{61} Y_{62} Y_{63} Y_{67} Z_{68} X_{69} X_{75} Z_{78} Z_{79} Y_{80} Z_{81} X_{83} Y_{86} X_{87} X_{88} Y_{89}",
+        "actual": "- X_0 Z_1 Z_2 Y_3 I_4 Z_5 Z_6 X_7 X_8 X_9 I_10 Y_11 I_12 X_13 X_14 Z_15 Y_16 Y_17 Y_18 I_19 Y_20 Z_21 Z_22 Y_23 I_24 X_25 Y_26 Z_27 Y_28 X_29 Y_30 I_31 I_32 X_33 I_34 Z_35 X_36 Z_37 I_38 Y_39 X_40 Z_41 I_42 X_43 Z_44 Y_45 Y_46 Z_47 I_48 Z_49 Z_50 I_51 X_52 Y_53 I_54 Z_55 Z_56 Y_57 Y_58 X_59 X_60 Z_61 Y_62 Y_63 I_64 I_65 I_66 Y_67 Z_68 X_69 I_70 I_71 I_72 I_73 I_74 X_75 I_76 I_77 Z_78 Z_79 Y_80 Z_81 I_82 X_83 I_84 I_85 Y_86 X_87 X_88 Y_89"
+      }
+    },
+    {
+      "problem_number": 4,
+      "original_problem": "Input: (-YYXXZYIXYYXZXZZZIIYZXIZIZZZIYYIYIXZXIZYIIYIIXZXZIIYZXIIYIXZIZZYYZZZXXZIIXIZIXYZYZIYIZXXZII) * (+ZZIXXYXYIYYXYXXZZZZZIXZIZXXYXXYYXIZXYZXYXIIXZZZIXZIXZIXYZYZIXIZZZZZIZIZZZIXIYYXZIZXIYIZXII)",
+      "expected_result": "+i X_{0} X_{1} X_{2} Y_{4} X_{6} Z_{7} Y_{8} Z_{10} Y_{11} Z_{12} Y_{13} Y_{14} Z_{16} Z_{17} X_{18} X_{20} X_{21} Y_{25} Y_{26} Y_{27} Z_{28} Z_{29} Y_{30} X_{32} X_{33} Y_{36} Z_{38} Y_{39} X_{40} Y_{41} X_{43} Y_{44} Y_{46} Z_{47} X_{48} Z_{49} Y_{50} Y_{51} Y_{52} X_{54} Z_{56} Z_{57} Y_{60} Z_{61} X_{62} X_{63} X_{67} Y_{68} Z_{69} Z_{70} Z_{71} Y_{72} Y_{74} Z_{76} Y_{78} X_{79} Z_{80} Z_{81} Z_{82} X_{84} X_{85} Y_{86} Y_{87}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "- Y_0 Y_1 X_2 X_3 Z_4 Y_5 I_6 X_7 Y_8 Y_9 X_10 Z_11 X_12 Z_13 Z_14 Z_15 I_16 I_17 Y_18 Z_19 X_20 I_21 Z_22 I_23 Z_24 Z_25 Z_26 I_27 Y_28 Y_29",
+          "I_30 Y_31 I_32 X_33 Z_34 X_35 I_36 Z_37 Y_38 I_39 I_40 Y_41 I_42 I_43 X_44 Z_45 X_46 Z_47 I_48 I_49 Y_50 Z_51 X_52 I_53 I_54 Y_55 I_56 X_57 Z_58 I_59",
+          "Z_60 Z_61 Y_62 Y_63 Z_64 Z_65 Z_66 X_67 X_68 Z_69 I_70 I_71 X_72 I_73 Z_74 I_75 X_76 Y_77 Z_78 Y_79 Z_80 I_81 Y_82 I_83 Z_84 X_85 X_86 Z_87 I_88 I_89"
+        ],
+        "str2_chunks": [
+          "+ Z_0 Z_1 I_2 X_3 X_4 Y_5 X_6 Y_7 I_8 Y_9 Y_10 X_11 Y_12 X_13 X_14 Z_15 Z_16 Z_17 Z_18 Z_19 I_20 X_21 Z_22 I_23 Z_24 X_25 X_26 Y_27 X_28 X_29",
+          "Y_30 Y_31 X_32 I_33 Z_34 X_35 Y_36 Z_37 X_38 Y_39 X_40 I_41 I_42 X_43 Z_44 Z_45 Z_46 I_47 X_48 Z_49 I_50 X_51 Z_52 I_53 X_54 Y_55 Z_56 Y_57 Z_58 I_59",
+          "X_60 I_61 Z_62 Z_63 Z_64 Z_65 Z_66 I_67 Z_68 I_69 Z_70 Z_71 Z_72 I_73 X_74 I_75 Y_76 Y_77 X_78 Z_79 I_80 Z_81 X_82 I_83 Y_84 I_85 Z_86 X_87 I_88 I_89"
+        ],
+        "chunk_definitions": [
+          "(- Y_0 Y_1 X_2 X_3 Z_4 Y_5 I_6 X_7 Y_8 Y_9 X_10 Z_11 X_12 Z_13 Z_14 Z_15 I_16 I_17 Y_18 Z_19 X_20 I_21 Z_22 I_23 Z_24 Z_25 Z_26 I_27 Y_28 Y_29) (+ Z_0 Z_1 I_2 X_3 X_4 Y_5 X_6 Y_7 I_8 Y_9 Y_10 X_11 Y_12 X_13 X_14 Z_15 Z_16 Z_17 Z_18 Z_19 I_20 X_21 Z_22 I_23 Z_24 X_25 X_26 Y_27 X_28 X_29)",
+          "(I_30 Y_31 I_32 X_33 Z_34 X_35 I_36 Z_37 Y_38 I_39 I_40 Y_41 I_42 I_43 X_44 Z_45 X_46 Z_47 I_48 I_49 Y_50 Z_51 X_52 I_53 I_54 Y_55 I_56 X_57 Z_58 I_59) (Y_30 Y_31 X_32 I_33 Z_34 X_35 Y_36 Z_37 X_38 Y_39 X_40 I_41 I_42 X_43 Z_44 Z_45 Z_46 I_47 X_48 Z_49 I_50 X_51 Z_52 I_53 X_54 Y_55 Z_56 Y_57 Z_58 I_59)",
+          "(Z_60 Z_61 Y_62 Y_63 Z_64 Z_65 Z_66 X_67 X_68 Z_69 I_70 I_71 X_72 I_73 Z_74 I_75 X_76 Y_77 Z_78 Y_79 Z_80 I_81 Y_82 I_83 Z_84 X_85 X_86 Z_87 I_88 I_89) (X_60 I_61 Z_62 Z_63 Z_64 Z_65 Z_66 I_67 Z_68 I_69 Z_70 Z_71 Z_72 I_73 X_74 I_75 Y_76 Y_77 X_78 Z_79 I_80 Z_81 X_82 I_83 Y_84 I_85 Z_86 X_87 I_88 I_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "+ X_0 X_1 X_2 I_3 Y_4 I_5 X_6 Z_7 Y_8 I_9 Z_10 Y_11 Z_12 Y_13 Y_14 I_15 Z_16 Z_17 X_18 I_19 X_20 X_21 I_22 I_23 I_24 Y_25 Y_26 Y_27 Z_28 Z_29",
+        "- Y_30 I_31 X_32 X_33 I_34 I_35 Y_36 I_37 Z_38 Y_39 X_40 Y_41 I_42 X_43 Y_44 I_45 Y_46 Z_47 X_48 Z_49 Y_50 Y_51 Y_52 I_53 X_54 I_55 Z_56 Z_57 I_58 I_59",
+        "-i Y_60 Z_61 X_62 X_63 I_64 I_65 I_66 X_67 Y_68 Z_69 Z_70 Z_71 Y_72 I_73 Y_74 I_75 Z_76 I_77 Y_78 X_79 Z_80 Z_81 Z_82 I_83 X_84 X_85 Y_86 Y_87 I_88 I_89"
+      ],
+      "llm_combined_result": "i X_0 X_1 X_2 I_3 Y_4 I_5 X_6 Z_7 Y_8 I_9 Z_10 Y_11 Z_12 Y_13 Y_14 I_15 Z_16 Z_17 X_18 I_19 X_20 X_21 I_22 I_23 I_24 Y_25 Y_26 Y_27 Z_28 Z_29 Y_30 I_31 X_32 X_33 I_34 I_35 Y_36 I_37 Z_38 Y_39 X_40 Y_41 I_42 X_43 Y_44 I_45 Y_46 Z_47 X_48 Z_49 Y_50 Y_51 Y_52 I_53 X_54 I_55 Z_56 Z_57 I_58 I_59 Y_60 Z_61 X_62 X_63 I_64 I_65 I_66 X_67 Y_68 Z_69 Z_70 Z_71 Y_72 I_73 Y_74 I_75 Z_76 I_77 Y_78 X_79 Z_80 Z_81 Z_82 I_83 X_84 X_85 Y_86 Y_87 I_88 I_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "+i X_{0} X_{1} X_{2} Y_{4} X_{6} Z_{7} Y_{8} Z_{10} Y_{11} Z_{12} Y_{13} Y_{14} Z_{16} Z_{17} X_{18} X_{20} X_{21} Y_{25} Y_{26} Y_{27} Z_{28} Z_{29} Y_{30} X_{32} X_{33} Y_{36} Z_{38} Y_{39} X_{40} Y_{41} X_{43} Y_{44} Y_{46} Z_{47} X_{48} Z_{49} Y_{50} Y_{51} Y_{52} X_{54} Z_{56} Z_{57} Y_{60} Z_{61} X_{62} X_{63} X_{67} Y_{68} Z_{69} Z_{70} Z_{71} Y_{72} Y_{74} Z_{76} Y_{78} X_{79} Z_{80} Z_{81} Z_{82} X_{84} X_{85} Y_{86} Y_{87}",
+        "actual": "i X_0 X_1 X_2 I_3 Y_4 I_5 X_6 Z_7 Y_8 I_9 Z_10 Y_11 Z_12 Y_13 Y_14 I_15 Z_16 Z_17 X_18 I_19 X_20 X_21 I_22 I_23 I_24 Y_25 Y_26 Y_27 Z_28 Z_29 Y_30 I_31 X_32 X_33 I_34 I_35 Y_36 I_37 Z_38 Y_39 X_40 Y_41 I_42 X_43 Y_44 I_45 Y_46 Z_47 X_48 Z_49 Y_50 Y_51 Y_52 I_53 X_54 I_55 Z_56 Z_57 I_58 I_59 Y_60 Z_61 X_62 X_63 I_64 I_65 I_66 X_67 Y_68 Z_69 Z_70 Z_71 Y_72 I_73 Y_74 I_75 Z_76 I_77 Y_78 X_79 Z_80 Z_81 Z_82 I_83 X_84 X_85 Y_86 Y_87 I_88 I_89"
+      }
+    },
+    {
+      "problem_number": 5,
+      "original_problem": "Input: (+YYXIYXIIYYIXIZYYXYYXXIXYXXYIXYXXYIIZIXIZIYYIXYXYYXZZYZXIIYYXYXXZIXIYYZIZIYIZYIXIXZZZZXZZIY) * (-iXZXIXZIZIXIXIIIXXYZYXXIIZZXZYIZIIIZYXZZXYIYZYXZZYXZXZYXXZIYIXIXYXIYXYZYYIYIZZXYIZZZZYIIXXY)",
+      "expected_result": "-i Z_{0} X_{1} Z_{4} Y_{5} Z_{7} Y_{8} Z_{9} Z_{13} Y_{14} Z_{15} X_{18} Z_{19} X_{21} X_{22} Y_{23} Y_{24} Y_{25} Z_{26} Z_{27} Z_{28} Y_{29} Y_{30} X_{31} Y_{32} Z_{34} X_{35} X_{36} Y_{37} Z_{38} Y_{39} Y_{40} Y_{41} Z_{43} Z_{44} Z_{45} Y_{46} X_{47} Y_{51} X_{52} X_{53} X_{55} Z_{56} Y_{57} X_{59} Z_{60} X_{61} X_{63} X_{64} X_{65} Y_{66} Z_{67} Y_{70} X_{71} X_{76} X_{77} Z_{78} Y_{80} X_{84} X_{85} Z_{86} Y_{87} X_{88}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "+ Y_0 Y_1 X_2 I_3 Y_4 X_5 I_6 I_7 Y_8 Y_9 I_10 X_11 I_12 Z_13 Y_14 Y_15 X_16 Y_17 Y_18 X_19 X_20 I_21 X_22 Y_23 X_24 X_25 Y_26 I_27 X_28 Y_29",
+          "X_30 X_31 Y_32 I_33 I_34 Z_35 I_36 X_37 I_38 Z_39 I_40 Y_41 Y_42 I_43 X_44 Y_45 X_46 Y_47 Y_48 X_49 Z_50 Z_51 Y_52 Z_53 X_54 I_55 I_56 Y_57 Y_58 X_59",
+          "Y_60 X_61 X_62 Z_63 I_64 X_65 I_66 Y_67 Y_68 Z_69 I_70 Z_71 I_72 Y_73 I_74 Z_75 Y_76 I_77 X_78 I_79 X_80 Z_81 Z_82 Z_83 Z_84 X_85 Z_86 Z_87 I_88 Y_89"
+        ],
+        "str2_chunks": [
+          "-i X_0 Z_1 X_2 I_3 X_4 Z_5 I_6 Z_7 I_8 X_9 I_10 X_11 I_12 I_13 I_14 X_15 X_16 Y_17 Z_18 Y_19 X_20 X_21 I_22 I_23 Z_24 Z_25 X_26 Z_27 Y_28 I_29",
+          "Z_30 I_31 I_32 I_33 Z_34 Y_35 X_36 Z_37 Z_38 X_39 Y_40 I_41 Y_42 Z_43 Y_44 X_45 Z_46 Z_47 Y_48 X_49 Z_50 X_51 Z_52 Y_53 X_54 X_55 Z_56 I_57 Y_58 I_59",
+          "X_60 I_61 X_62 Y_63 X_64 I_65 Y_66 X_67 Y_68 Z_69 Y_70 Y_71 I_72 Y_73 I_74 Z_75 Z_76 X_77 Y_78 I_79 Z_80 Z_81 Z_82 Z_83 Y_84 I_85 I_86 X_87 X_88 Y_89"
+        ],
+        "chunk_definitions": [
+          "(+ Y_0 Y_1 X_2 I_3 Y_4 X_5 I_6 I_7 Y_8 Y_9 I_10 X_11 I_12 Z_13 Y_14 Y_15 X_16 Y_17 Y_18 X_19 X_20 I_21 X_22 Y_23 X_24 X_25 Y_26 I_27 X_28 Y_29) (-i X_0 Z_1 X_2 I_3 X_4 Z_5 I_6 Z_7 I_8 X_9 I_10 X_11 I_12 I_13 I_14 X_15 X_16 Y_17 Z_18 Y_19 X_20 X_21 I_22 I_23 Z_24 Z_25 X_26 Z_27 Y_28 I_29)",
+          "(X_30 X_31 Y_32 I_33 I_34 Z_35 I_36 X_37 I_38 Z_39 I_40 Y_41 Y_42 I_43 X_44 Y_45 X_46 Y_47 Y_48 X_49 Z_50 Z_51 Y_52 Z_53 X_54 I_55 I_56 Y_57 Y_58 X_59) (Z_30 I_31 I_32 I_33 Z_34 Y_35 X_36 Z_37 Z_38 X_39 Y_40 I_41 Y_42 Z_43 Y_44 X_45 Z_46 Z_47 Y_48 X_49 Z_50 X_51 Z_52 Y_53 X_54 X_55 Z_56 I_57 Y_58 I_59)",
+          "(Y_60 X_61 X_62 Z_63 I_64 X_65 I_66 Y_67 Y_68 Z_69 I_70 Z_71 I_72 Y_73 I_74 Z_75 Y_76 I_77 X_78 I_79 X_80 Z_81 Z_82 Z_83 Z_84 X_85 Z_86 Z_87 I_88 Y_89) (X_60 I_61 X_62 Y_63 X_64 I_65 Y_66 X_67 Y_68 Z_69 Y_70 Y_71 I_72 Y_73 I_74 Z_75 Z_76 X_77 Y_78 I_79 Z_80 Z_81 Z_82 Z_83 Y_84 I_85 I_86 X_87 X_88 Y_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "-i Z_0 X_1 I_2 I_3 Z_4 Y_5 I_6 Z_7 Y_8 Z_9 I_10 I_11 I_12 Z_13 Y_14 Z_15 I_16 I_17 X_18 Z_19 I_20 X_21 X_22 Y_23 Y_24 Y_25 Z_26 Z_27 Z_28 Y_29",
+        "-i Y_30 X_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 Z_38 Y_39 Y_40 Y_41 I_42 Z_43 Z_44 Z_45 Y_46 X_47 I_48 I_49 I_50 Y_51 X_52 X_53 I_54 X_55 Z_56 Y_57 I_58 X_59",
+        "i Z_60 X_61 I_62 X_63 X_64 X_65 Y_66 Z_67 I_68 I_69 Y_70 X_71 I_72 I_73 I_74 I_75 X_76 X_77 Z_78 I_79 Y_80 I_81 I_82 I_83 X_84 X_85 Z_86 Y_87 X_88 I_89"
+      ],
+      "llm_combined_result": "-i Z_0 X_1 I_2 I_3 Z_4 Y_5 I_6 Z_7 Y_8 Z_9 I_10 I_11 I_12 Z_13 Y_14 Z_15 I_16 I_17 X_18 Z_19 I_20 X_21 X_22 Y_23 Y_24 Y_25 Z_26 Z_27 Z_28 Y_29 Y_30 X_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 Z_38 Y_39 Y_40 Y_41 I_42 Z_43 Z_44 Z_45 Y_46 X_47 I_48 I_49 I_50 Y_51 X_52 X_53 I_54 X_55 Z_56 Y_57 I_58 X_59 Z_60 X_61 I_62 X_63 X_64 X_65 Y_66 Z_67 I_68 I_69 Y_70 X_71 I_72 I_73 I_74 I_75 X_76 X_77 Z_78 I_79 Y_80 I_81 I_82 I_83 X_84 X_85 Z_86 Y_87 X_88 I_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "-i Z_{0} X_{1} Z_{4} Y_{5} Z_{7} Y_{8} Z_{9} Z_{13} Y_{14} Z_{15} X_{18} Z_{19} X_{21} X_{22} Y_{23} Y_{24} Y_{25} Z_{26} Z_{27} Z_{28} Y_{29} Y_{30} X_{31} Y_{32} Z_{34} X_{35} X_{36} Y_{37} Z_{38} Y_{39} Y_{40} Y_{41} Z_{43} Z_{44} Z_{45} Y_{46} X_{47} Y_{51} X_{52} X_{53} X_{55} Z_{56} Y_{57} X_{59} Z_{60} X_{61} X_{63} X_{64} X_{65} Y_{66} Z_{67} Y_{70} X_{71} X_{76} X_{77} Z_{78} Y_{80} X_{84} X_{85} Z_{86} Y_{87} X_{88}",
+        "actual": "-i Z_0 X_1 I_2 I_3 Z_4 Y_5 I_6 Z_7 Y_8 Z_9 I_10 I_11 I_12 Z_13 Y_14 Z_15 I_16 I_17 X_18 Z_19 I_20 X_21 X_22 Y_23 Y_24 Y_25 Z_26 Z_27 Z_28 Y_29 Y_30 X_31 Y_32 I_33 Z_34 X_35 X_36 Y_37 Z_38 Y_39 Y_40 Y_41 I_42 Z_43 Z_44 Z_45 Y_46 X_47 I_48 I_49 I_50 Y_51 X_52 X_53 I_54 X_55 Z_56 Y_57 I_58 X_59 Z_60 X_61 I_62 X_63 X_64 X_65 Y_66 Z_67 I_68 I_69 Y_70 X_71 I_72 I_73 I_74 I_75 X_76 X_77 Z_78 I_79 Y_80 I_81 I_82 I_83 X_84 X_85 Z_86 Y_87 X_88 I_89"
+      }
+    },
+    {
+      "problem_number": 6,
+      "original_problem": "Input: (iIZZZXXIYYZZIXYYYYXYXYXZIIZXYXZIYXXXYXYIXYZIZYXYIZXZYYIIXXXZYIXYIZZYZIIIIIYYYIIYZZXIYZYIZIX) * (+YZYZZXIIIYXXIZYYXZXZXYZZYIIZYYYIZIYYIZZYIYIIXXXXZZZIIZYZXYXZZYZYYXYXZYYYYZYZZYYXZXIZYZZZIX)",
+      "expected_result": "Y_{0} X_{2} Y_{4} Y_{7} Y_{8} X_{9} Y_{10} X_{11} X_{12} X_{13} Z_{16} Y_{17} Z_{18} Y_{19} Z_{20} Z_{21} Z_{23} Y_{24} Z_{25} X_{26} X_{27} Z_{28} X_{29} Y_{30} Y_{31} Y_{32} X_{33} Z_{34} X_{36} X_{37} Z_{38} Z_{39} Y_{40} X_{41} Z_{43} Z_{44} Z_{46} X_{47} Y_{49} Y_{51} Y_{52} Z_{53} Y_{54} Y_{55} Z_{57} Y_{58} X_{59} Z_{60} Z_{61} X_{62} Y_{63} X_{64} Y_{65} Y_{67} Z_{68} Y_{69} Y_{70} Y_{71} Y_{72} X_{73} X_{75} Z_{76} Y_{77} Y_{79} X_{83} X_{84} X_{85} Z_{86}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i I_0 Z_1 Z_2 Z_3 X_4 X_5 I_6 Y_7 Y_8 Z_9 Z_10 I_11 X_12 Y_13 Y_14 Y_15 Y_16 X_17 Y_18 X_19 Y_20 X_21 Z_22 I_23 I_24 Z_25 X_26 Y_27 X_28 Z_29",
+          "I_30 Y_31 X_32 X_33 X_34 Y_35 X_36 Y_37 I_38 X_39 Y_40 Z_41 I_42 Z_43 Y_44 X_45 Y_46 I_47 Z_48 X_49 Z_50 Y_51 Y_52 I_53 I_54 X_55 X_56 X_57 Z_58 Y_59",
+          "I_60 X_61 Y_62 I_63 Z_64 Z_65 Y_66 Z_67 I_68 I_69 I_70 I_71 I_72 Y_73 Y_74 Y_75 I_76 I_77 Y_78 Z_79 Z_80 X_81 I_82 Y_83 Z_84 Y_85 I_86 Z_87 I_88 X_89"
+        ],
+        "str2_chunks": [
+          "+ Y_0 Z_1 Y_2 Z_3 Z_4 X_5 I_6 I_7 I_8 Y_9 X_10 X_11 I_12 Z_13 Y_14 Y_15 X_16 Z_17 X_18 Z_19 X_20 Y_21 Z_22 Z_23 Y_24 I_25 I_26 Z_27 Y_28 Y_29",
+          "Y_30 I_31 Z_32 I_33 Y_34 Y_35 I_36 Z_37 Z_38 Y_39 I_40 Y_41 I_42 I_43 X_44 X_45 X_46 X_47 Z_48 Z_49 Z_50 I_51 I_52 Z_53 Y_54 Z_55 X_56 Y_57 X_58 Z_59",
+          "Z_60 Y_61 Z_62 Y_63 Y_64 X_65 Y_66 X_67 Z_68 Y_69 Y_70 Y_71 Y_72 Z_73 Y_74 Z_75 Z_76 Y_77 Y_78 X_79 Z_80 X_81 I_82 Z_83 Y_84 Z_85 Z_86 Z_87 I_88 X_89"
+        ],
+        "chunk_definitions": [
+          "(i I_0 Z_1 Z_2 Z_3 X_4 X_5 I_6 Y_7 Y_8 Z_9 Z_10 I_11 X_12 Y_13 Y_14 Y_15 Y_16 X_17 Y_18 X_19 Y_20 X_21 Z_22 I_23 I_24 Z_25 X_26 Y_27 X_28 Z_29) (+ Y_0 Z_1 Y_2 Z_3 Z_4 X_5 I_6 I_7 I_8 Y_9 X_10 X_11 I_12 Z_13 Y_14 Y_15 X_16 Z_17 X_18 Z_19 X_20 Y_21 Z_22 Z_23 Y_24 I_25 I_26 Z_27 Y_28 Y_29)",
+          "(I_30 Y_31 X_32 X_33 X_34 Y_35 X_36 Y_37 I_38 X_39 Y_40 Z_41 I_42 Z_43 Y_44 X_45 Y_46 I_47 Z_48 X_49 Z_50 Y_51 Y_52 I_53 I_54 X_55 X_56 X_57 Z_58 Y_59) (Y_30 I_31 Z_32 I_33 Y_34 Y_35 I_36 Z_37 Z_38 Y_39 I_40 Y_41 I_42 I_43 X_44 X_45 X_46 X_47 Z_48 Z_49 Z_50 I_51 I_52 Z_53 Y_54 Z_55 X_56 Y_57 X_58 Z_59)",
+          "(I_60 X_61 Y_62 I_63 Z_64 Z_65 Y_66 Z_67 I_68 I_69 I_70 I_71 I_72 Y_73 Y_74 Y_75 I_76 I_77 Y_78 Z_79 Z_80 X_81 I_82 Y_83 Z_84 Y_85 I_86 Z_87 I_88 X_89) (Z_60 Y_61 Z_62 Y_63 Y_64 X_65 Y_66 X_67 Z_68 Y_69 Y_70 Y_71 Y_72 Z_73 Y_74 Z_75 Z_76 Y_77 Y_78 X_79 Z_80 X_81 I_82 Z_83 Y_84 Z_85 Z_86 Z_87 I_88 X_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "i Y_0 I_1 X_2 I_3 Y_4 I_5 I_6 Y_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 I_15 Z_16 Y_17 Z_18 Y_19 Z_20 Z_21 I_22 Z_23 Y_24 Z_25 X_26 X_27 Z_28 X_29",
+        "+ Y_30 Y_31 Y_32 X_33 Z_34 I_35 X_36 X_37 Z_38 Z_39 Y_40 X_41 I_42 Z_43 Z_44 I_45 Z_46 X_47 I_48 Y_49 I_50 Y_51 Y_52 Z_53 Y_54 Y_55 I_56 Z_57 Y_58 X_59",
+        "-i Z_60 Z_61 X_62 Y_63 X_64 Y_65 I_66 Y_67 Z_68 Y_69 Y_70 Y_71 Y_72 X_73 I_74 X_75 Z_76 Y_77 I_78 Y_79 I_80 I_81 I_82 X_83 X_84 X_85 Z_86 I_87 I_88 I_89"
+      ],
+      "llm_combined_result": "+ Y_0 I_1 X_2 I_3 Y_4 I_5 I_6 Y_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 I_15 Z_16 Y_17 Z_18 Y_19 Z_20 Z_21 I_22 Z_23 Y_24 Z_25 X_26 X_27 Z_28 X_29 Y_30 Y_31 Y_32 X_33 Z_34 I_35 X_36 X_37 Z_38 Z_39 Y_40 X_41 I_42 Z_43 Z_44 I_45 Z_46 X_47 I_48 Y_49 I_50 Y_51 Y_52 Z_53 Y_54 Y_55 I_56 Z_57 Y_58 X_59 Z_60 Z_61 X_62 Y_63 X_64 Y_65 I_66 Y_67 Z_68 Y_69 Y_70 Y_71 Y_72 X_73 I_74 X_75 Z_76 Y_77 I_78 Y_79 I_80 I_81 I_82 X_83 X_84 X_85 Z_86 I_87 I_88 I_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "Y_{0} X_{2} Y_{4} Y_{7} Y_{8} X_{9} Y_{10} X_{11} X_{12} X_{13} Z_{16} Y_{17} Z_{18} Y_{19} Z_{20} Z_{21} Z_{23} Y_{24} Z_{25} X_{26} X_{27} Z_{28} X_{29} Y_{30} Y_{31} Y_{32} X_{33} Z_{34} X_{36} X_{37} Z_{38} Z_{39} Y_{40} X_{41} Z_{43} Z_{44} Z_{46} X_{47} Y_{49} Y_{51} Y_{52} Z_{53} Y_{54} Y_{55} Z_{57} Y_{58} X_{59} Z_{60} Z_{61} X_{62} Y_{63} X_{64} Y_{65} Y_{67} Z_{68} Y_{69} Y_{70} Y_{71} Y_{72} X_{73} X_{75} Z_{76} Y_{77} Y_{79} X_{83} X_{84} X_{85} Z_{86}",
+        "actual": "+ Y_0 I_1 X_2 I_3 Y_4 I_5 I_6 Y_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 I_15 Z_16 Y_17 Z_18 Y_19 Z_20 Z_21 I_22 Z_23 Y_24 Z_25 X_26 X_27 Z_28 X_29 Y_30 Y_31 Y_32 X_33 Z_34 I_35 X_36 X_37 Z_38 Z_39 Y_40 X_41 I_42 Z_43 Z_44 I_45 Z_46 X_47 I_48 Y_49 I_50 Y_51 Y_52 Z_53 Y_54 Y_55 I_56 Z_57 Y_58 X_59 Z_60 Z_61 X_62 Y_63 X_64 Y_65 I_66 Y_67 Z_68 Y_69 Y_70 Y_71 Y_72 X_73 I_74 X_75 Z_76 Y_77 I_78 Y_79 I_80 I_81 I_82 X_83 X_84 X_85 Z_86 I_87 I_88 I_89"
+      }
+    },
+    {
+      "problem_number": 7,
+      "original_problem": "Input: (-iYXYYXIIIIYIYZIYXIZYIYXYYZZIXZYZXYXXIYZYXIYYYYYXZZZZZYIIZIYXIIYYXZYXZYYZYIZIYYZXYXXZXXZXYYX) * (+IXIXZIXXIXZIYZYYZYZYZIIIXXXYIXXXYXXYXIIZXXXXXIZYXZYIXXZZXIXYXYIYIXIZXYXZXXIYXZYIZXIIIIZYXX)",
+      "expected_result": "- Y_{0} Y_{2} Z_{3} Y_{4} X_{6} X_{7} Z_{9} Z_{10} Y_{11} X_{12} Z_{13} Z_{15} Z_{16} X_{17} X_{18} Y_{19} X_{20} X_{21} Y_{22} Y_{23} Y_{24} Y_{25} X_{26} Z_{27} Z_{28} Z_{29} Y_{30} Y_{35} Z_{36} Z_{37} Y_{38} Y_{39} X_{40} Z_{41} Z_{42} Z_{43} Z_{44} Y_{45} Y_{46} X_{47} Y_{48} X_{50} Z_{51} Z_{52} X_{53} Z_{54} X_{56} Y_{57} Y_{59} X_{60} Y_{62} Z_{63} Z_{64} Z_{65} X_{66} Z_{68} Y_{70} X_{71} X_{72} Y_{73} Z_{76} Z_{78} Y_{79} Y_{80} Z_{82} X_{83} X_{84} Z_{85} Y_{86} Z_{88}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "-i Y_0 X_1 Y_2 Y_3 X_4 I_5 I_6 I_7 I_8 Y_9 I_10 Y_11 Z_12 I_13 Y_14 X_15 I_16 Z_17 Y_18 I_19 Y_20 X_21 Y_22 Y_23 Z_24 Z_25 I_26 X_27 Z_28 Y_29",
+          "Z_30 X_31 Y_32 X_33 X_34 I_35 Y_36 Z_37 Y_38 X_39 I_40 Y_41 Y_42 Y_43 Y_44 Y_45 X_46 Z_47 Z_48 Z_49 Z_50 Z_51 Y_52 I_53 I_54 Z_55 I_56 Y_57 X_58 I_59",
+          "I_60 Y_61 Y_62 X_63 Z_64 Y_65 X_66 Z_67 Y_68 Y_69 Z_70 Y_71 I_72 Z_73 I_74 Y_75 Y_76 Z_77 X_78 Y_79 X_80 X_81 Z_82 X_83 X_84 Z_85 X_86 Y_87 Y_88 X_89"
+        ],
+        "str2_chunks": [
+          "+ I_0 X_1 I_2 X_3 Z_4 I_5 X_6 X_7 I_8 X_9 Z_10 I_11 Y_12 Z_13 Y_14 Y_15 Z_16 Y_17 Z_18 Y_19 Z_20 I_21 I_22 I_23 X_24 X_25 X_26 Y_27 I_28 X_29",
+          "X_30 X_31 Y_32 X_33 X_34 Y_35 X_36 I_37 I_38 Z_39 X_40 X_41 X_42 X_43 X_44 I_45 Z_46 Y_47 X_48 Z_49 Y_50 I_51 X_52 X_53 Z_54 Z_55 X_56 I_57 X_58 Y_59",
+          "X_60 Y_61 I_62 Y_63 I_64 X_65 I_66 Z_67 X_68 Y_69 X_70 Z_71 X_72 X_73 I_74 Y_75 X_76 Z_77 Y_78 I_79 Z_80 X_81 I_82 I_83 I_84 I_85 Z_86 Y_87 X_88 X_89"
+        ],
+        "chunk_definitions": [
+          "(-i Y_0 X_1 Y_2 Y_3 X_4 I_5 I_6 I_7 I_8 Y_9 I_10 Y_11 Z_12 I_13 Y_14 X_15 I_16 Z_17 Y_18 I_19 Y_20 X_21 Y_22 Y_23 Z_24 Z_25 I_26 X_27 Z_28 Y_29) (+ I_0 X_1 I_2 X_3 Z_4 I_5 X_6 X_7 I_8 X_9 Z_10 I_11 Y_12 Z_13 Y_14 Y_15 Z_16 Y_17 Z_18 Y_19 Z_20 I_21 I_22 I_23 X_24 X_25 X_26 Y_27 I_28 X_29)",
+          "(Z_30 X_31 Y_32 X_33 X_34 I_35 Y_36 Z_37 Y_38 X_39 I_40 Y_41 Y_42 Y_43 Y_44 Y_45 X_46 Z_47 Z_48 Z_49 Z_50 Z_51 Y_52 I_53 I_54 Z_55 I_56 Y_57 X_58 I_59) (X_30 X_31 Y_32 X_33 X_34 Y_35 X_36 I_37 I_38 Z_39 X_40 X_41 X_42 X_43 X_44 I_45 Z_46 Y_47 X_48 Z_49 Y_50 I_51 X_52 X_53 Z_54 Z_55 X_56 I_57 X_58 Y_59)",
+          "(I_60 Y_61 Y_62 X_63 Z_64 Y_65 X_66 Z_67 Y_68 Y_69 Z_70 Y_71 I_72 Z_73 I_74 Y_75 Y_76 Z_77 X_78 Y_79 X_80 X_81 Z_82 X_83 X_84 Z_85 X_86 Y_87 Y_88 X_89) (X_60 Y_61 I_62 Y_63 I_64 X_65 I_66 Z_67 X_68 Y_69 X_70 Z_71 X_72 X_73 I_74 Y_75 X_76 Z_77 Y_78 I_79 Z_80 X_81 I_82 I_83 I_84 I_85 Z_86 Y_87 X_88 X_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "-i Y_0 I_1 Y_2 Z_3 Y_4 I_5 X_6 X_7 I_8 Z_9 Z_10 Y_11 X_12 Z_13 I_14 Z_15 Z_16 X_17 X_18 Y_19 X_20 X_21 Y_22 Y_23 Y_24 Y_25 X_26 Z_27 Z_28 Z_29",
+        "+ Y_30 I_31 I_32 I_33 I_34 Y_35 Z_36 Z_37 Y_38 Y_39 X_40 Z_41 Z_42 Z_43 Z_44 Y_45 Y_46 X_47 Y_48 I_49 X_50 Z_51 Z_52 X_53 Z_54 I_55 X_56 Y_57 I_58 Y_59",
+        "-i X_60 I_61 Y_62 Z_63 Z_64 Z_65 X_66 I_67 Z_68 I_69 Y_70 X_71 X_72 Y_73 I_74 I_75 Z_76 I_77 Z_78 Y_79 Y_80 I_81 Z_82 X_83 X_84 Z_85 Y_86 I_87 Z_88 I_89"
+      ],
+      "llm_combined_result": "- Y_0 I_1 Y_2 Z_3 Y_4 I_5 X_6 X_7 I_8 Z_9 Z_10 Y_11 X_12 Z_13 I_14 Z_15 Z_16 X_17 X_18 Y_19 X_20 X_21 Y_22 Y_23 Y_24 Y_25 X_26 Z_27 Z_28 Z_29 Y_30 I_31 I_32 I_33 I_34 Y_35 Z_36 Z_37 Y_38 Y_39 X_40 Z_41 Z_42 Z_43 Z_44 Y_45 Y_46 X_47 Y_48 I_49 X_50 Z_51 Z_52 X_53 Z_54 I_55 X_56 Y_57 I_58 Y_59 X_60 I_61 Y_62 Z_63 Z_64 Z_65 X_66 I_67 Z_68 I_69 Y_70 X_71 X_72 Y_73 I_74 I_75 Z_76 I_77 Z_78 Y_79 Y_80 I_81 Z_82 X_83 X_84 Z_85 Y_86 I_87 Z_88 I_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "- Y_{0} Y_{2} Z_{3} Y_{4} X_{6} X_{7} Z_{9} Z_{10} Y_{11} X_{12} Z_{13} Z_{15} Z_{16} X_{17} X_{18} Y_{19} X_{20} X_{21} Y_{22} Y_{23} Y_{24} Y_{25} X_{26} Z_{27} Z_{28} Z_{29} Y_{30} Y_{35} Z_{36} Z_{37} Y_{38} Y_{39} X_{40} Z_{41} Z_{42} Z_{43} Z_{44} Y_{45} Y_{46} X_{47} Y_{48} X_{50} Z_{51} Z_{52} X_{53} Z_{54} X_{56} Y_{57} Y_{59} X_{60} Y_{62} Z_{63} Z_{64} Z_{65} X_{66} Z_{68} Y_{70} X_{71} X_{72} Y_{73} Z_{76} Z_{78} Y_{79} Y_{80} Z_{82} X_{83} X_{84} Z_{85} Y_{86} Z_{88}",
+        "actual": "- Y_0 I_1 Y_2 Z_3 Y_4 I_5 X_6 X_7 I_8 Z_9 Z_10 Y_11 X_12 Z_13 I_14 Z_15 Z_16 X_17 X_18 Y_19 X_20 X_21 Y_22 Y_23 Y_24 Y_25 X_26 Z_27 Z_28 Z_29 Y_30 I_31 I_32 I_33 I_34 Y_35 Z_36 Z_37 Y_38 Y_39 X_40 Z_41 Z_42 Z_43 Z_44 Y_45 Y_46 X_47 Y_48 I_49 X_50 Z_51 Z_52 X_53 Z_54 I_55 X_56 Y_57 I_58 Y_59 X_60 I_61 Y_62 Z_63 Z_64 Z_65 X_66 I_67 Z_68 I_69 Y_70 X_71 X_72 Y_73 I_74 I_75 Z_76 I_77 Z_78 Y_79 Y_80 I_81 Z_82 X_83 X_84 Z_85 Y_86 I_87 Z_88 I_89"
+      }
+    },
+    {
+      "problem_number": 8,
+      "original_problem": "Input: (-iZZIYYZYYYYZZYYXZYIZIZXXIZXZYZZIXYIXYZYZYYIIZZYYIXYZYZZYXZYYZZZIXIZIYYZIIXIYXIIZIYIXXZYIZZX) * (iIIXYYZYXIZXYZZXYIYXIIIZYIYIXIIYYYZZYZZYZYZZXIIYXYYXZXZYYXYXZYYZYZZZXZIZIYIXXIIYXYXXYZZZIZZ)",
+      "expected_result": "-i Z_{0} Z_{1} X_{2} Z_{7} Y_{8} X_{9} Y_{10} X_{11} X_{12} X_{13} X_{15} Y_{16} Y_{17} Y_{18} Z_{20} X_{21} Y_{22} Y_{23} Z_{24} Z_{25} Z_{26} Z_{27} Z_{28} Z_{29} Y_{30} Z_{31} Z_{33} Y_{34} X_{37} X_{38} X_{39} Z_{41} Z_{42} Y_{43} Z_{44} Y_{45} X_{47} Z_{48} Y_{50} X_{51} Y_{52} Z_{55} Y_{56} Z_{58} X_{60} X_{61} Z_{62} Z_{63} Z_{64} Z_{66} Z_{67} X_{68} Z_{69} Z_{70} Z_{72} Z_{74} X_{78} X_{79} X_{81} Z_{83} X_{85} Z_{86} Z_{87} Y_{89}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "-i Z_0 Z_1 I_2 Y_3 Y_4 Z_5 Y_6 Y_7 Y_8 Y_9 Z_10 Z_11 Y_12 Y_13 X_14 Z_15 Y_16 I_17 Z_18 I_19 Z_20 X_21 X_22 I_23 Z_24 X_25 Z_26 Y_27 Z_28 Z_29",
+          "I_30 X_31 Y_32 I_33 X_34 Y_35 Z_36 Y_37 Z_38 Y_39 Y_40 I_41 I_42 Z_43 Z_44 Y_45 Y_46 I_47 X_48 Y_49 Z_50 Y_51 Z_52 Z_53 Y_54 X_55 Z_56 Y_57 Y_58 Z_59",
+          "Z_60 Z_61 I_62 X_63 I_64 Z_65 I_66 Y_67 Y_68 Z_69 I_70 I_71 X_72 I_73 Y_74 X_75 I_76 I_77 Z_78 I_79 Y_80 I_81 X_82 X_83 Z_84 Y_85 I_86 Z_87 Z_88 X_89"
+        ],
+        "str2_chunks": [
+          "i I_0 I_1 X_2 Y_3 Y_4 Z_5 Y_6 X_7 I_8 Z_9 X_10 Y_11 Z_12 Z_13 X_14 Y_15 I_16 Y_17 X_18 I_19 I_20 I_21 Z_22 Y_23 I_24 Y_25 I_26 X_27 I_28 I_29",
+          "Y_30 Y_31 Y_32 Z_33 Z_34 Y_35 Z_36 Z_37 Y_38 Z_39 Y_40 Z_41 Z_42 X_43 I_44 I_45 Y_46 X_47 Y_48 Y_49 X_50 Z_51 X_52 Z_53 Y_54 Y_55 X_56 Y_57 X_58 Z_59",
+          "Y_60 Y_61 Z_62 Y_63 Z_64 Z_65 Z_66 X_67 Z_68 I_69 Z_70 I_71 Y_72 I_73 X_74 X_75 I_76 I_77 Y_78 X_79 Y_80 X_81 X_82 Y_83 Z_84 Z_85 Z_86 I_87 Z_88 Z_89"
+        ],
+        "chunk_definitions": [
+          "(-i Z_0 Z_1 I_2 Y_3 Y_4 Z_5 Y_6 Y_7 Y_8 Y_9 Z_10 Z_11 Y_12 Y_13 X_14 Z_15 Y_16 I_17 Z_18 I_19 Z_20 X_21 X_22 I_23 Z_24 X_25 Z_26 Y_27 Z_28 Z_29) (i I_0 I_1 X_2 Y_3 Y_4 Z_5 Y_6 X_7 I_8 Z_9 X_10 Y_11 Z_12 Z_13 X_14 Y_15 I_16 Y_17 X_18 I_19 I_20 I_21 Z_22 Y_23 I_24 Y_25 I_26 X_27 I_28 I_29)",
+          "(I_30 X_31 Y_32 I_33 X_34 Y_35 Z_36 Y_37 Z_38 Y_39 Y_40 I_41 I_42 Z_43 Z_44 Y_45 Y_46 I_47 X_48 Y_49 Z_50 Y_51 Z_52 Z_53 Y_54 X_55 Z_56 Y_57 Y_58 Z_59) (Y_30 Y_31 Y_32 Z_33 Z_34 Y_35 Z_36 Z_37 Y_38 Z_39 Y_40 Z_41 Z_42 X_43 I_44 I_45 Y_46 X_47 Y_48 Y_49 X_50 Z_51 X_52 Z_53 Y_54 Y_55 X_56 Y_57 X_58 Z_59)",
+          "(Z_60 Z_61 I_62 X_63 I_64 Z_65 I_66 Y_67 Y_68 Z_69 I_70 I_71 X_72 I_73 Y_74 X_75 I_76 I_77 Z_78 I_79 Y_80 I_81 X_82 X_83 Z_84 Y_85 I_86 Z_87 Z_88 X_89) (Y_60 Y_61 Z_62 Y_63 Z_64 Z_65 Z_66 X_67 Z_68 I_69 Z_70 I_71 Y_72 I_73 X_74 X_75 I_76 I_77 Y_78 X_79 Y_80 X_81 X_82 Y_83 Z_84 Z_85 Z_86 I_87 Z_88 Z_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "i Z_0 Z_1 X_2 I_3 I_4 I_5 I_6 Z_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 X_15 Y_16 Y_17 Y_18 I_19 Z_20 X_21 Y_22 Y_23 Z_24 Z_25 Z_26 Z_27 Z_28 Z_29",
+        "-i Y_30 Z_31 I_32 Z_33 Y_34 I_35 I_36 X_37 X_38 X_39 I_40 Z_41 Z_42 Y_43 Z_44 Y_45 I_46 X_47 Z_48 I_49 Y_50 X_51 Y_52 I_53 I_54 Z_55 Y_56 I_57 Z_58 I_59",
+        "-i X_60 X_61 Z_62 Z_63 Z_64 I_65 Z_66 Z_67 X_68 Z_69 Z_70 I_71 Z_72 I_73 Z_74 I_75 I_76 I_77 X_78 X_79 I_80 X_81 I_82 Z_83 I_84 X_85 Z_86 Z_87 I_88 Y_89"
+      ],
+      "llm_combined_result": "-i Z_0 Z_1 X_2 I_3 I_4 I_5 I_6 Z_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 X_15 Y_16 Y_17 Y_18 I_19 Z_20 X_21 Y_22 Y_23 Z_24 Z_25 Z_26 Z_27 Z_28 Z_29 Y_30 Z_31 I_32 Z_33 Y_34 I_35 I_36 X_37 X_38 X_39 I_40 Z_41 Z_42 Y_43 Z_44 Y_45 I_46 X_47 Z_48 I_49 Y_50 X_51 Y_52 I_53 I_54 Z_55 Y_56 I_57 Z_58 I_59 X_60 X_61 Z_62 Z_63 Z_64 I_65 Z_66 Z_67 X_68 Z_69 Z_70 I_71 Z_72 I_73 Z_74 I_75 I_76 I_77 X_78 X_79 I_80 X_81 I_82 Z_83 I_84 X_85 Z_86 Z_87 I_88 Y_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "-i Z_{0} Z_{1} X_{2} Z_{7} Y_{8} X_{9} Y_{10} X_{11} X_{12} X_{13} X_{15} Y_{16} Y_{17} Y_{18} Z_{20} X_{21} Y_{22} Y_{23} Z_{24} Z_{25} Z_{26} Z_{27} Z_{28} Z_{29} Y_{30} Z_{31} Z_{33} Y_{34} X_{37} X_{38} X_{39} Z_{41} Z_{42} Y_{43} Z_{44} Y_{45} X_{47} Z_{48} Y_{50} X_{51} Y_{52} Z_{55} Y_{56} Z_{58} X_{60} X_{61} Z_{62} Z_{63} Z_{64} Z_{66} Z_{67} X_{68} Z_{69} Z_{70} Z_{72} Z_{74} X_{78} X_{79} X_{81} Z_{83} X_{85} Z_{86} Z_{87} Y_{89}",
+        "actual": "-i Z_0 Z_1 X_2 I_3 I_4 I_5 I_6 Z_7 Y_8 X_9 Y_10 X_11 X_12 X_13 I_14 X_15 Y_16 Y_17 Y_18 I_19 Z_20 X_21 Y_22 Y_23 Z_24 Z_25 Z_26 Z_27 Z_28 Z_29 Y_30 Z_31 I_32 Z_33 Y_34 I_35 I_36 X_37 X_38 X_39 I_40 Z_41 Z_42 Y_43 Z_44 Y_45 I_46 X_47 Z_48 I_49 Y_50 X_51 Y_52 I_53 I_54 Z_55 Y_56 I_57 Z_58 I_59 X_60 X_61 Z_62 Z_63 Z_64 I_65 Z_66 Z_67 X_68 Z_69 Z_70 I_71 Z_72 I_73 Z_74 I_75 I_76 I_77 X_78 X_79 I_80 X_81 I_82 Z_83 I_84 X_85 Z_86 Z_87 I_88 Y_89"
+      }
+    },
+    {
+      "problem_number": 9,
+      "original_problem": "Input: (-iIYZYIIIXYIYIYXIZZYYZZYYYXIXXZYIZYZIYYXXXYZYXXIYXYIYZXYIYXIIYZYYYZXZXXYIIYXZZYYIYXYIYIXZZIZ) * (-iXZYYZZYZZXYYIYYXXIZIYXIXXXXIZYXZYYZIIXXZZXYZIXYXYXXIIYZYIIIYIZXYZZYIYXIZIXZXYZIIYIXXIZIYII)",
+      "expected_result": "-i X_{0} X_{1} X_{2} Z_{4} Z_{5} Y_{6} Y_{7} X_{8} X_{9} Y_{11} Y_{12} Z_{13} Y_{14} Y_{15} Y_{16} Y_{17} X_{18} Z_{19} X_{20} Z_{21} Y_{22} Z_{23} X_{25} X_{27} X_{30} X_{33} Z_{34} Y_{35} Y_{36} Y_{39} X_{40} Y_{41} Y_{43} X_{44} X_{45} X_{49} Z_{50} Z_{51} X_{52} Z_{54} X_{56} Z_{60} X_{61} Z_{62} Y_{65} X_{66} X_{67} Z_{68} Z_{69} Z_{71} Y_{72} Y_{75} X_{77} Y_{79} Z_{80} Y_{81} X_{82} Z_{83} Y_{85} Z_{86} X_{87} Z_{89}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "-i I_0 Y_1 Z_2 Y_3 I_4 I_5 I_6 X_7 Y_8 I_9 Y_10 I_11 Y_12 X_13 I_14 Z_15 Z_16 Y_17 Y_18 Z_19 Z_20 Y_21 Y_22 Y_23 X_24 I_25 X_26 X_27 Z_28 Y_29",
+          "I_30 Z_31 Y_32 Z_33 I_34 Y_35 Y_36 X_37 X_38 X_39 Y_40 Z_41 Y_42 X_43 X_44 I_45 Y_46 X_47 Y_48 I_49 Y_50 Z_51 X_52 Y_53 I_54 Y_55 X_56 I_57 I_58 Y_59",
+          "Z_60 Y_61 Y_62 Y_63 Z_64 X_65 Z_66 X_67 X_68 Y_69 I_70 I_71 Y_72 X_73 Z_74 Z_75 Y_76 Y_77 I_78 Y_79 X_80 Y_81 I_82 Y_83 I_84 X_85 Z_86 Z_87 I_88 Z_89"
+        ],
+        "str2_chunks": [
+          "-i X_0 Z_1 Y_2 Y_3 Z_4 Z_5 Y_6 Z_7 Z_8 X_9 Y_10 Y_11 I_12 Y_13 Y_14 X_15 X_16 I_17 Z_18 I_19 Y_20 X_21 I_22 X_23 X_24 X_25 X_26 I_27 Z_28 Y_29",
+          "X_30 Z_31 Y_32 Y_33 Z_34 I_35 I_36 X_37 X_38 Z_39 Z_40 X_41 Y_42 Z_43 I_44 X_45 Y_46 X_47 Y_48 X_49 X_50 I_51 I_52 Y_53 Z_54 Y_55 I_56 I_57 I_58 Y_59",
+          "I_60 Z_61 X_62 Y_63 Z_64 Z_65 Y_66 I_67 Y_68 X_69 I_70 Z_71 I_72 X_73 Z_74 X_75 Y_76 Z_77 I_78 I_79 Y_80 I_81 X_82 X_83 I_84 Z_85 I_86 Y_87 I_88 I_89"
+        ],
+        "chunk_definitions": [
+          "(-i I_0 Y_1 Z_2 Y_3 I_4 I_5 I_6 X_7 Y_8 I_9 Y_10 I_11 Y_12 X_13 I_14 Z_15 Z_16 Y_17 Y_18 Z_19 Z_20 Y_21 Y_22 Y_23 X_24 I_25 X_26 X_27 Z_28 Y_29) (-i X_0 Z_1 Y_2 Y_3 Z_4 Z_5 Y_6 Z_7 Z_8 X_9 Y_10 Y_11 I_12 Y_13 Y_14 X_15 X_16 I_17 Z_18 I_19 Y_20 X_21 I_22 X_23 X_24 X_25 X_26 I_27 Z_28 Y_29)",
+          "(I_30 Z_31 Y_32 Z_33 I_34 Y_35 Y_36 X_37 X_38 X_39 Y_40 Z_41 Y_42 X_43 X_44 I_45 Y_46 X_47 Y_48 I_49 Y_50 Z_51 X_52 Y_53 I_54 Y_55 X_56 I_57 I_58 Y_59) (X_30 Z_31 Y_32 Y_33 Z_34 I_35 I_36 X_37 X_38 Z_39 Z_40 X_41 Y_42 Z_43 I_44 X_45 Y_46 X_47 Y_48 X_49 X_50 I_51 I_52 Y_53 Z_54 Y_55 I_56 I_57 I_58 Y_59)",
+          "(Z_60 Y_61 Y_62 Y_63 Z_64 X_65 Z_66 X_67 X_68 Y_69 I_70 I_71 Y_72 X_73 Z_74 Z_75 Y_76 Y_77 I_78 Y_79 X_80 Y_81 I_82 Y_83 I_84 X_85 Z_86 Z_87 I_88 Z_89) (I_60 Z_61 X_62 Y_63 Z_64 Z_65 Y_66 I_67 Y_68 X_69 I_70 Z_71 I_72 X_73 Z_74 X_75 Y_76 Z_77 I_78 I_79 Y_80 I_81 X_82 X_83 I_84 Z_85 I_86 Y_87 I_88 I_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "-i X_0 X_1 X_2 I_3 Z_4 Z_5 Y_6 Y_7 X_8 X_9 I_10 Y_11 Y_12 Z_13 Y_14 Y_15 Y_16 Y_17 X_18 Z_19 X_20 Z_21 Y_22 Z_23 I_24 X_25 I_26 X_27 I_28 I_29",
+        "- X_30 I_31 I_32 X_33 Z_34 Y_35 Y_36 I_37 I_38 Y_39 X_40 Y_41 I_42 Y_43 X_44 X_45 I_46 I_47 I_48 X_49 Z_50 Z_51 X_52 I_53 Z_54 I_55 X_56 I_57 I_58 I_59",
+        "- Z_60 X_61 Z_62 I_63 I_64 Y_65 X_66 X_67 Z_68 Z_69 I_70 Z_71 Y_72 I_73 I_74 Y_75 I_76 X_77 I_78 Y_79 Z_80 Y_81 X_82 Z_83 I_84 Y_85 Z_86 X_87 I_88 Z_89"
+      ],
+      "llm_combined_result": "-i X_0 X_1 X_2 I_3 Z_4 Z_5 Y_6 Y_7 X_8 X_9 I_10 Y_11 Y_12 Z_13 Y_14 Y_15 Y_16 Y_17 X_18 Z_19 X_20 Z_21 Y_22 Z_23 I_24 X_25 I_26 X_27 I_28 I_29 X_30 I_31 I_32 X_33 Z_34 Y_35 Y_36 I_37 I_38 Y_39 X_40 Y_41 I_42 Y_43 X_44 X_45 I_46 I_47 I_48 X_49 Z_50 Z_51 X_52 I_53 Z_54 I_55 X_56 I_57 I_58 I_59 Z_60 X_61 Z_62 I_63 I_64 Y_65 X_66 X_67 Z_68 Z_69 I_70 Z_71 Y_72 I_73 I_74 Y_75 I_76 X_77 I_78 Y_79 Z_80 Y_81 X_82 Z_83 I_84 Y_85 Z_86 X_87 I_88 Z_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "-i X_{0} X_{1} X_{2} Z_{4} Z_{5} Y_{6} Y_{7} X_{8} X_{9} Y_{11} Y_{12} Z_{13} Y_{14} Y_{15} Y_{16} Y_{17} X_{18} Z_{19} X_{20} Z_{21} Y_{22} Z_{23} X_{25} X_{27} X_{30} X_{33} Z_{34} Y_{35} Y_{36} Y_{39} X_{40} Y_{41} Y_{43} X_{44} X_{45} X_{49} Z_{50} Z_{51} X_{52} Z_{54} X_{56} Z_{60} X_{61} Z_{62} Y_{65} X_{66} X_{67} Z_{68} Z_{69} Z_{71} Y_{72} Y_{75} X_{77} Y_{79} Z_{80} Y_{81} X_{82} Z_{83} Y_{85} Z_{86} X_{87} Z_{89}",
+        "actual": "-i X_0 X_1 X_2 I_3 Z_4 Z_5 Y_6 Y_7 X_8 X_9 I_10 Y_11 Y_12 Z_13 Y_14 Y_15 Y_16 Y_17 X_18 Z_19 X_20 Z_21 Y_22 Z_23 I_24 X_25 I_26 X_27 I_28 I_29 X_30 I_31 I_32 X_33 Z_34 Y_35 Y_36 I_37 I_38 Y_39 X_40 Y_41 I_42 Y_43 X_44 X_45 I_46 I_47 I_48 X_49 Z_50 Z_51 X_52 I_53 Z_54 I_55 X_56 I_57 I_58 I_59 Z_60 X_61 Z_62 I_63 I_64 Y_65 X_66 X_67 Z_68 Z_69 I_70 Z_71 Y_72 I_73 I_74 Y_75 I_76 X_77 I_78 Y_79 Z_80 Y_81 X_82 Z_83 I_84 Y_85 Z_86 X_87 I_88 Z_89"
+      }
+    },
+    {
+      "problem_number": 10,
+      "original_problem": "Input: (iZIXIXYZZIIZXYYIZXXIZZXXIZIYXYYIIZYYIYYYIYIIXXYXZIIZIIZIZXXYXIZIIYZIXXXZXYIZXXIZYZYIIZYYIXI) * (iIIZIYIZYXXXZIIXXZYXZYYYYXYZZZXIXZZXYZXIIYIXXXZYXXIIIIYZYXZIXIZXXZIZXIIZZXYIXIXXZIZIZXIXIYI)",
+      "expected_result": "-i Z_{0} Y_{2} Z_{4} Y_{5} X_{7} X_{8} X_{9} Y_{10} Y_{11} Y_{12} Y_{13} X_{14} Y_{15} Y_{16} Z_{17} X_{18} X_{20} Z_{21} Z_{22} Y_{23} Y_{24} Y_{25} X_{26} Y_{27} X_{28} Z_{29} X_{31} X_{33} Z_{34} Y_{35} X_{36} Z_{37} Y_{38} X_{42} X_{45} Z_{46} Y_{47} X_{48} Z_{50} X_{53} Z_{54} X_{55} Y_{57} Y_{58} X_{62} X_{63} X_{64} Z_{65} Z_{66} X_{68} X_{69} Y_{71} Z_{72} Y_{73} Z_{74} X_{76} X_{77} Y_{78} X_{79} Z_{80} X_{81} Z_{83} Y_{84} Y_{85} Z_{86} Z_{88}",
+      "llm_decomposition": {
+        "str1_chunks": [
+          "i Z_0 I_1 X_2 I_3 X_4 Y_5 Z_6 Z_7 I_8 I_9 Z_10 X_11 Y_12 Y_13 I_14 Z_15 X_16 X_17 I_18 Z_19 Z_20 X_21 X_22 I_23 Z_24 I_25 Y_26 X_27 Y_28 Y_29",
+          "I_30 I_31 Z_32 Y_33 Y_34 I_35 Y_36 Y_37 Y_38 I_39 Y_40 I_41 I_42 X_43 X_44 Y_45 X_46 Z_47 I_48 I_49 Z_50 I_51 I_52 Z_53 I_54 Z_55 X_56 X_57 Y_58 X_59",
+          "I_60 Z_61 I_62 I_63 Y_64 Z_65 I_66 X_67 X_68 X_69 Z_70 X_71 Y_72 I_73 Z_74 X_75 X_76 I_77 Z_78 Y_79 Z_80 Y_81 I_82 I_83 Z_84 Y_85 Y_86 I_87 X_88 I_89"
+        ],
+        "str2_chunks": [
+          "i I_0 I_1 Z_2 I_3 Y_4 I_5 Z_6 Y_7 X_8 X_9 X_10 Z_11 I_12 I_13 X_14 X_15 Z_16 Y_17 X_18 Z_19 Y_20 Y_21 Y_22 Y_23 X_24 Y_25 Z_26 Z_27 Z_28 X_29",
+          "I_30 X_31 Z_32 Z_33 X_34 Y_35 Z_36 X_37 I_38 I_39 Y_40 I_41 X_42 X_43 X_44 Z_45 Y_46 X_47 X_48 I_49 I_50 I_51 I_52 Y_53 Z_54 Y_55 X_56 Z_57 I_58 X_59",
+          "I_60 Z_61 X_62 X_63 Z_64 I_65 Z_66 X_67 I_68 I_69 Z_70 Z_71 X_72 Y_73 I_74 X_75 I_76 X_77 X_78 Z_79 I_80 Z_81 I_82 Z_83 X_84 I_85 X_86 I_87 Y_88 I_89"
+        ],
+        "chunk_definitions": [
+          "(i Z_0 I_1 X_2 I_3 X_4 Y_5 Z_6 Z_7 I_8 I_9 Z_10 X_11 Y_12 Y_13 I_14 Z_15 X_16 X_17 I_18 Z_19 Z_20 X_21 X_22 I_23 Z_24 I_25 Y_26 X_27 Y_28 Y_29) (i I_0 I_1 Z_2 I_3 Y_4 I_5 Z_6 Y_7 X_8 X_9 X_10 Z_11 I_12 I_13 X_14 X_15 Z_16 Y_17 X_18 Z_19 Y_20 Y_21 Y_22 Y_23 X_24 Y_25 Z_26 Z_27 Z_28 X_29)",
+          "(I_30 I_31 Z_32 Y_33 Y_34 I_35 Y_36 Y_37 Y_38 I_39 Y_40 I_41 I_42 X_43 X_44 Y_45 X_46 Z_47 I_48 I_49 Z_50 I_51 I_52 Z_53 I_54 Z_55 X_56 X_57 Y_58 X_59) (I_30 X_31 Z_32 Z_33 X_34 Y_35 Z_36 X_37 I_38 I_39 Y_40 I_41 X_42 X_43 X_44 Z_45 Y_46 X_47 X_48 I_49 I_50 I_51 I_52 Y_53 Z_54 Y_55 X_56 Z_57 I_58 X_59)",
+          "(I_60 Z_61 I_62 I_63 Y_64 Z_65 I_66 X_67 X_68 X_69 Z_70 X_71 Y_72 I_73 Z_74 X_75 X_76 I_77 Z_78 Y_79 Z_80 Y_81 I_82 I_83 Z_84 Y_85 Y_86 I_87 X_88 I_89) (I_60 Z_61 X_62 X_63 Z_64 I_65 Z_66 X_67 I_68 I_69 Z_70 Z_71 X_72 Y_73 I_74 X_75 I_76 X_77 X_78 Z_79 I_80 Z_81 I_82 Z_83 X_84 I_85 X_86 I_87 Y_88 I_89)"
+        ],
+        "chunk_ranges": [
+          "0-29",
+          "30-59",
+          "60-89"
+        ]
+      },
+      "llm_computed_results": [
+        "+ Z_0 I_1 Y_2 I_3 Z_4 Y_5 I_6 X_7 X_8 X_9 Y_10 Y_11 Y_12 Y_13 X_14 Y_15 Y_16 Z_17 X_18 I_19 X_20 Z_21 Z_22 Y_23 Y_24 Y_25 X_26 Y_27 X_28 Z_29",
+        "+ I_30 X_31 I_32 X_33 Z_34 Y_35 X_36 Z_37 Y_38 I_39 I_40 I_41 X_42 I_43 I_44 X_45 Z_46 Y_47 X_48 I_49 Z_50 I_51 I_52 X_53 Z_54 X_55 I_56 Y_57 Y_58 I_59",
+        "-i I_60 I_61 X_62 X_63 X_64 Z_65 Z_66 I_67 X_68 X_69 I_70 Y_71 Z_72 Y_73 Z_74 I_75 X_76 X_77 Y_78 X_79 Z_80 X_81 I_82 Z_83 Y_84 Y_85 Z_86 I_87 Z_88 I_89"
+      ],
+      "llm_combined_result": "-i Z_0 I_1 Y_2 I_3 Z_4 Y_5 I_6 X_7 X_8 X_9 Y_10 Y_11 Y_12 Y_13 X_14 Y_15 Y_16 Z_17 X_18 I_19 X_20 Z_21 Z_22 Y_23 Y_24 Y_25 X_26 Y_27 X_28 Z_29 I_30 X_31 I_32 X_33 Z_34 Y_35 X_36 Z_37 Y_38 I_39 I_40 I_41 X_42 I_43 I_44 X_45 Z_46 Y_47 X_48 I_49 Z_50 I_51 I_52 X_53 Z_54 X_55 I_56 Y_57 Y_58 I_59 I_60 I_61 X_62 X_63 X_64 Z_65 Z_66 I_67 X_68 X_69 I_70 Y_71 Z_72 Y_73 Z_74 I_75 X_76 X_77 Y_78 X_79 Z_80 X_81 I_82 Z_83 Y_84 Y_85 Z_86 I_87 Z_88 I_89",
+      "verification_summary": {
+        "is_correct": true,
+        "expected": "-i Z_{0} Y_{2} Z_{4} Y_{5} X_{7} X_{8} X_{9} Y_{10} Y_{11} Y_{12} Y_{13} X_{14} Y_{15} Y_{16} Z_{17} X_{18} X_{20} Z_{21} Z_{22} Y_{23} Y_{24} Y_{25} X_{26} Y_{27} X_{28} Z_{29} X_{31} X_{33} Z_{34} Y_{35} X_{36} Z_{37} Y_{38} X_{42} X_{45} Z_{46} Y_{47} X_{48} Z_{50} X_{53} Z_{54} X_{55} Y_{57} Y_{58} X_{62} X_{63} X_{64} Z_{65} Z_{66} X_{68} X_{69} Y_{71} Z_{72} Y_{73} Z_{74} X_{76} X_{77} Y_{78} X_{79} Z_{80} X_{81} Z_{83} Y_{84} Y_{85} Z_{86} Z_{88}",
+        "actual": "-i Z_0 I_1 Y_2 I_3 Z_4 Y_5 I_6 X_7 X_8 X_9 Y_10 Y_11 Y_12 Y_13 X_14 Y_15 Y_16 Z_17 X_18 I_19 X_20 Z_21 Z_22 Y_23 Y_24 Y_25 X_26 Y_27 X_28 Z_29 I_30 X_31 I_32 X_33 Z_34 Y_35 X_36 Z_37 Y_38 I_39 I_40 I_41 X_42 I_43 I_44 X_45 Z_46 Y_47 X_48 I_49 Z_50 I_51 I_52 X_53 Z_54 X_55 I_56 Y_57 Y_58 I_59 I_60 I_61 X_62 X_63 X_64 Z_65 Z_66 I_67 X_68 X_69 I_70 Y_71 Z_72 Y_73 Z_74 I_75 X_76 X_77 Y_78 X_79 Z_80 X_81 I_82 Z_83 Y_84 Y_85 Z_86 I_87 Z_88 I_89"
+      }
+    }
+  ],
+  "workflow_summary": {
+    "total_llm_calls": 5,
+    "accuracy": 0.8,
+    "correct_count": 8,
+    "total_count": 10,
+    "duration_seconds": 686.4600012302399,
+    "total_input_tokens": 29898,
+    "total_output_tokens": 15197,
+    "total_tokens": 116458
+  }
+}

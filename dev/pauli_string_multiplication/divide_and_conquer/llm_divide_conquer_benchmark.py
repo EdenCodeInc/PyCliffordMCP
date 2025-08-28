@@ -355,12 +355,12 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                     workflow_result['total_tokens'] += token_metadata['total_tokens']
                 
                 print(f"    Phase 1 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                time.sleep(8)  # Rate limit delay
+                time.sleep(12)  # Rate limit delay
                 break
             except Exception as e:
                 print(f"    ❌ Phase 1 API call failed: {e}")
-                print(f"    🔄 Retrying in 30s...")
-                time.sleep(30)
+                print(f"    🔄 Retrying in 60s...")
+                time.sleep(60)
         
         if SAVE_LLM_RESPONSES:
             workflow_result['phase1_prompt'] = decomposition_prompt
@@ -438,12 +438,12 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                         workflow_result['total_tokens'] += token_metadata['total_tokens']
                     
                     print(f"      Chunk {chunk_num} token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                    time.sleep(8)  # Rate limit delay
+                    time.sleep(12)  # Rate limit delay
                     break
                 except Exception as e:
                     print(f"      ❌ Chunk {chunk_num} API call failed: {e}")
-                    print(f"      🔄 Retrying in 30s...")
-                    time.sleep(30)
+                    print(f"      🔄 Retrying in 60s...")
+                    time.sleep(60)
             
             if SAVE_LLM_RESPONSES:
                 workflow_result['phase2_prompts_and_responses'].append({
@@ -515,12 +515,12 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                     workflow_result['total_tokens'] += token_metadata['total_tokens']
                 
                 print(f"    Phase 3 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                time.sleep(8)  # Rate limit delay
+                time.sleep(12)  # Rate limit delay
                 break
             except Exception as e:
                 print(f"    ❌ Phase 3 API call failed: {e}")
-                print(f"    🔄 Retrying in 30s...")
-                time.sleep(30)
+                print(f"    🔄 Retrying in 60s...")
+                time.sleep(60)
         
         if SAVE_LLM_RESPONSES:
             workflow_result['phase3_prompt'] = combination_prompt

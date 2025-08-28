@@ -1,0 +1,50 @@
+{
+  "timestamp": "20250818_232123",
+  "model": "gemini-2.5-flash",
+  "N": 10,
+  "batch_size": 10,
+  "iteration": 1,
+  "llm_answers": [
+    "+I_0I_1I_2Y_3Z_4Y_5Y_6I_7Z_9",
+    "-X_0I_1Z_2Y_3Y_4X_5X_6Y_7X_9",
+    "+Z_0X_1Y_2X_3Z_4Y_5X_6I_7Z_8X_9",
+    "-iZ_0I_2X_3Y_4Z_5Z_6Z_7X_8Z_9",
+    "-iX_0X_1I_2I_3Y_4I_5I_6Y_7I_8Z_9",
+    "+iY_0Z_1Y_2I_3X_5I_6X_7X_8X_9",
+    "-X_0Y_1I_2I_3Z_4Z_5X_6Y_7I_8",
+    "+iY_0X_1Z_2I_3X_4I_5Y_6Y_7Y_8Y_9",
+    "-iX_0Z_1Y_2X_3X_4Z_5I_6X_7Z_8Z_9",
+    "-Z_0Y_1Y_2I_3X_4Y_5Z_6Y_7I_8Z_9"
+  ],
+  "correct_answers": [
+    "coefficient=(1+0j) pauli_string={3: 'Y', 4: 'Z', 5: 'Y', 6: 'Y', 9: 'Z'} text='Y_{3} Z_{4} Y_{5} Y_{6} Z_{9}'",
+    "coefficient=(-1+0j) pauli_string={0: 'X', 2: 'Z', 3: 'Y', 4: 'Y', 5: 'X', 6: 'X', 7: 'Y', 9: 'X'} text='- X_{0} Z_{2} Y_{3} Y_{4} X_{5} X_{6} Y_{7} X_{9}'",
+    "coefficient=(1+0j) pauli_string={0: 'Z', 1: 'X', 2: 'Y', 3: 'X', 4: 'Z', 5: 'Y', 6: 'X', 8: 'Z', 9: 'X'} text='Z_{0} X_{1} Y_{2} X_{3} Z_{4} Y_{5} X_{6} Z_{8} X_{9}'",
+    "coefficient=1j pauli_string={0: 'Z', 3: 'X', 4: 'Y', 5: 'Z', 6: 'Z', 7: 'Z', 8: 'X', 9: 'Z'} text='+i Z_{0} X_{3} Y_{4} Z_{5} Z_{6} Z_{7} X_{8} Z_{9}'",
+    "coefficient=-1j pauli_string={0: 'X', 1: 'X', 4: 'Y', 7: 'Y', 9: 'Z'} text='-i X_{0} X_{1} Y_{4} Y_{7} Z_{9}'",
+    "coefficient=-1j pauli_string={0: 'Y', 1: 'Z', 2: 'Y', 5: 'X', 7: 'X', 8: 'X', 9: 'X'} text='-i Y_{0} Z_{1} Y_{2} X_{5} X_{7} X_{8} X_{9}'",
+    "coefficient=(-1+0j) pauli_string={0: 'X', 1: 'Y', 4: 'Z', 5: 'Z', 6: 'X', 7: 'Y'} text='- X_{0} Y_{1} Z_{4} Z_{5} X_{6} Y_{7}'",
+    "coefficient=(-1+0j) pauli_string={0: 'Y', 1: 'X', 2: 'Z', 4: 'X', 6: 'Z', 7: 'Y', 8: 'Y', 9: 'Y'} text='- Y_{0} X_{1} Z_{2} X_{4} Z_{6} Y_{7} Y_{8} Y_{9}'",
+    "coefficient=-1j pauli_string={0: 'X', 1: 'Z', 2: 'Y', 3: 'X', 4: 'X', 5: 'Z', 7: 'X', 8: 'Z', 9: 'Z'} text='-i X_{0} Z_{1} Y_{2} X_{3} X_{4} Z_{5} X_{7} Z_{8} Z_{9}'",
+    "coefficient=(1+0j) pauli_string={0: 'Z', 1: 'Y', 2: 'Y', 4: 'X', 5: 'Y', 6: 'Z', 7: 'Y', 9: 'Z'} text='Z_{0} Y_{1} Y_{2} X_{4} Y_{5} Z_{6} Y_{7} Z_{9}'"
+  ],
+  "is_correct_list": [
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    false,
+    true,
+    false
+  ],
+  "accuracy": 0.6,
+  "error_message": null,
+  "irrelevant_text_length": 0,
+  "input_tokens": 1600,
+  "output_tokens": 351,
+  "total_tokens": 11503,
+  "temperature": 0.0
+}

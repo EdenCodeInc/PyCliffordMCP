@@ -12,10 +12,10 @@ ACCUMULATED PHASES:
 TASK: For each problem, combine all chunk results and apply the final accumulated phase.
 
 COMBINATION RULES:
-1. Combine all chunk operators into one Pauli string (INCLUDE ALL I_i)
+1. Combine all chunk operators into one Pauli string; include I_i for every qubit position
 2. Apply the accumulated phase to the front
 3. KEEP ALL identity operators (I_i) in the final result
-4. Output X_i, Y_i, Z_i, I_i operators in indexed format for final output
+4. Output I_i X_j Y_k Z_l operators in indexed format for final output
 
 EXAMPLE:
 Original: + X_0 Y_1 Z_2 × + I_0 X_1 I_2
@@ -23,7 +23,7 @@ Chunk 1 result: Y_0 Z_1
 Chunk 2 result: I_2  
 Accumulated phase: -i
 Step 1: Combine chunks (INCLUDE ALL): Y_0 Z_1 I_2
-Step 2: Apply phase (KEEP ALL): -i Y_0 Z_1 I_2  
+Step 2: Apply phase (KEEP ALL): -i Y_0 Z_1 I_2
 Step 3: Final result (KEEP ALL): -i Y_0 Z_1 I_2
 
 STEPS FOR EACH PROBLEM:
@@ -33,10 +33,9 @@ STEPS FOR EACH PROBLEM:
 
 CRITICAL: 
 1. Use the exact accumulated phase from the table
-2. INCLUDE ALL Identity operators (I_i) in intermediate combination steps
-3. KEEP ALL identity operators (I_i) in final result
-4. Show X_i, Y_i, Z_i, I_i operators with their indices in final output
-5. Use <batch_combination> XML tags with FINAL_ANSWERS = [...] list assignment syntax inside, strictly as shown below (NOT nested XML)
+2. INCLUDE ALL Identity operators (I_i) in intermediate combination steps and also the final result
+3. Show I_i X_j Y_k Z_l operators with their indices in final output
+4. Use <batch_combination> XML tags with FINAL_ANSWERS = [...] list assignment syntax inside, strictly as shown below (NOT nested XML)
 
 <batch_combination>
 FINAL_ANSWERS = [
