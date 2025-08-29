@@ -354,7 +354,7 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                 workflow_result['total_tokens'] += token_metadata['total_tokens']
 
             print(f"    Phase 1 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-            time.sleep(12)  # Rate limit delay
+            time.sleep(3)  # Rate limit delay
 
             if SAVE_LLM_RESPONSES:
                 workflow_result['phase1_prompt'] = decomposition_prompt
@@ -430,7 +430,7 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                     workflow_result['total_tokens'] += token_metadata['total_tokens']
 
                 print(f"      Chunk {chunk_num} token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                time.sleep(12)  # Rate limit delay
+                time.sleep(3)  # Rate limit delay
 
                 if SAVE_LLM_RESPONSES:
                     workflow_result['phase2_prompts_and_responses'].append({
@@ -500,7 +500,7 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                 workflow_result['total_tokens'] += token_metadata['total_tokens']
 
             print(f"    Phase 3 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-            time.sleep(12)  # Rate limit delay
+            time.sleep(3)  # Rate limit delay
 
             if SAVE_LLM_RESPONSES:
                 workflow_result['phase3_prompt'] = combination_prompt
@@ -522,8 +522,8 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
         except Exception as e:
             workflow_result['error_message'] = str(e)
             print(f"    Workflow failed: {e}")
-            print(f"    🔄 Retrying entire workflow in 60s...")
-            time.sleep(60)
+            print(f"    🔄 Retrying entire workflow in 20s...")
+            time.sleep(20)
             # Loop will restart from Phase 1
             continue
 
