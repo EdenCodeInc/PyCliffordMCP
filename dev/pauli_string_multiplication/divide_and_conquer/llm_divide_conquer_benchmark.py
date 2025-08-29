@@ -277,235 +277,150 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
     """
     batch_size = len(problems)
     print(f"  Starting divide-and-conquer for {batch_size} problems, N={N}, chunk_size={chunk_size}")
-    
-    workflow_result = {
-        'success': False,
-        'llm_calls': 0,
-        'total_input_tokens': 0,
-        'total_output_tokens': 0,
-        'total_tokens': 0,
-        'decomposition': None,
-        'chunk_results': {},
-        'final_results': [],
-        'error_message': None
-    }
-    
-    if SAVE_LLM_RESPONSES:
-        workflow_result.update({
-            'phase1_prompt': None,
-            'phase1_response': None,
-            'phase2_prompts_and_responses': [],
-            'phase3_prompt': None,
-            'phase3_response': None
-        })
-    
-    try:
-        # === PHASE 1: Decomposition ===
-        print(f"=== PHASE 1: Decomposition ===")
-        print(f"    Decomposing {batch_size} problems...")
-        
-        # Convert compact format to indexed format for LLM display
-        def to_indexed_format(pauli_string):
-            """Convert compact IXYZ string to indexed X_0 Y_1 Z_2 format."""
-            # Extract phase - handle all four phase factors: +, i, -, -i
-            phase = ""
-            ops = pauli_string
-            # Check in order to avoid prefix conflicts (longer first)
-            for p in ['-i', '+', 'i', '-']:
-                if pauli_string.startswith(p):
-                    phase = p
-                    ops = pauli_string[len(p):]
-                    break
-            
-            # Add indices - show ALL operators (even I)
-            # Use simple underscore format without braces to avoid formatting conflicts
-            indexed_ops = []
-            for i, op in enumerate(ops):
-                indexed_ops.append(f"{op}_{i}")
-            
-            result = " ".join(indexed_ops)
-            return (phase + " " + result).strip() if phase else result
-        
-        problems_block = "\n".join([
-            f"Problem {i+1}:\n  String 1: {to_indexed_format(prob['str1'])}\n  String 2: {to_indexed_format(prob['str2'])}"
-            for i, prob in enumerate(problems)
-        ])
-        
-        config = get_config()
-        with open(config.get_path('prompt_round1_decomposition'), "r") as f:
-            decomposition_prompt = f.read().format(
-                batch_size=batch_size,
-                problems_block=problems_block,
-                N=N,
-                chunk_size=chunk_size
-            )
-        
-        # Phase 1 with retry logic
-        while True:
-            try:
-                decomposition_response, token_metadata = get_llm_response(decomposition_prompt, MODEL_NAME, LLM_BACKEND)
-                workflow_result['llm_calls'] += 1
-                
-                # Accumulate token usage
-                if token_metadata.get('input_tokens'):
-                    workflow_result['total_input_tokens'] += token_metadata['input_tokens']
-                if token_metadata.get('output_tokens'):
-                    workflow_result['total_output_tokens'] += token_metadata['output_tokens']
-                if token_metadata.get('total_tokens'):
-                    workflow_result['total_tokens'] += token_metadata['total_tokens']
-                
-                print(f"    Phase 1 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                time.sleep(12)  # Rate limit delay
-                break
-            except Exception as e:
-                print(f"    ❌ Phase 1 API call failed: {e}")
-                print(f"    🔄 Retrying in 60s...")
-                time.sleep(60)
-        
+
+    while True:
+        workflow_result = {
+            'success': False,
+            'llm_calls': 0,
+            'total_input_tokens': 0,
+            'total_output_tokens': 0,
+            'total_tokens': 0,
+            'decomposition': None,
+            'chunk_results': {},
+            'final_results': [],
+            'error_message': None
+        }
+
         if SAVE_LLM_RESPONSES:
-            workflow_result['phase1_prompt'] = decomposition_prompt
-            workflow_result['phase1_response'] = decomposition_response
-        
-        decomposition_result = extract_batch_decomposition(decomposition_response)
-        if not decomposition_result['success']:
-            raise Exception("Failed to extract batch decomposition")
-        
-        workflow_result['decomposition'] = decomposition_result
-        num_chunks = len(decomposition_result['chunk_ranges'])
-        print(f"    Decomposed into {num_chunks} chunks: {decomposition_result['chunk_ranges']}")
-        
-        # === PHASE 2: CHUNK COMPUTATION ===
-        print("=== PHASE 2: CHUNK COMPUTATION ===")
-        
-        # Initialize phase tracking for phase accumulation
-        accumulated_phases = {}
-        for problem in decomposition_result['problems']:
-            accumulated_phases[problem['problem_number']] = "1"
-        print(f"    Phase 2: Computing {num_chunks} chunks with LLM phase accumulation...")
-        
-        chunk_template_file = config.get_path('prompt_round2_chunk_calculation')
-        
-        with open(chunk_template_file, "r") as f:
-            chunk_prompt_template = f.read()
-        
-        for chunk_num in range(1, num_chunks + 1):
-            print(f"      Computing chunk {chunk_num}...")
-            
-            # Calculate qubit range for this chunk
-            start_qubit = (chunk_num - 1) * chunk_size
-            end_qubit = min(start_qubit + chunk_size - 1, N - 1)
-            qubit_range = f"{start_qubit}-{end_qubit}"
-            
-            # Format chunk problems
-            chunk_problems_list = []
-            for problem in decomposition_result['problems']:
-                for chunk in problem['chunks']:
-                    if chunk['chunk_number'] == chunk_num:
-                        chunk_problems_list.append(
-                            f"Problem {problem['problem_number']}: {chunk['definition']}"
-                        )
+            workflow_result.update({
+                'phase1_prompt': None,
+                'phase1_response': None,
+                'phase2_prompts_and_responses': [],
+                'phase3_prompt': None,
+                'phase3_response': None
+            })
+
+        try:
+            # === PHASE 1: Decomposition ===
+            print(f"=== PHASE 1: Decomposition ===")
+            print(f"    Decomposing {batch_size} problems...")
+
+            # Convert compact format to indexed format for LLM display
+            def to_indexed_format(pauli_string):
+                """Convert compact IXYZ string to indexed X_0 Y_1 Z_2 format."""
+                # Extract phase - handle all four phase factors: +, i, -, -i
+                phase = ""
+                ops = pauli_string
+                # Check in order to avoid prefix conflicts (longer first)
+                for p in ['-i', '+', 'i', '-']:
+                    if pauli_string.startswith(p):
+                        phase = p
+                        ops = pauli_string[len(p):]
                         break
-            
-            chunk_problems_block = "\n".join(chunk_problems_list)
-            
-            # Format accumulated phases for this chunk
-            accumulated_phases_lines = []
-            accumulated_phases_lines.append("PREVIOUS ACCUMULATED PHASES:")
-            for prob_num in sorted(accumulated_phases.keys()):
-                accumulated_phases_lines.append(f"  Problem {prob_num}: {accumulated_phases[prob_num]}")
-            accumulated_phases_block = "\n".join(accumulated_phases_lines)
-            
-            chunk_prompt = chunk_prompt_template.format(
-                chunk_number=chunk_num,
-                batch_size=batch_size,
-                chunk_problems_block=chunk_problems_block,
-                qubit_range=qubit_range,
-                accumulated_phases_block=accumulated_phases_block
-            )
-            
-            # Phase 2 chunk with retry logic
-            while True:
-                try:
-                    chunk_response, token_metadata = get_llm_response(chunk_prompt, MODEL_NAME, LLM_BACKEND)
-                    workflow_result['llm_calls'] += 1
-                    
-                    # Accumulate token usage
-                    if token_metadata.get('input_tokens'):
-                        workflow_result['total_input_tokens'] += token_metadata['input_tokens']
-                    if token_metadata.get('output_tokens'):
-                        workflow_result['total_output_tokens'] += token_metadata['output_tokens']
-                    if token_metadata.get('total_tokens'):
-                        workflow_result['total_tokens'] += token_metadata['total_tokens']
-                    
-                    print(f"      Chunk {chunk_num} token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
-                    time.sleep(12)  # Rate limit delay
-                    break
-                except Exception as e:
-                    print(f"      ❌ Chunk {chunk_num} API call failed: {e}")
-                    print(f"      🔄 Retrying in 60s...")
-                    time.sleep(60)
-            
-            if SAVE_LLM_RESPONSES:
-                workflow_result['phase2_prompts_and_responses'].append({
-                    'chunk_number': chunk_num,
-                    'prompt': chunk_prompt,
-                    'response': chunk_response
-                })
-            
-            chunk_results = extract_batch_chunk_results(chunk_response, chunk_num)
-            if not chunk_results:
-                raise Exception(f"Failed to extract results for chunk {chunk_num}")
-            
-            # Update phase tracking
-            for result in chunk_results:
-                prob_num = result['problem_number']
-                new_phase = result['new_accumulated_phase']
-                old_phase = accumulated_phases[prob_num]
-                print(f"      Problem {prob_num}: accumulated phase updated from {old_phase} to {new_phase}")
-                accumulated_phases[prob_num] = new_phase
-            
-            workflow_result['chunk_results'][chunk_num] = chunk_results
-        
-        # === PHASE 3: COMBINATION ===
-        print("=== PHASE 3: COMBINATION ===")
-        
-        # Format all chunk results
-        all_chunk_results_lines = []
-        for chunk_num in range(1, num_chunks + 1):
-            all_chunk_results_lines.append(f"Chunk {chunk_num} Results:")
-            for result in workflow_result['chunk_results'][chunk_num]:
-                all_chunk_results_lines.append(
-                    f"  Problem {result['problem_number']}: {result['result']}"
+
+                # Add indices - show ALL operators (even I)
+                # Use simple underscore format without braces to avoid formatting conflicts
+                indexed_ops = []
+                for i, op in enumerate(ops):
+                    indexed_ops.append(f"{op}_{i}")
+
+                result = " ".join(indexed_ops)
+                return (phase + " " + result).strip() if phase else result
+
+            problems_block = "\n".join([
+                f"Problem {i+1}:\n  String 1: {to_indexed_format(prob['str1'])}\n  String 2: {to_indexed_format(prob['str2'])}"
+                for i, prob in enumerate(problems)
+            ])
+
+            config = get_config()
+            with open(config.get_path('prompt_round1_decomposition'), "r") as f:
+                decomposition_prompt = f.read().format(
+                    batch_size=batch_size,
+                    problems_block=problems_block,
+                    N=N,
+                    chunk_size=chunk_size
                 )
-            all_chunk_results_lines.append("")
-        
-        all_chunk_results_block = "\n".join(all_chunk_results_lines)
-        
-        # Format final accumulated phases for Phase 3
-        accumulated_phases_lines = []
-        accumulated_phases_lines.append("FINAL ACCUMULATED PHASES:")
-        for prob_num in sorted(accumulated_phases.keys()):
-            phase = accumulated_phases[prob_num]
-            accumulated_phases_lines.append(f"  Problem {prob_num}: {phase}")
-        accumulated_phases_block = "\n".join(accumulated_phases_lines)
-        
-        print(f"    Final accumulated phases: {accumulated_phases}")
-        
-        with open(config.get_path('prompt_round3_combination'), "r") as f:
-            combination_prompt = f.read().format(
-                num_chunks=num_chunks,
-                batch_size=batch_size,
-                original_problems_block=problems_block,
-                all_chunk_results_block=all_chunk_results_block,
-                accumulated_phases_block=accumulated_phases_block
-            )
-        
-        # Phase 3 with retry logic
-        while True:
-            try:
-                combination_response, token_metadata = get_llm_response(combination_prompt, MODEL_NAME, LLM_BACKEND)
+
+            # Single attempt (overall retry handled by outer loop)
+            decomposition_response, token_metadata = get_llm_response(decomposition_prompt, MODEL_NAME, LLM_BACKEND)
+            workflow_result['llm_calls'] += 1
+
+            # Accumulate token usage
+            if token_metadata.get('input_tokens'):
+                workflow_result['total_input_tokens'] += token_metadata['input_tokens']
+            if token_metadata.get('output_tokens'):
+                workflow_result['total_output_tokens'] += token_metadata['output_tokens']
+            if token_metadata.get('total_tokens'):
+                workflow_result['total_tokens'] += token_metadata['total_tokens']
+
+            print(f"    Phase 1 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+            time.sleep(12)  # Rate limit delay
+
+            if SAVE_LLM_RESPONSES:
+                workflow_result['phase1_prompt'] = decomposition_prompt
+                workflow_result['phase1_response'] = decomposition_response
+
+            decomposition_result = extract_batch_decomposition(decomposition_response)
+            if not decomposition_result['success']:
+                raise Exception("Failed to extract batch decomposition")
+
+            workflow_result['decomposition'] = decomposition_result
+            num_chunks = len(decomposition_result['chunk_ranges'])
+            print(f"    Decomposed into {num_chunks} chunks: {decomposition_result['chunk_ranges']}")
+
+            # === PHASE 2: CHUNK COMPUTATION ===
+            print("=== PHASE 2: CHUNK COMPUTATION ===")
+
+            # Initialize phase tracking for phase accumulation
+            accumulated_phases = {}
+            for problem in decomposition_result['problems']:
+                accumulated_phases[problem['problem_number']] = "1"
+            print(f"    Phase 2: Computing {num_chunks} chunks with LLM phase accumulation...")
+
+            chunk_template_file = config.get_path('prompt_round2_chunk_calculation')
+
+            with open(chunk_template_file, "r") as f:
+                chunk_prompt_template = f.read()
+
+            for chunk_num in range(1, num_chunks + 1):
+                print(f"      Computing chunk {chunk_num}...")
+
+                # Calculate qubit range for this chunk
+                start_qubit = (chunk_num - 1) * chunk_size
+                end_qubit = min(start_qubit + chunk_size - 1, N - 1)
+                qubit_range = f"{start_qubit}-{end_qubit}"
+
+                # Format chunk problems
+                chunk_problems_list = []
+                for problem in decomposition_result['problems']:
+                    for chunk in problem['chunks']:
+                        if chunk['chunk_number'] == chunk_num:
+                            chunk_problems_list.append(
+                                f"Problem {problem['problem_number']}: {chunk['definition']}"
+                            )
+                            break
+
+                chunk_problems_block = "\n".join(chunk_problems_list)
+
+                # Format accumulated phases for this chunk
+                accumulated_phases_lines = []
+                accumulated_phases_lines.append("PREVIOUS ACCUMULATED PHASES:")
+                for prob_num in sorted(accumulated_phases.keys()):
+                    accumulated_phases_lines.append(f"  Problem {prob_num}: {accumulated_phases[prob_num]}")
+                accumulated_phases_block = "\n".join(accumulated_phases_lines)
+
+                chunk_prompt = chunk_prompt_template.format(
+                    chunk_number=chunk_num,
+                    batch_size=batch_size,
+                    chunk_problems_block=chunk_problems_block,
+                    qubit_range=qubit_range,
+                    accumulated_phases_block=accumulated_phases_block
+                )
+
+                # Single attempt for each chunk (errors will restart entire workflow)
+                chunk_response, token_metadata = get_llm_response(chunk_prompt, MODEL_NAME, LLM_BACKEND)
                 workflow_result['llm_calls'] += 1
-                
+
                 # Accumulate token usage
                 if token_metadata.get('input_tokens'):
                     workflow_result['total_input_tokens'] += token_metadata['input_tokens']
@@ -513,34 +428,104 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
                     workflow_result['total_output_tokens'] += token_metadata['output_tokens']
                 if token_metadata.get('total_tokens'):
                     workflow_result['total_tokens'] += token_metadata['total_tokens']
-                
-                print(f"    Phase 3 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+
+                print(f"      Chunk {chunk_num} token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
                 time.sleep(12)  # Rate limit delay
-                break
-            except Exception as e:
-                print(f"    ❌ Phase 3 API call failed: {e}")
-                print(f"    🔄 Retrying in 60s...")
-                time.sleep(60)
-        
-        if SAVE_LLM_RESPONSES:
-            workflow_result['phase3_prompt'] = combination_prompt
-            workflow_result['phase3_response'] = combination_response
-        
-        final_results = extract_batch_final_results(combination_response)
-        if not final_results:
-            raise Exception("Failed to extract final batch results")
-        
-        workflow_result['final_results'] = final_results
-        workflow_result['success'] = True
-        
-        print(f"    Workflow completed! Total LLM calls: {workflow_result['llm_calls']}")
-        print(f"    Total token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
-        
-    except Exception as e:
-        workflow_result['error_message'] = str(e)
-        print(f"    Workflow failed: {e}")
-    
-    return workflow_result
+
+                if SAVE_LLM_RESPONSES:
+                    workflow_result['phase2_prompts_and_responses'].append({
+                        'chunk_number': chunk_num,
+                        'prompt': chunk_prompt,
+                        'response': chunk_response
+                    })
+
+                chunk_results = extract_batch_chunk_results(chunk_response, chunk_num)
+                if not chunk_results:
+                    raise Exception(f"Failed to extract results for chunk {chunk_num}")
+
+                # Update phase tracking
+                for result in chunk_results:
+                    prob_num = result['problem_number']
+                    new_phase = result['new_accumulated_phase']
+                    old_phase = accumulated_phases[prob_num]
+                    print(f"      Problem {prob_num}: accumulated phase updated from {old_phase} to {new_phase}")
+                    accumulated_phases[prob_num] = new_phase
+
+                workflow_result['chunk_results'][chunk_num] = chunk_results
+
+            # === PHASE 3: COMBINATION ===
+            print("=== PHASE 3: COMBINATION ===")
+
+            # Format all chunk results
+            all_chunk_results_lines = []
+            for chunk_num in range(1, num_chunks + 1):
+                all_chunk_results_lines.append(f"Chunk {chunk_num} Results:")
+                for result in workflow_result['chunk_results'][chunk_num]:
+                    all_chunk_results_lines.append(
+                        f"  Problem {result['problem_number']}: {result['result']}"
+                    )
+                all_chunk_results_lines.append("")
+
+            all_chunk_results_block = "\n".join(all_chunk_results_lines)
+
+            # Format final accumulated phases for Phase 3
+            accumulated_phases_lines = []
+            accumulated_phases_lines.append("FINAL ACCUMULATED PHASES:")
+            for prob_num in sorted(accumulated_phases.keys()):
+                phase = accumulated_phases[prob_num]
+                accumulated_phases_lines.append(f"  Problem {prob_num}: {phase}")
+            accumulated_phases_block = "\n".join(accumulated_phases_lines)
+
+            print(f"    Final accumulated phases: {accumulated_phases}")
+
+            with open(config.get_path('prompt_round3_combination'), "r") as f:
+                combination_prompt = f.read().format(
+                    num_chunks=num_chunks,
+                    batch_size=batch_size,
+                    original_problems_block=problems_block,
+                    all_chunk_results_block=all_chunk_results_block,
+                    accumulated_phases_block=accumulated_phases_block
+                )
+
+            # Single attempt (errors will restart entire workflow)
+            combination_response, token_metadata = get_llm_response(combination_prompt, MODEL_NAME, LLM_BACKEND)
+            workflow_result['llm_calls'] += 1
+
+            # Accumulate token usage
+            if token_metadata.get('input_tokens'):
+                workflow_result['total_input_tokens'] += token_metadata['input_tokens']
+            if token_metadata.get('output_tokens'):
+                workflow_result['total_output_tokens'] += token_metadata['output_tokens']
+            if token_metadata.get('total_tokens'):
+                workflow_result['total_tokens'] += token_metadata['total_tokens']
+
+            print(f"    Phase 3 token usage: {token_metadata.get('input_tokens', 'N/A')} in, {token_metadata.get('output_tokens', 'N/A')} out")
+            time.sleep(12)  # Rate limit delay
+
+            if SAVE_LLM_RESPONSES:
+                workflow_result['phase3_prompt'] = combination_prompt
+                workflow_result['phase3_response'] = combination_response
+
+            final_results = extract_batch_final_results(combination_response)
+            if not final_results:
+                raise Exception("Failed to extract final batch results")
+
+            workflow_result['final_results'] = final_results
+            workflow_result['success'] = True
+
+            print(f"    Workflow completed! Total LLM calls: {workflow_result['llm_calls']}")
+            print(f"    Total token usage: {workflow_result['total_input_tokens']} in, {workflow_result['total_output_tokens']} out, {workflow_result['total_tokens']} total")
+
+            # Success: return result and exit outer loop
+            return workflow_result
+
+        except Exception as e:
+            workflow_result['error_message'] = str(e)
+            print(f"    Workflow failed: {e}")
+            print(f"    🔄 Retrying entire workflow in 60s...")
+            time.sleep(60)
+            # Loop will restart from Phase 1
+            continue
 
 # === EXPERIMENT MANAGEMENT ===
 
