@@ -521,8 +521,8 @@ def run_batch_divide_conquer_workflow(problems: List[Dict], chunk_size: int, N: 
 
         except Exception as e:
             workflow_result['error_message'] = str(e)
-            print(f"    Workflow failed: {e}")
-            print(f"    🔄 Retrying entire workflow in 20s...")
+            print(f"    ❌ Workflow failed: {e}")
+            print(f"    🔄 Retrying entire workflow in 20s... ⏳")
             time.sleep(20)
             # Loop will restart from Phase 1
             continue
