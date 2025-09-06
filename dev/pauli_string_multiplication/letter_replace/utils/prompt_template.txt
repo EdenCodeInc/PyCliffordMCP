@@ -1,0 +1,52 @@
+Task: Letter replacement over A–Z using an affine map modulo 26.
+
+Rules:
+- Map each capital letter to x with A=0, B=1, …, Z=25.
+- Compute y = (5*x + 13) mod 26 for each character independently.
+- Map y back to a capital letter (0→A, …, 25→Z).
+
+Complete letter-index mapping:
+A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8, J=9, K=10, L=11, M=12,
+N=13, O=14, P=15, Q=16, R=17, S=18, T=19, U=20, V=21, W=22, X=23, Y=24, Z=25
+
+Examples (illustrative only - NOT related to the real questions):
+Questions:
+(1) Input: $ ABCD $
+    Your Answer: 
+(2) Input: $ HELL $
+    Your Answer: 
+(3) Input: $ PYTH $
+    Your Answer: 
+(4) Input: $ CODE $
+    Your Answer: 
+(5) Input: $ MATH $
+    Your Answer: 
+
+Answers (formatted as required):
+<answers>
+```python
+LLM_answers = [
+    "NSXC",  # A=0→13=N, B=1→18=S, C=2→23=X, D=3→28→2=C
+    "WHQQ",  # H=7→22=W, E=4→7=H, L=11→16=Q, L=11→16=Q
+    "KDEW",  # P=15→10=K, Y=24→3=D, T=19→4=E, H=7→22=W
+    "XFCH",  # C=2→23=X, O=14→5=F, D=3→2=C, E=4→7=H
+    "VNEW"   # M=12→21=V, A=0→13=N, T=19→4=E, H=7→22=W
+]
+```
+</answers>
+
+Instructions:
+- For each input, output only the transformed string with no extra spaces.
+- Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
+- Do not include any other text outside this block.
+
+<answers>
+```python
+LLM_answers = [
+    # One string per input, in order
+]
+```
+</answers>
+
+Questions (Compute and give your answer in the same format as above):
+{{QUESTIONS_BLOCK}}
