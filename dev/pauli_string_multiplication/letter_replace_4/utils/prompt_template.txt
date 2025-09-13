@@ -1,0 +1,51 @@
+Task: Letter replacement over A–D using a cyclic shift modulo 4.
+
+Rules:
+- Map each capital letter to x with A=0, B=1, C=2, D=3.
+- Compute y = (x + 1) mod 4 for each character independently.
+- Map y back to a capital letter over {A,B,C,D} (0→A, 1→B, 2→C, 3→D).
+
+ABCD index mapping:
+A=0, B=1, C=2, D=3
+
+Examples (illustrative only - NOT related to the real questions):
+Questions:
+(1) Input: $ ABCD $
+    Your Answer: 
+(2) Input: $ BADC $
+    Your Answer: 
+(3) Input: $ DCBA $
+    Your Answer: 
+(4) Input: $ CCDD $
+    Your Answer: 
+(5) Input: $ AAAA $
+    Your Answer: 
+
+Answers (formatted as required):
+<answers>
+```python
+LLM_answers = [
+    "BCDA",  # A=0→1=B, B=1→2=C, C=2→3=D, D=3→0=A (cyclic +1)
+    "CABD",  # B→C, A→B, D→A, C→D
+    "CBAD",  # D→A, C→D, B→C, A→B
+    "DDAA",  # C→D, C→D, D→A, D→A
+    "BBBB"   # A→B for all four
+]
+```
+</answers>
+
+Instructions:
+- For each input, output only the transformed string (letters A–D only), no extra spaces.
+- Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
+- Do not include any other text outside this block.
+
+<answers>
+```python
+LLM_answers = [
+    # One string per input, in order
+]
+```
+</answers>
+
+Questions (Compute and give your answer in the same format as above):
+{{QUESTIONS_BLOCK}}

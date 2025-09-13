@@ -1,0 +1,51 @@
+{
+  "timestamp": "20250911_144749",
+  "model": "gemini-2.5-flash",
+  "L": 10,
+  "batch_size": 10,
+  "iteration": 10,
+  "inputs": null,
+  "llm_answers": [
+    "CABBABACAB",
+    "DCBDCDCDAC",
+    "CBCBDDCDAB",
+    "BBBBCBADDA",
+    "ACCDCCBDCD",
+    "BDCCABACAD",
+    "BDBBBBACBA",
+    "BDDCBCDDAB",
+    "CABACDDADC",
+    "CDCBBBCACC"
+  ],
+  "correct_answers": [
+    "CABBABACAB",
+    "DCBDCDCDAC",
+    "CBCBDADBBA",
+    "BBBCBADDAA",
+    "ACCDCCBDCD",
+    "BDCCABCAAD",
+    "BDBBBBCABA",
+    "BDDCCCDAAB",
+    "CABACDDADD",
+    "CDCBBBCAAC"
+  ],
+  "is_correct_list": [
+    true,
+    true,
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "accuracy": 0.3,
+  "error_message": null,
+  "input_tokens": 671,
+  "output_tokens": 108,
+  "total_tokens": 1604,
+  "temperature": 0.0,
+  "llm_response": "<answers>\n```python\nLLM_answers = [\n    \"CABBABACAB\",\n    \"DCBDCDCDAC\",\n    \"CBCBDDCDAB\",\n    \"BBBBCBADDA\",\n    \"ACCDCCBDCD\",\n    \"BDCCABACAD\",\n    \"BDBBBBACBA\",\n    \"BDDCBCDDAB\",\n    \"CABACDDADC\",\n    \"CDCBBBCACC\"\n]\n```\n</answers>"
+}
