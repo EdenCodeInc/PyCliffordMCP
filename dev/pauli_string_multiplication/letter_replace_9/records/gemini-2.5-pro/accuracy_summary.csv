@@ -255,3 +255,4 @@ timestamp,model,L,batch_size,temperature,iteration,accuracy,input_tokens,output_
 20250923_154734,gemini-2.5-pro,26,10,0.0,4,0.2,767,183,3399
 20250923_154734,gemini-2.5-pro,26,10,0.0,5,0.0,768,187,12602
 20250923_154734,gemini-2.5-pro,26,10,0.0,6,0.3,768,191,4899
+20250923_154734,gemini-2.5-pro,26,10,0.0,7,0.2,767,183,5202
