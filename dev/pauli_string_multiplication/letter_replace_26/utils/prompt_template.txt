@@ -1,8 +1,8 @@
-Task: Letter replacement over A–Z using an affine map modulo 26.
+Task: Letter replacement over A–Z using a cyclic shift modulo 26.
 
 Rules:
 - Map each capital letter to x with A=0, B=1, …, Z=25.
-- Compute y = (5*x + 13) mod 26 for each character independently.
+- Compute y = (x + 1) mod 26 for each character independently.
 - Map y back to a capital letter (0→A, …, 25→Z).
 
 Complete letter-index mapping:
@@ -13,7 +13,7 @@ Examples (illustrative only - NOT related to the real questions):
 Questions:
 (1) Input: $ ABCD $
     Your Answer: 
-(2) Input: $ HELL $
+(2) Input: $ AIML $
     Your Answer: 
 (3) Input: $ PYTH $
     Your Answer: 
@@ -26,11 +26,11 @@ Answers (formatted as required):
 <answers>
 ```python
 LLM_answers = [
-    "NSXC",  # A=0→13=N, B=1→18=S, C=2→23=X, D=3→28→2=C
-    "WHQQ",  # H=7→22=W, E=4→7=H, L=11→16=Q, L=11→16=Q
-    "KDEW",  # P=15→10=K, Y=24→3=D, T=19→4=E, H=7→22=W
-    "XFCH",  # C=2→23=X, O=14→5=F, D=3→2=C, E=4→7=H
-    "VNEW"   # M=12→21=V, A=0→13=N, T=19→4=E, H=7→22=W
+    "BCDE",  # A→B, B→C, C→D, D→E
+    "BJNM",  # A→B, I→J, M→N, L→M
+    "QZUI",  # P→Q, Y→Z, T→U, H→I
+    "DPEF",  # C→D, O→P, D→E, E→F
+    "NBUI"   # M→N, A→B, T→U, H→I
 ]
 ```
 </answers>

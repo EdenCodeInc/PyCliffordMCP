@@ -1,0 +1,51 @@
+{
+  "timestamp": "20250922_105240",
+  "model": "gemini-2.5-pro",
+  "L": 9,
+  "batch_size": 10,
+  "iteration": 10,
+  "inputs": null,
+  "llm_answers": [
+    "TTCTCGTAC",
+    "TAACCGCCG",
+    "ATGTAAGTC",
+    "GATTTGATC",
+    "CCAAAAGGT",
+    "TTTGAGATGA",
+    "TTGGCGCC\u0421",
+    "CTTGAGCGG",
+    "CGGATGGGG",
+    "GACACAGAT"
+  ],
+  "correct_answers": [
+    "TTCTCGCAC",
+    "TAACCGCCG",
+    "ATGTAAGTC",
+    "GATTTGATC",
+    "CCAAAAGGT",
+    "TTTGAGTGA",
+    "TTGGCGCCC",
+    "CTTGAGCGG",
+    "CGGATGGGG",
+    "GACACAGAT"
+  ],
+  "is_correct_list": [
+    false,
+    true,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true
+  ],
+  "accuracy": 0.7,
+  "error_message": null,
+  "input_tokens": 658,
+  "output_tokens": 108,
+  "total_tokens": 2261,
+  "temperature": 0.0,
+  "llm_response": "<answers>\n```python\nLLM_answers = [\n    \"TTCTCGTAC\",\n    \"TAACCGCCG\",\n    \"ATGTAAGTC\",\n    \"GATTTGATC\",\n    \"CCAAAAGGT\",\n    \"TTTGAGATGA\",\n    \"TTGGCGCC\u0421\",\n    \"CTTGAGCGG\",\n    \"CGGATGGGG\",\n    \"GACACAGAT\"\n]\n```\n</answers>"
+}

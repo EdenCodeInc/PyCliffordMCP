@@ -1,0 +1,51 @@
+{
+  "timestamp": "20250922_113804",
+  "model": "gemini-2.5-pro",
+  "L": 14,
+  "batch_size": 10,
+  "iteration": 5,
+  "inputs": null,
+  "llm_answers": [
+    "CAAGCTACTTTCAG",
+    "TCGGATGACTGGGA",
+    "TGGAGAGACCGCTT",
+    "GAGACAAAGAGGGT",
+    "CATACAGCAAATCT",
+    "GCCACACACGACT",
+    "AAATGCCTCCGGCT",
+    "CACCGGATCGGGAG",
+    "CGCTTTTTAGGGGC",
+    "TTCCACATTAGTCG"
+  ],
+  "correct_answers": [
+    "CAAGCTACTTTCAG",
+    "TCGGATGAGTGGGA",
+    "TGGAGAGACCGCTT",
+    "GAGACAAAGAGGGT",
+    "CATACAGCAAATCT",
+    "GCCACACACGATCT",
+    "AAATGCCTCCGGCT",
+    "CACCGGTCCGGGAG",
+    "CGCTTTTTAGGGGC",
+    "TTCCACATTAGTCG"
+  ],
+  "is_correct_list": [
+    true,
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true,
+    true
+  ],
+  "accuracy": 0.7,
+  "error_message": null,
+  "input_tokens": 679,
+  "output_tokens": 128,
+  "total_tokens": 2793,
+  "temperature": 0.0,
+  "llm_response": "<answers>\n```python\nLLM_answers = [\n    \"CAAGCTACTTTCAG\",\n    \"TCGGATGACTGGGA\",\n    \"TGGAGAGACCGCTT\",\n    \"GAGACAAAGAGGGT\",\n    \"CATACAGCAAATCT\",\n    \"GCCACACACGACT\",\n    \"AAATGCCTCCGGCT\",\n    \"CACCGGATCGGGAG\",\n    \"CGCTTTTTAGGGGC\",\n    \"TTCCACATTAGTCG\"\n]\n```\n</answers>"
+}

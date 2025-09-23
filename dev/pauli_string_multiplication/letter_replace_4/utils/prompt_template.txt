@@ -1,41 +1,41 @@
-Task: Letter replacement over A–D using a cyclic shift modulo 4.
+Task: Letter replacement over A/T/C/G using a cyclic shift modulo 4.
 
 Rules:
-- Map each capital letter to x with A=0, B=1, C=2, D=3.
+- Map each letter to x with A=0, T=1, C=2, G=3.
 - Compute y = (x + 1) mod 4 for each character independently.
-- Map y back to a capital letter over {A,B,C,D} (0→A, 1→B, 2→C, 3→D).
+- Map y back to a letter over {A,T,C,G} (0→A, 1→T, 2→C, 3→G).
 
-ABCD index mapping:
-A=0, B=1, C=2, D=3
+ATCG index mapping:
+A=0, T=1, C=2, G=3
 
 Examples (illustrative only - NOT related to the real questions):
 Questions:
-(1) Input: $ ABCD $
+(1) Input: $ ATCG $
     Your Answer: 
-(2) Input: $ BADC $
+(2) Input: $ TAAG $
     Your Answer: 
-(3) Input: $ DCBA $
+(3) Input: $ GGCC $
     Your Answer: 
-(4) Input: $ CCDD $
+(4) Input: $ AAAA $
     Your Answer: 
-(5) Input: $ AAAA $
+(5) Input: $ CTGA $
     Your Answer: 
 
 Answers (formatted as required):
 <answers>
 ```python
 LLM_answers = [
-    "BCDA",  # A=0→1=B, B=1→2=C, C=2→3=D, D=3→0=A (cyclic +1)
-    "CABD",  # B→C, A→B, D→A, C→D
-    "CBAD",  # D→A, C→D, B→C, A→B
-    "DDAA",  # C→D, C→D, D→A, D→A
-    "BBBB"   # A→B for all four
+    "TCGA",  # A→T, T→C, C→G, G→A
+    "ACTA",  # T→C, A→T, A→T, G→A
+    "AATT",  # G→A, G→A, C→G, C→G
+    "TTTT",  # A→T (x4)
+    "GACT"   # C→G, T→C, G→A, A→T
 ]
 ```
 </answers>
 
 Instructions:
-- For each input, output only the transformed string (letters A–D only), no extra spaces.
+- For each input, output only the transformed string (letters A/T/C/G only), no extra spaces.
 - Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
 - Do not include any other text outside this block.
 

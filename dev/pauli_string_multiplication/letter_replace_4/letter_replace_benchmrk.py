@@ -26,8 +26,8 @@ def _print_runtime_paths(prompt_template_path: str, records_base_dir: str) -> No
     print(f"{'✅' if os.path.exists(prompt_template_path) else '⚠️ '} prompt_template: {prompt_template_path}")
     print(f"{'✅' if os.path.isdir(records_base_dir) else '⚠️ '} records_base_dir: {records_base_dir}")
 
-# --- Simple letter transform utilities (ABCD only) ---
-ALPHABET = "ABCD"
+# --- Simple letter transform utilities (ATCG only) ---
+ALPHABET = "ATCG"
 MODULUS = len(ALPHABET)
 char_to_idx = {c: i for i, c in enumerate(ALPHABET)}
 idx_to_char = {i: c for i, c in enumerate(ALPHABET)}
@@ -36,7 +36,7 @@ def transform_string(s: str) -> str:
     out = []
     for ch in s:
         if ch not in char_to_idx:
-            raise ValueError(f"Invalid character '{ch}' (only A–D allowed)")
+            raise ValueError(f"Invalid character '{ch}' (only A/T/C/G allowed)")
         x = char_to_idx[ch]
         y = (x + 1) % MODULUS  # cyclic shift by +1 modulo 4
         out.append(idx_to_char[y])

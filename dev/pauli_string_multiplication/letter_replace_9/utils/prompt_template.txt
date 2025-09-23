@@ -1,0 +1,51 @@
+Task: Letter replacement over A–I using a cyclic shift modulo 9.
+
+Rules:
+- Map each capital letter to x with A=0, B=1, …, I=8.
+- Compute y = (x + 1) mod 9 for each character independently.
+- Map y back to a capital letter over {A,…,I} (0→A, …, 8→I).
+
+Complete letter-index mapping (A–I):
+A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8
+
+Examples (illustrative only - NOT related to the real questions):
+Questions:
+(1) Input: $ ABCD $
+    Your Answer: 
+(2) Input: $ AIGF $
+    Your Answer: 
+(3) Input: $ GHCI $
+    Your Answer: 
+(4) Input: $ IAAA $
+    Your Answer: 
+(5) Input: $ CCGI $
+    Your Answer: 
+
+Answers (formatted as required):
+<answers>
+```python
+LLM_answers = [
+    "BCDE",  # A→B, B→C, C→D, D→E
+    "BAHG",  # A→B, I→A, G→H, F→G
+    "HIDA",  # G→H, H→I, C→D, I→A (wrap)
+    "BAAA",  # I→A (wrap), A→B, A→B, A→B
+    "DDHA"   # C→D, C→D, G→H, I→A (wrap)
+]
+```
+</answers>
+
+Instructions:
+- For each input, output only the transformed string (letters A–I only), no extra spaces.
+- Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
+- Do not include any other text outside this block.
+
+<answers>
+```python
+LLM_answers = [
+    # One string per input, in order
+]
+```
+</answers>
+
+Questions (Compute and give your answer in the same format as above):
+{{QUESTIONS_BLOCK}}

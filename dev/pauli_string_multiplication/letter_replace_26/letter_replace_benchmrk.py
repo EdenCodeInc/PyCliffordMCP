@@ -37,7 +37,7 @@ def transform_string(s: str) -> str:
         if ch not in char_to_idx:
             raise ValueError(f"Invalid character '{ch}' (only A–Z allowed)")
         x = char_to_idx[ch]
-        y = (5 * x + 13) % 26
+        y = (x + 1) % 26  # cyclic shift by +1 modulo 26
         out.append(idx_to_char[y])
     return ''.join(out)
 

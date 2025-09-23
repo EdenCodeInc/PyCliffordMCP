@@ -1,0 +1,51 @@
+Task: Letter replacement over A–M using a cyclic shift modulo 13.
+
+Rules:
+- Map each capital letter to x with A=0, B=1, …, M=12.
+- Compute y = (x + 1) mod 13 for each character independently.
+- Map y back to a capital letter over {A,…,M} (0→A, …, 12→M).
+
+Complete letter-index mapping (A–M):
+A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8, J=9, K=10, L=11, M=12
+
+Examples (illustrative only - NOT related to the real questions):
+Questions:
+(1) Input: $ ABCD $
+    Your Answer: 
+(2) Input: $ AIML $
+    Your Answer: 
+(3) Input: $ JKLJ $
+    Your Answer: 
+(4) Input: $ MAAA $
+    Your Answer: 
+(5) Input: $ CCGM $
+    Your Answer: 
+
+Answers (formatted as required):
+<answers>
+```python
+LLM_answers = [
+    "BCDE",  # A→B, B→C, C→D, D→E
+    "BJAM",  # A→B, I→J, M→A (wrap), L→M
+    "KLMK",  # J→K, K→L, L→M, J→K
+    "ABBB",  # M→A (wrap), A→B, A→B, A→B
+    "DDHA"   # C→D, C→D, G→H, M→A (wrap)
+]
+```
+</answers>
+
+Instructions:
+- For each input, output only the transformed string (letters A–M only), no extra spaces.
+- Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
+- Do not include any other text outside this block.
+
+<answers>
+```python
+LLM_answers = [
+    # One string per input, in order
+]
+```
+</answers>
+
+Questions (Compute and give your answer in the same format as above):
+{{QUESTIONS_BLOCK}}
