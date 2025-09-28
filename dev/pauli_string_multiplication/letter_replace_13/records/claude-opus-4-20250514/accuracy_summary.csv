@@ -1,0 +1,3 @@
+timestamp,model,L,batch_size,temperature,iteration,accuracy,input_tokens,output_tokens,total_tokens
+20250925_132848,claude-opus-4-20250514,50,10,0.0,1,0.0,994,13,1007
+20250925_132848,claude-opus-4-20250514,50,10,0.0,2,0.0,992,30,1022
