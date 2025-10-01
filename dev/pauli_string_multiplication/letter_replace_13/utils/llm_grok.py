@@ -6,6 +6,7 @@ from typing import Tuple, Dict, Optional
 # Docs: https://docs.x.ai/
 
 API_BASE = os.getenv("XAI_API_BASE", "https://api.x.ai/v1")
+TIMEOUT = int(os.getenv("XAI_TIMEOUT", "600"))  # seconds (default 10 min)
 
 
 def query_llm(
@@ -29,7 +30,7 @@ def query_llm(
     if max_output_tokens is not None:
         payload["max_tokens"] = max_output_tokens
 
-    resp = requests.post(url, headers=headers, json=payload, timeout=180)
+    resp = requests.post(url, headers=headers, json=payload, timeout=TIMEOUT)
     resp.raise_for_status()
     data = resp.json()
 
