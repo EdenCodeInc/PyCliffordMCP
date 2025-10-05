@@ -30,7 +30,7 @@ def query_llm(
     - Extracts all text blocks from the response
     """
     client = anthropic.Anthropic(api_key=api_key)
-
+    
     # cap selection
     model_cap = MODEL_MAX_TOKENS.get(model, 32000)
     max_tokens = max_output_tokens or 10240
@@ -57,7 +57,7 @@ def query_llm(
     }
     if token_metadata["input_tokens"] is not None and token_metadata["output_tokens"] is not None:
         token_metadata["total_tokens"] = token_metadata["input_tokens"] + token_metadata["output_tokens"]
-
+    
     # collect all text blocks (Claude 4.x may include non-text blocks first)
     text_parts = [blk.text for blk in resp.content if getattr(blk, "type", "") == "text"]
     return ("\n".join(text_parts) if text_parts else ""), token_metadata
