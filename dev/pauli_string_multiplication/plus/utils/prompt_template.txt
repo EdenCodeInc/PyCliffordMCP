@@ -1,0 +1,48 @@
+Task: Integer addition with tunable digit length.
+
+Rules:
+- You will be given addition problems in the form A+B where A and B are positive integers.
+- Compute the sum and return the result as a string.
+- No extra spaces or formatting.
+
+Examples (illustrative only - NOT related to the real questions):
+Questions:
+(1) Input: $ 1234+5678 $
+    Your Answer: 
+(2) Input: $ 9876+1234 $
+    Your Answer: 
+(3) Input: $ 4567+8901 $
+    Your Answer: 
+(4) Input: $ 1111+2222 $
+    Your Answer: 
+(5) Input: $ 9999+1 $
+    Your Answer: 
+
+Answers (formatted as required):
+<answers>
+```python
+LLM_answers = [
+    "6912",   # 1234+5678=6912
+    "11110",  # 9876+1234=11110
+    "13468",  # 4567+8901=13468
+    "3333",   # 1111+2222=3333
+    "10000"   # 9999+1=10000
+]
+```
+</answers>
+
+Instructions:
+- For each input, output only the numeric result, no extra spaces.
+- Return all answers strictly in the block below, as valid Python code, matching the order of the inputs.
+- Do not include any other text outside this block.
+
+<answers>
+```python
+LLM_answers = [
+    # One string per input, in order
+]
+```
+</answers>
+
+Questions (Compute and give your answer in the same format as above):
+{{QUESTIONS_BLOCK}}

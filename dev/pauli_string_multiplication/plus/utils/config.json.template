@@ -1,0 +1,15 @@
+{
+  "api_keys": {
+    "openai": "your-openai-api-key-here",
+    "anthropic": "your-anthropic-api-key-here",
+    "google": "your-google-api-key-here"
+  },
+  "benchmark_settings": {
+    "default_temperature": 0.0,
+    "default_max_tokens": null
+  },
+  "paths": {
+    "prompt_template": "dev/pauli_string_multiplication/plus/utils/prompt_template.txt",
+    "records_base_dir": "dev/pauli_string_multiplication/plus/records"
+  }
+} 
