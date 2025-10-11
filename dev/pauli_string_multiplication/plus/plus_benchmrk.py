@@ -140,7 +140,7 @@ def main():
                 questions_block, gt_answers = generate_questions_and_answers(L, batch_size)
                 full_prompt = prompt_template.replace('{{QUESTIONS_BLOCK}}', questions_block)
                 llm_response, token_metadata = query_llm(full_prompt, MODEL_NAME, API_KEY, temperature=TEMPERATURE)
-                time.sleep(8)
+                time.sleep(2)
                 break
             except Exception as e:
                 print(f"[Iteration {it+1}] ❌ API call failed: {e}")
