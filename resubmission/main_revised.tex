@@ -1,0 +1,1005 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2025
+
+% The authors should use one of these tracks.
+% Before accepting by the NeurIPS conference, select one of the options below.
+% 0. "default" for submission
+ \usepackage[preprint]{neurips_2025}
+ \usepackage{graphicx}
+ \usepackage{amsmath}
+ \usepackage{dsfont}
+ \usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+
+
+% the "default" option is equal to the "main" option, which is used for the Main Track with double-blind reviewing.
+% 1. "main" option is used for the Main Track
+%  \usepackage[main]{neurips_2025}
+% 2. "position" option is used for the Position Paper Track
+%  \usepackage[position]{neurips_2025}
+% 3. "dandb" option is used for the Datasets & Benchmarks Track
+ % \usepackage[dandb]{neurips_2025}
+% 4. "creativeai" option is used for the Creative AI Track
+%  \usepackage[creativeai]{neurips_2025}
+% 5. "sglblindworkshop" option is used for the Workshop with single-blind reviewing
+ % \usepackage[sglblindworkshop]{neurips_2025}
+% 6. "dblblindworkshop" option is used for the Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop]{neurips_2025}
+
+% After being accepted, the authors should add "final" behind the track to compile a camera-ready version.
+% 1. Main Track
+ % \usepackage[main, final]{neurips_2025}
+% 2. Position Paper Track
+%  \usepackage[position, final]{neurips_2025}
+% 3. Datasets & Benchmarks Track
+ % \usepackage[dandb, final]{neurips_2025}
+% 4. Creative AI Track
+%  \usepackage[creativeai, final]{neurips_2025}
+% 5. Workshop with single-blind reviewing
+%  \usepackage[sglblindworkshop, final]{neurips_2025}
+% 6. Workshop with double-blind reviewing
+%  \usepackage[dblblindworkshop, final]{neurips_2025}
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+% For workshops (5., 6.), the authors should add the name of the workshop, "\workshoptitle" command is used to set the workshop title.
+% \workshoptitle{WORKSHOP TITLE}
+
+% "preprint" option is used for arXiv or other preprint submissions
+ % \usepackage[preprint]{neurips_2025}
+
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2025}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{cleveref}
+\crefname{appendix}{App.}{Apps.}
+\crefname{equation}{Eq.}{Eqs.}
+\crefname{figure}{Fig.}{Figs.}
+\crefname{table}{Tab.}{Tabs.}
+\crefname{section}{Sec.}{Secs.}
+\usepackage{xcolor}
+\newcommand{\yzy}[1]{\textcolor[rgb]{0,0.6,0.15}{[\textsf{YZY}: #1]}}
+
+% Note. For the workshop paper template, both \title{} and \workshoptitle{} are required, with the former indicating the paper title shown in the title and the latter indicating the workshop title displayed in the footnote.
+\title{How Focused Are LLMs? A Quantitative Study via Repetitive Deterministic Prediction Tasks}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{
+  Wanda Hou \\
+  EdenCode Inc. \\
+  \texttt{hwanda@edencode.ai} \\
+  \And
+  Leon Zhou \\
+  Stevenson School \\
+  \texttt{lzhou26@stevensonschool.org} \\
+  \\
+  \And
+  Hong-Ye Hu \\
+  Harvard University \\
+  \texttt{hongyehu@fas.harvard.edu} \\
+  \And
+  Yubei Chen\\
+  UC Davis \\
+  \texttt{ybchen@ucdavis.edu} \\
+  \And
+  Yi-Zhuang You \\
+  EdenCode Inc. \\
+  \texttt{yzyou@edencode.ai} \\
+  \And
+  Xiao-Liang Qi \\
+ Path Integral Technology, Inc. \\
+  \texttt{phynics@pathintegral.xyz} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+We investigate the performance of large language models (LLMs) on repetitive deterministic prediction tasks and study how the sequence accuracy rate (SAR) scales with output length. Each such task involves the repetition of the same operation $n$ times. Examples of such tasks include letter replacement in letter strings following a given rule, integer addition, and multiplication of string operators in many-body quantum mechanics. If the LLM performs the task by a simple repetition algorithm, the success rate would follow an exponential decay with sequence length. In contrast, our experiments on leading LLMs reveal a sharp double-exponential drop beyond a characteristic length scale—an accuracy cliff marking a transition from reliable to unstable generation. This implies that LLMs fail to execute each operation independently. To explain this phenomenon, we propose an effective statistical-physics model capturing the competition between external conditioning from the prompt and internal interference among generated tokens. The model quantitatively reproduces the observed crossover and provides an interpretable, effective description that links correlated token errors to sequence-level failure. Fitting the model to empirical results across multiple LLMs and tasks yields effective parameters that characterize the intrinsic error rate and error accumulation factor for each model-task pair, offering a principled framework for understanding the limits of deterministic accuracy in LLMs.
+
+%Accuracy has long served as the most direct and interpretable measure of model performance in machine learning, particularly in settings where each input corresponds to a single correct label. For many language generation tasks, however, evaluation requires alternative metrics since multiple outputs can be acceptable. By contrast, in domains such as mathematics, physics, and computer science, problems often have a unique solution, making exact sequence-level correctness the natural performance criterion. We formalize this idea through the \emph{Sequence Accuracy Rate (SAR)}, which quantifies the fraction of instances where a large language model (LLM) produces the exact correct output. To study SAR systematically, we introduce three controlled benchmarks—cyclic letter replacement, integer addition and Pauli string multiplication—each admitting a unique ground-truth solution and an adjustable complexity parameter $N$. All three tasks exhibit multiplicative error accumulation, allowing precise characterization of accuracy scaling. Our experiments with state-of-the-art LLMs reveal systematic failure modes. To account for this phenomenon, we draw on a statistical-physics model inspired by the Ising system, which captures the observed scaling behavior. Together, these results establish a principled framework for evaluating the reliability of LLMs in deterministic reasoning domains.
+\end{abstract}
+
+\section{Introduction}
+
+\emph{Accuracy rate} is among the most fundamental and widely adopted evaluation metrics in machine learning, especially for classification and other discriminative tasks. Its appeal lies in the clarity of its definition: each input has a well-defined ground-truth label, and the model's prediction can be judged unambiguously as correct or incorrect. This binary criterion makes accuracy a natural measure of performance, enabling direct comparison across models and datasets.
+
+However, this paradigm does not directly extend to large language models (LLMs). Many LLM applications, such as machine translation, summarization, or dialogue, are inherently sequence-to-sequence generation problems. In these settings, the model generates text probabilistically, token by token, sampling from a distribution of plausible continuations. Crucially, there is rarely a single ``correct'' output: multiple valid translations, summaries, or conversational responses may exist. Consequently, simple exact-match accuracy is insufficient for evaluation, and researchers rely instead on a suite of task-specific metrics (e.g., BLEU, ROUGE, perplexity, or human judgment)~\citep{papineni-etal-2002-bleu,lin-2004-rouge,liang2022holistic} that capture fluency, coherence, and relevance.
+
+Yet this limitation is context-dependent. In scientific domains---including mathematics, physics, and computer science---the nature of the task often changes. Here, many problems admit a unique correct solution: a definite numerical value, a closed-form expression, or a precise code output. For instance, the question ``what is $2342342 + 3442342$'' has only one acceptable answer, and the model's response must exactly match the correct sequence of digits to be considered correct~\citep{cobbe2021training,hendrycks2021measuring,lewkowycz2022solving}. In such applications, the probabilistic flexibility of LLMs does not diminish the importance of exact correctness. The evaluation once again reduces to a binary criterion: either the model outputs the correct sequence or it does not.
+
+This observation motivates the introduction of a new evaluation concept tailored for LLMs in scientific applications: the \emph{Sequence Accuracy Rate (SAR)}.
+SAR measures the proportion of problem instances for which the LLM produces the exact correct sequence as output.
+By aligning the evaluation of LLMs with the well-established standard of accuracy in classification, SAR provides a rigorous and interpretable metric for assessing LLMs in domains where precision and correctness are paramount, as illustrated in \cref{fig:illustration}.
+
+LLMs have achieved remarkable progress across a wide range of tasks, yet their reliability on structured, multi-step reasoning remains poorly understood~\citep{wei2022chain,havrilla2024glore}. While in generative modeling the challenge has often been framed as a tradeoff between diversity and realism~\citep{astolfi2024consistency}, multi-step reasoning tasks demand consistent correctness across sequential subtasks. In the simplest case, success in these settings is approximately \emph{factorizable}: for tasks whose output positions are computed independently (such as cyclic letter replacement), the probability of solving the overall problem is the product of per-step accuracies, making performance highly sensitive to individual step error rates. Other tasks introduce explicit dependencies between steps---integer addition couples digits through long-range carry propagation, and Pauli string multiplication couples sites through a shared global phase---so that the strict factorization holds only as a leading-order approximation. This range of dependency structures is exactly what allows us to probe whether models exploit compositional structure and execute each step independently, rather than treating complex problems monolithically~\citep{lake2018generalization}.
+
+To probe this challenge, we introduce a minimal and fully deterministic evaluation class where each problem instance admits a unique ground-truth solution and complexity can be tuned by a single parameter $N$. We present three complementary benchmarks: (i) \emph{cyclic letter replacement task}, a purely symbolic problem over a finite alphabet that isolates stepwise error propagation without memory; (ii) \emph{integer addition}, which tests the handling of local carry rules and long-range carry propagation across digits; and (iii) \emph{Pauli string multiplication}, which requires tracking both local symbol rules and a global phase factor, thereby testing the model’s ability to maintain a lightweight memory across many steps All three benchmarks share the key property that overall complexity decays multiplicatively with sequence length $N$, providing a clean probe of cumulative error accumulation in deterministic reasoning~\citep{wang2022self,liu2023lost,turpin2023language,wan2025fano}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\linewidth]{figs/illustration.pdf}
+    \caption{Illustration of the experimental setup and theoretical framework.
+The left panel shows examples of deterministic sequence prediction tasks (e.g., arithmetic problems) used to evaluate large language models (LLMs), where each token’s correctness is represented by a binary variable (Ising spin). Token errors are modeled as Ising spins interacting through all-to-all random couplings, capturing how correlations and noise propagate during sequence generation. The right panel displays the typical behavior of the Sequence Accuracy Rate (SAR) (i.e.~the probability for all tokens to be correct in a output sequence) as a function of the sequence length $N$: SAR remains high for short sequences, then drops sharply beyond a characteristic crossover scale $N_*$, forming the accuracy cliff, which is nicely reproduced by a spin-glass statistical-mechanical model.}
+    \label{fig:illustration}
+\end{figure}
+
+
+Beyond empirical evaluation, we develop a statistical physics interpretation of the observed behavior of SAR, drawing an analogy to the Ising model in which token correctness variables influence each other through effective random couplings. Our theoretical model reproduces  the accuracy-cliff cross-over behavior observed in LLMs, aligning closely with observed scaling behaviors, offering principled intuition for the limits of reliability as complexity grows. We stress that this analogy is an \emph{effective}, phenomenological description rather than a microscopic theory of the network. Together, our benchmarks and theoretical framework establish a controlled setting for studying how LLMs manage compositional reasoning, memory, and robustness in deterministic problem families.
+
+\section{Experiment}
+
+We prompted a set of large language models (LLMs)---\texttt{gpt-5}, \texttt{gemini-2.5-pro}, \texttt{gemini-2.5-flash}, \texttt{grok-4}, and \texttt{claude-4-sonnet}---to perform a series of deterministic sequence prediction tasks that each admit a unique correct solution.
+These tasks provide a well-defined setting for evaluating the sequence accuracy rate (SAR), enabling a quantitative analysis of how the accuracy of generated sequences scales with the problem size, measured by the output sequence length. During evaluation, all models were tested in a closed setting with external tools such as code execution and web access explicitly disabled. Concretely, every query was issued through a plain text completion/chat call with no tool-use, function-calling, or code-interpreter interfaces enabled (see the source code); consequently the models cannot invoke external calculators or solvers, and all results reflect the models' internal, in-context reasoning capabilities only.
+
+For each task and each sequence length, we evaluate up to $n=100$ independent problem instances (10 repetitions of a batch of 10 freshly sampled problems; a subset of \texttt{grok-4} runs use fewer repetitions, $n\approx20$--$30$); all accuracy curves report SAR with $95\%$ confidence-interval error bars (bootstrap over the repeated batches; $n$ up to $100$ instances per length). Following the definition in \cref{app:sk-sar}, SAR is the geometric mean of the per-batch accuracies; for integer addition (and the scaling-collapse analysis) we report the instance-level success rate with $95\%$ Wilson intervals, and for a small number of high-accuracy lengths where a single anomalous batch (e.g.\ a formatting failure) collapses the geometric mean we likewise report the instance success rate. The per-task aggregation is detailed in the released analysis code. Sampling temperature was set to $0$ wherever the API exposes it; reasoning models (\texttt{gpt-5}, \texttt{grok-4}) use their fixed internal sampling and do not expose a temperature parameter. While the quantitative results may vary slightly with prompt phrasing or instruction style, the qualitative behaviors reported here are robust across formulations. The prompt templates and per-model settings used for each task are available in the source code at
+\href{https://github.com/EdenCodeInc/PyCliffordMCP/tree/main/dev/pauli_string_multiplication}{\texttt{GitHub}}.
+
+\subsection{Cyclic Letter Replacement}
+
+We start with a simple \emph{cyclic letter replacement} task defined over an alphabet
+\begin{equation}
+\mathcal{A} = \{\mathrm{A}, \mathrm{B}, \mathrm{C}, \ldots\}.
+\end{equation}
+Each letter is mapped to an integer index $x \in \{0,1,\ldots,|\mathcal{A}|-1\}$.
+The transformation rule is a cyclic shift by one modulo the alphabet size:
+\begin{equation}
+y = (x+1) \bmod |\mathcal{A}|.
+\end{equation}
+The output is then mapped back to a letter in $\mathcal{A}$. Each position in the input string is transformed independently, so for a string of length $N$ the task is simply to apply the shift rule to each site.
+
+Formally, given an input string
+\begin{equation}
+S = \big(x_1, x_2, \ldots, x_N\big), \quad x_j \in \{0,\ldots,|\mathcal{A}|-1\},
+\end{equation}
+the transformed output string is
+\begin{equation}
+T = \big((x_1+1)\bmod |\mathcal{A}|,\ (x_2+1)\bmod |\mathcal{A}|,\ \ldots,\ (x_N+1)\bmod |\mathcal{A}|\big).
+\end{equation}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/data-alph.pdf}
+    \caption{Cyclic letter replacement benchmark on \texttt{gemini-2.5-pro} and \texttt{gemini-2.5-flash} with alphabet size $|\mathcal{A}|=4,9,13$ and $26$. Each point aggregates $n=100$ instances; error bars denote $95\%$ bootstrap confidence intervals.}
+    \label{fig:data-alph}
+\end{figure}
+
+For example, for $\mathcal{A}={A,B,C,D}$:
+\begin{center}
+\begin{tabular}{lcl}
+Input: & ADBAA & $\Rightarrow$ Output: BACBB \\
+Input: & DABDC    & $\Rightarrow$ Output: ABCAD
+\end{tabular}
+\end{center}
+
+For this task, the results are presented in \cref{fig:data-alph} and \cref{fig:data-alph-13}.
+\cref{fig:data-alph} shows results from \texttt{gemini-2.5-pro} and \texttt{gemini-2.5-flash} with alphabet sizes $|\mathcal{A}|=4,9,13,26$.
+\cref{fig:data-alph-13} compares \texttt{gpt-5}, \texttt{gemini-2.5-pro}, \texttt{gemini-2.5-flash}, \texttt{grok-4}, and \texttt{claude-4-sonnet} at $|\mathcal{A}|=13$.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figs/data-alph-13.pdf}
+    \caption{Cyclic letter replacement with alphabet size $|\mathcal{A}|=13$ across many different models. Each point aggregates $n=100$ instances ($n\approx20$--$30$ for some \texttt{grok-4} points); error bars denote $95\%$ bootstrap confidence intervals.}
+    \label{fig:data-alph-13}
+\end{figure}
+
+% In this benchmark, each site is transformed independently by a fixed cyclic shift rule, so no global phase or memory variable is required.
+% If the probability of making a mistake at a single site is $p_{\ell}$,
+% then the overall sequence accuracy rate for a string of length $N$ is
+% \begin{equation}\label{letter_sar}
+%     \text{SAR}(N) = (1 - p_{\ell})^{N}.
+% \end{equation}
+
+\subsection{Integer Addition}
+
+Next, we consider \emph{integer addition} with a fixed number of digits.
+The task probes arithmetic consistency and multi-digit carry propagation—requiring sequential reasoning rather than purely single-site transformations.
+
+Each query presents an addition problem of the form
+\begin{equation}
+A + B,
+\end{equation}
+where \(A,B \in \mathbb{N}\) are positive integers with the same digit lengths.
+The model is asked to compute the sum and return the result as a plain numeric string.
+
+For example at $N=4$:
+
+\begin{center}
+\begin{tabular}{lcl}
+Input: & \(\texttt{1234} + \texttt{5678}\) & $\Rightarrow$ Output: \texttt{6912} \\
+Input: & \(\texttt{9999} + \texttt{0001}\)    & $\Rightarrow$ Output: \texttt{10000}
+\end{tabular}
+\end{center}
+
+The corresponding results are shown in \cref{fig:data-add},
+evaluating \texttt{gemini-2.5-flash}, \texttt{gemini-2.5-pro}, \texttt{grok-4}, and \texttt{claude-4-sonnet}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/data-add.pdf}
+    \caption{Integer addition benchmark across different models. Each point aggregates $n=100$ instances ($n\approx20$--$30$ for some \texttt{grok-4} points); error bars denote $95\%$ Wilson confidence intervals.}
+    \label{fig:data-add}
+\end{figure}
+
+% Each sample is independently generated, and the difficulty scales with the number of digits (i.e., carry depth).
+% If the probability of making an error in computing or propagating each digit or carry operation is $p_{\mathrm{add}}$,
+% then the expected sequence accuracy for an $N$-digit addition scales as
+% \begin{equation}\label{add_sar}
+%     \text{SAR}(N) = (1 - p_{\mathrm{add}})^{N}.
+% \end{equation}
+
+% This task introduces arithmetic state propagation and discrete carry memory, serving as a minimal model for sequential symbolic reasoning with internal dependencies.
+
+\subsection{Pauli Algebra}
+
+As a third deterministic benchmark, we consider \emph{Pauli string multiplication} task with tunable string length. The Pauli operators $X$, $Y$, and $Z$ are $2\times 2$ matrices
+\begin{align}
+    X=\left(\begin{array}{cc}0&1\\1&0\end{array}\right),~Y=\left(\begin{array}{cc}0&-i\\i&0\end{array}\right),~Z=\left(\begin{array}{cc}1&0\\0&-1\end{array}\right),
+\end{align}
+They originate as generators of the Lie algebra $\mathfrak{su}(2)$, up to constants. For our purposes we treat them algebraically, using only their multiplication rules and phase factors. The identity operator is denoted $I$. The single-qubit multiplication rules are
+\begin{equation}
+X \times X = Y \times Y = Z \times Z = I,
+\end{equation}
+\begin{equation}
+X \times Y = iZ, \quad Y \times X = -iZ,
+\end{equation}
+\begin{equation}
+Y \times Z = iX, \quad Z \times Y = -iX,
+\end{equation}
+\begin{equation}
+Z \times X = iY, \quad X \times Z = -iY,
+\end{equation}
+
+together with $I \times P = P$ for $P \in \{I,X,Y,Z\}$.
+
+A Pauli string on $N$ sites is
+\begin{equation}
+S = \alpha \bigotimes_{\ell=1}^{N} P_\ell,
+\end{equation}
+where $\alpha \in \{\pm 1,\pm i\}$ is a global phase and $P_\ell \in \{I,X,Y,Z\}$.
+Because Pauli operators acting on different sites commute, the product of two strings reduces to independent local multiplications together with accumulation of the global phase:
+\begin{equation}
+\left(\alpha_1 \bigotimes_{\ell=1}^{N} P_\ell \right)
+\left(\alpha_2 \bigotimes_{\ell=1}^{N} Q_\ell \right)
+= \Big(\alpha_1 \alpha_2 \prod_{\ell=1}^{N} \phi_\ell \Big)
+\bigotimes_{\ell=1}^{N} R_\ell,
+\end{equation}
+where $P_\ell \times Q_\ell = \phi_\ell R_\ell$ with $\phi_\ell \in \{\pm 1,\pm i\}$ and $R_\ell \in \{I,X,Y,Z\}$.
+
+This structure makes the task explicitly factorizable:
+each site requires a local Pauli multiplication and a phase update,
+while the overall result depends on consistent accumulation of all local outcomes. See \cref{app:pauli_sar} for a theoretical complexity analysis.
+% If the probability of making a mistake during a local Pauli multiplication is $p_{\sigma}$
+% and the probability of making a mistake during a phase update is $p_{\phi}$,
+% then the overall sequence accuracy rate for a string of length $N$ is
+% \begin{equation}\label{pauli_sar}
+%     \text{SAR}(N) = (1 - p_{\sigma})^{N}\left[\tfrac14+\tfrac34\left(\tfrac{3 - 4p_{\phi}}{3}\right)^{N}\right].
+% \end{equation}
+
+
+The need to consistently maintain and update the global phase highlights the role of \emph{memory handling} in multi-step reasoning. Unlike purely sitewise problems, errors here can accumulate not only locally but also through the global phase register.
+
+For this task, the results are presented in \cref{fig:data-pauli},
+evaluating \texttt{gemini-2.5-pro} and \texttt{gemini-2.5-flash} under two evaluation criteria:
+one requiring both the operator sequence and accumulated phase to be correct,
+and a relaxed criterion considering only the operator sequence while ignoring phase errors.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/data-pauli.pdf}
+    \caption{Pauli string multiplication benchmark on \texttt{gemini-2.5-pro} and \texttt{gemini-2.5-flash} evaluated under strict (phase-matched) and relaxed (phase-ignored) criteria. Each point aggregates $n=100$ instances; error bars denote $95\%$ bootstrap confidence intervals.}
+    \label{fig:data-pauli}
+\end{figure}
+
+\section{Analysis}
+
+\subsection{Empirical Formula}
+
+In our experiments, we observed that the Sequence Accuracy Rate (SAR) depends strongly on the output sequence length $N$. Assuming independent per-token error events during generation, the baseline expectation is that the sequence accuracy rate decays exponentially with the sequence length $N$:
+\begin{equation}\label{exp_sar}
+    \text{SAR}(N) = \mathrm{e}^{-\beta N},
+\end{equation}
+where $\beta>0$ denotes a constant per-token error rate.
+However, as we have seen in the above experiments, the empirical results deviate significantly from this simple picture.
+Instead of a smooth exponential decay, SAR exhibits a distinct crossover behavior:
+it remains nearly perfect for short sequences and then undergoes a rapid drop to zero around a characteristic length scale $N_{*}$.
+
+This observation indicates that token errors are not independent: earlier tokens affect the error rate of subsequent tokens. To capture this history dependence, we treat the per-token error rate as a function of the sequence length $N$ rather than a constant and adopt the following empirical fit:
+\begin{equation}\label{emp_sar}
+    \text{SAR}(N) = \mathrm{e}^{-\beta(N)N},
+    \quad \beta(N) = \beta_0\, \alpha^{N-1},
+\end{equation}
+where $\beta_0>0$ quantifies the \emph{intrinsic} error rate,
+and $\alpha$ represents the \emph{error accumulation factor},
+which characterizes how local errors compound as the sequence length increases.
+When $\alpha = 1$, the model reduces to the standard exponential decay expected from independent token errors. For $\alpha > 1$, however, the effective error rate $\beta(N)$ grows exponentially with $N$ even when $\beta_0$ is small, leading to a rapid, catastrophic drop in accuracy once $\beta(N)$ becomes of order one. The onset of this accuracy cliff occurs at a characteristic sequence length
+\begin{equation}\label{eq:Nc}
+    N_*\simeq 1+\frac{\log(1/\beta_0)}{\log\alpha},
+\end{equation}
+beyond which scale the model's reliability collapses.
+
+To verify that the two-parameter form is warranted rather than merely flexible, we compared it against the single-exponential baseline ($\alpha=1$, \cref{exp_sar}) via the Akaike information criterion across model--task pairs: the double-exponential is favored in all but the highest-accuracy cases (e.g.\ \texttt{gemini-2.5-pro} on integer addition), which sit in the $\alpha\to1$ limit. This confirms the parametrization contains the single exponential as a genuine special case rather than over-fitting; the per-curve comparison is provided in the released analysis code.
+
+\subsection{Hypothesis and Statistical Model}
+
+Empirically, the observed crossover length $N_*$ is typically on the order of $10\sim 100$---well within the attention window ($\sim 10^5$ or larger) of modern LLMs. This rules out limited context length as the primary cause of the accuracy cliff. We therefore propose an \emph{effective} model in which the rapid accuracy degradation is captured by all-to-all couplings among token-correctness variables. This choice is motivated by---though not derived from---the all-to-all structure of the self-attention mechanism. While the attention weights in next-token prediction are structured and typically sparse rather than uniformly distributed over all past tokens, the architecture nonetheless allows fluctuations and errors to spread through the network in an effectively all-to-all fashion, propagating globally across the entire generated sequence. As a result, small local errors can be amplified and spread through these dense interactions, effectively inducing collective fluctuations among token-level accuracies.
+
+To analyze this mechanism, we abstract away token content and focus solely on whether each token is generated correctly. We introduce binary variables $s_i = \pm 1$ to represent the correctness of the $i$-th token, with $s_i = +1$ for correct and $s_i = -1$ for incorrect generation. We model the joint distribution of token errors $s = \{s_i\}$ using an effective Ising-like energy function,
+\begin{equation}
+E_J[s] = -\sum_{i<j} J_{ij}\, s_i s_j - h \sum_i s_i,
+\end{equation}
+where $h$ denotes an external field reflecting the baseline bias from the prompt toward correct generation, and $J_{ij}$ represent effective couplings between token correctness variables. In the independent-token limit, $J_{ij}=0$ and the model will predict the exponential decay SAR following Eq.~\eqref{exp_sar}. However, experimental results described by Eq.~\eqref{emp_sar} clearly indicate deviations from this independent picture, implying the presence of correlations among token outcomes.
+
+We model these token-error correlations phenomenologically as random couplings drawn independently from a Gaussian ensemble, a form inspired by (but not derived from) the all-to-all structure of attention,
+\begin{equation}
+    \mathbb{E}_J[J_{ij}] = 0, \qquad
+    \mathbb{E}_J[J_{ij}^2] = J_0^2,
+\end{equation}
+where $J_0$ characterizes the strength of internal interference or “noise coupling.” The random couplings capture, in an effective way, both constructive and destructive interference among token-correctness variables. Together with the external field h, which sets the intrinsic per-token accuracy, this formulation defines a statistical-physics model for the collective behavior of token errors. The model is mathematically equivalent to the Sherrington-Kirkpatrick (SK) spin-glass model, widely studied in statistical physics.
+
+We emphasize that a genuinely disordered coupling is essential to the observed phenomenology, and that simpler alternatives are insufficient. A model containing only a field (uniform, or even a site-dependent random field $h_i$) but \emph{no} pairwise coupling factorizes over sites; its $\log\mathrm{SAR}$ is then strictly linear in $N$, reproducing the single exponential of \cref{exp_sar} with no crossover. Uniform \emph{ferromagnetic} couplings ($J_{ij}=J_0>0$) would instead drive a smooth mean-field transition, not the sharp, sample-to-sample crossover seen here. The random signs of $J_{ij}$ introduce \emph{frustration}---competing pairwise constraints that cannot all be satisfied simultaneously---while the field $h$ favors the all-correct configuration. It is the competition between this disorder (internal interference among generated tokens) and the field (external conditioning from the prompt) that the model captures, and the disorder contributes a super-linear-in-$N$ term to $-\log\mathrm{SAR}$, and hence the accuracy cliff. We note that the field explicitly breaks the $s\to-s$ symmetry, so there is no $\mathbb{Z}_2$ degeneracy between the all-correct and all-incorrect states: at small $N$ the field selects the all-correct configuration (paramagnetic regime), whereas at large $N$ the disorder energy ($\propto N^2$) overtakes the field, so the all-correct configuration is no longer favored---and, in the strong-disorder/weak-field regime, an incorrect configuration can become energetically competitive. This asymmetry is precisely what the field term is designed to encode.
+
+For a given realization of the couplings $J_{ij}$, the probability of observing a sequence of token correctness variables  $s$ is
+\begin{equation}
+    p_J[s] \;=\; \frac{1}{Z_J} \, e^{-E_J[s]},
+\end{equation}
+with the partition function
+\begin{equation}
+    Z_J = \sum_{s} e^{-E_J[s]}.
+\end{equation}
+In particular, the SAR is associated with the probability of generating the fully correct sequence $s = (1,1,\ldots,1)$, averaged over disorder realizations of the couplings. Using the geometric mean to account for multiplicative scaling, we define
+\begin{equation}\label{ising_sar}
+    \mathrm{SAR} \;:=\; \exp\!\Big( \mathbb{E}_J \big[ \log p_J[s=1] \big] \Big).
+\end{equation}
+Under a perturbative approximation \cref{app:sk-sar}, exponentiating the leading-order ($\mathcal{O}(J_0^2)$) correction to \cref{ising_sar} yields the same functional form as the empirical law in \cref{emp_sar}, with empirical parameters $\alpha, \beta_0$ related to the energy model parameters $J_0, h$ as follows:
+\begin{equation}
+    \alpha \;\simeq\; \mathrm{e}^{\frac{2 J_0^2}{1 + 2 J_0}},
+    \qquad \beta_0 \;=\; \mathrm{e}^{-2h}.
+\end{equation}
+We stress that \cref{emp_sar} is best understood as a phenomenological closed form motivated by this leading-order behavior rather than as a strict resummation of the full perturbative series; the higher-order ($\mathcal{O}(J_0^4)$) terms are not reproduced by the simple exponentiation, as detailed in \cref{app:sk-sar}.
+
+From the statistical-physics perspective, the accuracy cliff corresponds to a finite-size crossover in the underlying spin system. For small system size $N$, the external field $h$ dominates, and the system behaves as a paramagnet, aligning most spins in the correct direction ($s_i = +1$). As $N$ increases, however, the collective spin correlation energy from the random couplings $J_{ij}$, which scales as $N^2$, eventually exceeds the entropic contribution that grows only linearly with $N$. Beyond a characteristic size $N_*$, the interaction energy dominates, and the system crosses over into a spin-glass-like regime, where the fully aligned configuration is no longer favored, leading to the rapid accuracy degradation observed as the accuracy cliff.
+
+This finite-size crossover predicts a \emph{data collapse}: when SAR is plotted against the rescaled length $N/N_*$, curves for different models and tasks should fall onto a common master curve. \cref{fig:data-collapse} confirms this---data across all three task families and all models collapse onto a single crossover curve passing through $(N/N_*,\mathrm{SAR})\approx(1,0.5)$, supporting the universality of the crossover that the spin-glass picture predicts.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.62\linewidth]{figs/data-collapse.pdf}
+    \caption{Scaling collapse of the Sequence Accuracy Rate. Plotting SAR against the rescaled length $N/N_*$ (with $N_*$ the fitted $\mathrm{SAR}=0.5$ crossover scale) collapses all model--task curves onto a common crossover curve through $(1,0.5)$, as expected for a finite-size crossover. Colors denote task families; error bars are $95\%$ Wilson intervals.}
+    \label{fig:data-collapse}
+\end{figure}
+
+Using the fitted results of the numerical data based on the form in \cref{emp_sar},
+we pin each model onto the correlation–error map.
+This mapping translates observed SAR decay profiles into quantitative measures of intrinsic error rate and correlation strength,
+enabling direct comparison of how different LLMs accumulate and propagate errors across tasks.
+Each point on the map represents a model’s performance under a specific task,
+corresponding to a pair $(\log \alpha, \log \beta_0)$ with color indicating $\log N_*$,
+where $N_*$ is defined as the solution of $\mathrm{SAR}(N_*) = 0.5$ under the given parameters.  A smaller $\log\alpha$ means the model has a sharper focus of attention, and a smaller $\log\beta_0$ means the model has a lower error rate for executing a single unit task.
+The mapping results grouped by model are shown in \cref{fig:phase-model},
+and those grouped by task are shown in \cref{fig:phase-task}.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figs/phase-model.pdf}
+    \caption{Correlation–error map grouped by model, with color indicating the value of $\log N_*$.
+The horizontal and vertical axes, $(\log \alpha, \log \beta_0)$, represent the correlation level and error level, respectively.
+The gray contour line and the numbers along it denote the sequence length $N$.}
+    \label{fig:phase-model}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.65\linewidth]{figs/phase-task.pdf}
+    \caption{Correlation–error map grouped by task, with color indicating the value of $\log N_*$.
+The horizontal and vertical axes, $(\log \alpha, \log \beta_0)$, represent the correlation level and error level, respectively.
+The gray contour line and the numbers along it denote the sequence length $N$.}
+    \label{fig:phase-task}
+\end{figure}
+
+
+\section{Implication: Divide-and-Conquer Strategy}
+
+The empirical scaling law of Eq.~(\ref{emp_sar}) not only provides a qualitative description of how the accuracy inevitably degrades with the output sequence length $N$ for LLMs, but also offers a \emph{constructive implication}: when $\alpha > 1$, the reliability of long-sequence generation can be improved by adopting a \emph{divide-and-conquer} strategy. We emphasize that the prediction below follows directly from the empirical accumulation law \cref{emp_sar}; it does not depend on the specific SK interpretation, and the experiment in this section therefore tests the accumulation law itself rather than the microscopic model.
+
+In this context, divide-and-conquer refers to partitioning a sequence-generation task of total length $N$ into $k$ sub-tasks of length $N/k$, prompting the model separately for each sub-task, and then merging the partial outputs to form the complete sequence. The intuition is that the observed accuracy cliff originates from correlated error propagation among tokens: when $\alpha>1$, the effective per-token error rate grows exponentially with $N$, driven by the effective all-to-all couplings among token-correctness variables. Dividing the sequence into shorter fragments effectively \emph{cuts the correlation loops}, preventing the catastrophic error accumulation.
+
+We introduce a multiplicative overhead factor $\theta_{N,k}\in(0,1]$ to account for the reduction of SAR due to the additional operations involved in applying the divide-and-conquer strategy, such as segmentation, formatting, boundary handling, and content copying. $\theta_{N,k}$ is expected to only  depend on $N$ and $k$ weakly. The overall success probability under divide-and-conquer is then
+\begin{equation}\label{eq:SAR_DC}
+\mathrm{SAR}_{\mathrm{DC}}(N,k)
+= \theta_{N,k}\,\big[\mathrm{SAR}(N/k)\big]^k
+= \theta_{N,k}\,\exp\!\Big[-\beta_0\,N\,\alpha^{\,\frac{N}{k}-1}\Big].
+\end{equation}
+Define the logarithmic gain of divide-and-conquer relative to the single-shot strategy as
+\begin{equation}
+\Delta(N,k)
+:= \log \frac{\mathrm{SAR}_{\mathrm{DC}}(N,k)}{\mathrm{SAR}(N)}
+= \log \theta_{N,k} + \beta_0 N \Big( \alpha^{\,N-1} - \alpha^{\,\frac{N}{k}-1} \Big).
+\end{equation}
+This formulation shows that for $\alpha>1$, the gain term increases rapidly with $N$, indicating that the larger $\alpha$ is, the more advantageous segmentation becomes.
+
+\begin{theorem}[Advantage of Divide-and-Conquer]\label{theorem1}
+Let the intrinsic error rate $\beta_0>0$ and the correlation amplification factor $\alpha>1$, and fix the integer $k\ge2$.
+Under the empirical scaling law $\mathrm{SAR}(N)=\exp[-\beta_0 N \alpha^{\,N-1}]$, for the segmentation into $k$ equal sub-tasks to yield a positive gain $\Delta(N,k)>0$, it would be sufficient if the sequence length exceeds the following bound
+\begin{equation}
+N\geq N_{\mathrm{DC}} \;=\; 1 + \frac{1}{\log\alpha}\left(\log\left(1-\frac{2\log\theta_{N,k}}{\beta_0}\right)+\frac{\log 2}{1-1/k}\right),
+\end{equation}
+meaning that for all $N \ge N_{\mathrm{DC}}$, one has $\mathrm{SAR}_{\mathrm{DC}}(N,k) > \mathrm{SAR}(N)$.
+\end{theorem} (See App.~\ref{app:proof} for a proof.)
+
+This result provides an explicit criterion for when the divide-and-conquer approach is beneficial.
+Under this strategy, as evident from Eq.~\eqref{eq:SAR_DC}, the intrinsic error rate $\beta_0$ remains unchanged, while the correlation amplification factor $\alpha$ is effectively rescaled to $\alpha_\text{eff}\simeq \alpha^{1/k}$ in the large-$N$ regime.
+As a consequence, the characteristic accuracy-cliff scale is extended to
+\begin{equation}
+    N_* \simeq 1+\frac{\log(1/\beta_0)}{\log \alpha_\text{eff}}=1+k\,\frac{\log(1/\beta_0)}{\log \alpha},
+\end{equation}
+growing approximately linearly with $k$, according to Eq.~\eqref{eq:Nc}.  The empirical effectiveness of the divide-and-conquer strategy is demonstrated in \cref{fig:d&c}, where the linear-$k$ scaling of accuracy cliff is indeed observed. We use the Pauli string multiplication task as the testbed here because its sub-problems are exactly site-local and recombination is unambiguous; extending the divide-and-conquer test to the other task families is left to future work.
+
+In summary, the empirical scaling law does more than describe the accuracy cliff—it also \emph{predicts how to mitigate it}: segmentation effectively reduces the compounding of correlated errors and extends the \emph{reliable length scale} of LLMs by roughly a factor of $k$, transforming an observed limitation into a quantitative improvement strategy.
+
+
+%\subsection{Divide and Conquer}
+
+% The empirical format \cref{emp_sar} implies that when $\alpha>1$, splitting a length-$N$ task into $k$ subproblems of size $N/k$ and merging the answers can raise reliability. Let $\theta_{N,k}\in(0,1]$ denote the multiplicative overhead from prompting to \emph{divide} and to \emph{combine} (segmentation, formatting, boundary handling). The overall success of divide-and-conquer (divide-and-conquer) is
+% \begin{equation}
+% \mathrm{SAR}_{\mathrm{divide-and-conquer}}(N,k)=\theta_{N,k}\,\big[\mathrm{SAR}(N/k)\big]^k
+% =\theta_{N,k}\,\exp\!\Big[-\beta_0 N\,\alpha^{\frac{N}{k}-1}\Big].
+% \end{equation}
+% divide-and-conquer is beneficial iff
+% \begin{equation}\label{eq:dc-main}
+% \theta_{N,k}\,\big[\mathrm{SAR}(N/k)\big]^k \;\ge\; \mathrm{SAR}(N)
+% \quad\Longleftrightarrow\quad
+% \alpha^{\frac{N}{k}-1}-\alpha^{N-1}\;\ge\;\frac{\log\theta_{N,k}}{\beta_0 N}.
+% \end{equation}
+% With $\theta_{N,k}=1$, any $k\!\ge\!2$ improves the reliability whenever $\alpha>1$; with overhead ($\theta_{N,k}<1$), improvement occurs only when \cref{eq:dc-main} holds.
+
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figs/d-c.pdf}
+    \caption{
+Divide-and-conquer evaluation on the Pauli string multiplication task under both phase-restricted and phase-relaxed criteria, using \texttt{gemini-2.5-flash} and \texttt{gemini-2.5-pro}.
+The gray $k{=}1$ curves show the fitted $\mathrm{SAR}(N)$ from \cref{emp_sar}; the extracted $(\alpha,\beta_{0})$ values are then used to plot the theoretical $\mathrm{SAR}(N/k)^{k}$ curves for $k{=}2$ and $k{=}3$ (red and blue), assuming no overhead ($\theta_{N,k}=1$).
+In the phase-restricted case, the \texttt{pro} model closely follows the predicted improvement, while the \texttt{flash} model performs below the theoretical curves, consistent with the additional overhead $\theta_{N,k}<1$ incurred during divide and combine (a weaker model loses more to this overhead than it gains from shorter sub-problems).
+In the phase-relaxed case, both models closely follow the predicted improvement, and additionally expand the perfect-accuracy plateau by approximately a factor of $k$ (indicated by the colored dashed lines).}\label{fig:d&c}
+\end{figure}
+
+
+\section{Related Works}
+
+\textbf{Single-pass reasoning and capacity limits.}
+Recent research has shown that even when models can locally apply correct reasoning steps, global accuracy collapses as reasoning chains lengthen. This phenomenon parallels information-theoretic capacity limits of single forward passes. The \emph{Fano-style upper bound} framework ~\citep{wan2025fano} formalizes this collapse for multi-hop question answering (MHQA), proving that once task complexity exceeds the model’s per-pass information capacity, accuracy must drop sharply—mirroring our empirical SAR crossover. Their work interprets the reasoning chain as a noisy communication channel, bounded by mutual information, while our SAR analysis arrives at the same breakdown curve from an effective statistical-physics viewpoint, in which all-to-all error propagation---motivated by, though not derived from, the attention architecture---is modeled phenomenologically. Together they highlight the inevitability of reliability loss in single-pass reasoning under finite model capacity.
+
+\textbf{Prompting paradigms and decomposition.}
+A wide range of prompting methods—Direct prompting, Chain-of-Thought (CoT)~\citep{wei2022chain,kojima2022large}, ReAct~\citep{yao2023react}, Plan-and-Solve~\citep{wang2023plan}, and Self-Ask~\citep{press2023measuring}—operate in the \emph{single-pass} regime, assuming the full reasoning chain fits within one generation. By contrast, \emph{multi-call} frameworks such as Self-Refine~\citep{madaan2023self}, InfoQA~\citep{wan2025fano}, and agentic systems for programming or reasoning~\citep{li2024survey,qian2024chatdev,kim2024llm} mitigate this bottleneck by decomposing reasoning into smaller, verifiable subcalls. Our SAR-based analysis provides a quantitative explanation of why such multi-call methods succeed: by resetting the error accumulation process, they effectively bound per-step complexity below the model’s capacity threshold, preventing the exponential or super-exponential degradation seen in single-pass reasoning.
+
+\textbf{Self-checking, verification, and robust reasoning.}
+Other orthogonal strategies—such as self-consistency sampling, debate-style verification, and tool-augmented reasoning—attempt to mitigate compounding errors by introducing redundancy or external validation~\citep{yao2023react,xie2025fire,wan2025cognitive,mccoy2023embers}. SAR offers a unified diagnostic lens for such methods: improved reliability corresponds to reduced intrinsic error rate $\beta_0$, while better verification or decomposition corresponds to smaller accumulation factor $\alpha$. Thus, SAR quantitatively links algorithmic interventions to empirical stability regimes.
+
+\section{Conclusion and Future Work}
+
+We introduced the \emph{Sequence Accuracy Rate (SAR)} as a principled metric for quantifying reliability in deterministic reasoning tasks performed by large language models. Through three controlled benchmarks—cyclic letter replacement, integer addition, and Pauli string multiplication—we demonstrated that SAR provides a quantitative view of how local inaccuracies compound with sequence length. Empirical results reveal a sharp reliability crossover rather than a simple exponential decay, indicating correlated error accumulation rather than independent token noise.
+
+To explain this behavior, we developed an effective statistical-physics model inspired by the Sherrington–Kirkpatrick spin-glass system, linking empirical scaling parameters to interpretable quantities: intrinsic error rate $\beta_0$ and error accumulation strength $\alpha$. This phenomenological model connects observed \emph{accuracy cliffs} in deterministic reasoning to correlated interactions within LLMs.
+
+Future directions include extending SAR to stochastic reasoning pipelines, integrating it with self-verification or multi-call decomposition schemes, and applying the statistical-physics approach to study model scaling laws and architectural modifications. Two concrete next steps are (i) extending the divide-and-conquer test beyond Pauli string multiplication to the cyclic-letter-replacement and integer-addition tasks, and (ii) making the connection to network internals microscopic---for instance, by attempting to extract the effective couplings $J_{ij}$ from attention patterns, or testing whether controlled perturbations of attention sparsity shift the accumulation factor $\alpha$ in the predicted direction. More broadly, SAR provides a foundation for treating reasoning reliability as a measurable and scalable property, enabling systematic analysis and engineering of models that sustain compositional accuracy over increasing complexity.
+
+\section{Acknowledgment}
+We would like to thank Chen Nie for the engineering support. We would like to acknowledge helpful discussion with Victor Albert and Hsin-Yuan Huang on \href{https://bench.science}{bench.science}. W.H. additionally thanks Tianxiao Hu for helpful discussions.
+
+\bibliography{ref}
+\bibliographystyle{plainnat}
+
+\newpage
+\appendix
+
+\section{Success Rate Analysis of Pauli String test}\label{app:pauli_sar}
+
+Suppose an intellectual agent attempts to compute the product of two Pauli strings of length $N$.
+At each site, two types of operations are required:
+
+\begin{enumerate}
+    \item A \emph{Pauli multiplication step}, where $P_i \times Q_i$ is reduced to a Pauli operator $R_i$ and a local phase factor $\phi_i$. Let the probability of correctly performing this step be $p_{\sigma}$.
+    \item A \emph{phase multiplication step}, where the accumulated phase is updated as $\Phi \mapsto \Phi \times \phi_i$. Let the probability of correctly performing a single phase update be $p_{\phi}$.
+\end{enumerate}
+
+We first model the accumulated phase as a Markov chain on the cyclic group
+\(G = \{1, i, -1, -i\}\) with the state order \((1, i, -1, -i)\).
+At each step, the algorithm multiplies the current phase by one of the group elements,
+but due to noise it returns an incorrect element with probability $p_{\phi}$,
+and the correct (true) element with probability \(1 - p_{\phi}\).
+Hence, each of the three incorrect elements occurs with probability \(\tfrac{p_{\phi}}{3}\).
+Let \(\mathds{1}\) denote the \(4\times4\) identity matrix and \(J\) the all-ones matrix.
+When the intended multiplier is \(1\), the one-step transition kernel is the circulant matrix
+\begin{equation}
+    K = (1 - p_{\phi})\,\mathds{1} + \frac{p_{\phi}}{3}\,(J - \mathds{1}).
+\end{equation}
+
+Define the four permutation (left-shift) matrices \(\{S_\phi:\phi\in G\}\) that implement left multiplication by \(\phi\) on the state order; explicitly,
+\[
+S_1=\mathds{1},\qquad
+S_i=\begin{bmatrix}
+0&0&0&1\\
+1&0&0&0\\
+0&1&0&0\\
+0&0&1&0
+\end{bmatrix},\qquad
+S_{-1}=\begin{bmatrix}
+0&0&1&0\\
+0&0&0&1\\
+1&0&0&0\\
+0&1&0&0
+\end{bmatrix},\qquad
+S_{-i}=\begin{bmatrix}
+0&1&0&0\\
+0&0&0&1\\
+0&0&1&0\\
+1&0&0&0
+\end{bmatrix}.
+\]
+
+Thus, if the multiplier at a step is \(\phi\in G\), the corresponding one-step transition matrix is
+\begin{equation}
+T(\phi)\;=\; S_\phi\, K.
+\end{equation}
+
+Because every permutation matrix commutes with $K$, i.e.\ $S_\phi K = K S_\phi, \forall \phi \in G$,
+the product of step-wise transitions reduces to a similarity transform. For any sequence of true multipliers $\phi_1,\ldots,\phi_N$, we have
+\begin{equation}
+T(\phi_N)\cdots T(\phi_1)
+= \big(S_{\phi_N}\cdots S_{\phi_1}\big)\, K^{N}
+= S_{\Phi}\, K^{N},
+\quad \Phi:=\phi_N\cdots\phi_1.
+\end{equation}
+Therefore, the success rate of phase computing task is given by:
+
+\begin{equation}
+    P_{\phi}(N)=e_{\Phi}^{\top}S_{\Phi}\, K^{N}e_{1},
+\end{equation}
+
+where $e_{\Phi}$ is the basis vector of $\Phi$ in the state order $(1,i,-1,-i)$ and $K^{N}=\tfrac{1}{4}J+\Big(\tfrac{3-4p_{\phi}}{3}\Big)^{N} (\mathds{1}-\tfrac{1}{4}J)$. Explicitly, this gives:
+
+\begin{equation}
+P_{\phi}(N)
+= \tfrac14+\tfrac34\Big(\tfrac{3-4p_{\phi}}{3}\Big)^{N}.
+\end{equation}
+
+Combining this with the individual Pauli multiplication success rate, the overall sequence accuracy rate is
+\begin{equation}
+\text{SAR}(N) = (1-p_{\sigma})^{N}\left[\tfrac14+\tfrac34\left(\tfrac{3-4p_{\phi}}{3}\right)^{N}\right].
+\end{equation}
+
+The requirement to accumulate local phase factors across all sites is especially instructive, as it directly reflects the need for \emph{memory handling} in agent design: just as an LLM must correctly maintain and update a state variable across multiple reasoning steps, the phase register here must be updated consistently at every site.
+
+
+\section{Modeling the LLM SAR with SK-Model}\label{app:sk-sar}
+
+In this appendix, we propose and solve a minimal energy-based toy model that captures the empirical scaling behavior in \cref{emp_sar} and offers a possible physical interpretation of its underlying mechanism.
+
+Let \(\mathcal{D} = \{(x_{(k)}, y_{(k)})\}_{k=1}^{K}\) be a dataset consisting of input–output sequence pairs,
+where each input sequence \(x_{(k)}\) is deterministically mapped to a unique correct output sequence \(y_{(k)}\).
+An LLM trained on this dataset defines a conditional probability distribution
+\(p_{\theta}(y \mid x)\) over output sequences.
+
+\subsection{Definitions and independent-token baseline}\label{app:def}
+The \emph{Sequence Accuracy Rate (SAR)} is defined as the geometric mean of the model's probability on correct sequences:
+\begin{equation}
+\mathrm{SAR}(p_\theta;\mathcal{D})
+=\exp\!\Big(\frac{1}{K}\sum_{k=1}^{K}\log p_\theta(y_{(k)}\mid x_{(k)})\Big)\in(0,1].
+\end{equation}
+
+Introduce Ising variables for correctness:
+\[
+s_i=\begin{cases}
++1,& y_i\ \text{is correct},\\
+-1,& \text{otherwise},
+\end{cases}
+\qquad s=(s_1,\dots,s_N)\in\{\pm1\}^N,
+\]
+so all-correct output sequence corresponds to \(s_i = +1\) for all \(i = 1, \ldots, N\),
+which we denote jointly as \(s = \mathbf{1}\).
+If each token were generated independently with a token-level accuracy rate \(p_{\mathrm{tok}}\),
+the expected sequence accuracy would scale as
+\begin{equation}
+\mathrm{SAR} = p_{\mathrm{tok}}^{N},
+\end{equation}
+which decays exponentially with sequence length \(N\).
+The corresponding energy model for the Ising variables is simply
+\begin{equation}
+E[s] = -h \sum_{i=1}^{N} s_i,
+\end{equation}
+such that
+\begin{equation}
+\mathrm{SAR}
+= \frac{e^{-E[s=\mathbf{1}]}}{\sum_{s} e^{-E[s]}}
+= \left(\frac{1}{1 + e^{-2h}}\right)^{N},
+\end{equation}
+implying that the external field \(h\) parameterizes the token-level accuracy as
+\begin{equation}
+p_{\mathrm{tok}} = \frac{1}{1 + e^{-2h}}.
+\end{equation}
+However, this independent-token prediction fails to capture
+the crossover behavior observed in experiments.
+
+\subsection{Energy model (Sherrington--Kirkpatrick (SK) Hamiltonian)}\label{app:sk}
+
+In our experiments, the Sequence Accuracy Rate (SAR) shows a pronounced dependence on output length \(N\).
+While one might expect a simple exponential decay, \(\mathrm{SAR} \sim e^{-\alpha N}\), our results reveal a clear \emph{accuracy cliff}: SAR remains high for short sequences, then sharply declines around a characteristic length.
+This behavior indicates that sequence-level reliability in LLMs arises not from independent token errors but from correlated or scale-dependent effects, such as contextual coupling and calibration across sequence lengths, governing the shift from reliable to unreliable generation in deterministic tasks.
+We hypothesize that the deviation arises from all-to-all correlations among tokens during sequence generation.
+Because attention couples tokens across the sequence, dependencies beyond the independent-token picture can arise; we capture these in an effective way, without claiming a specific microscopic origin.
+We represent them by effective random coupling strengths \(J_{ij}\) between the Ising variables \(s_i\) (the token correctness labels), whose random signs encode constructive and destructive interference.
+Such couplings modify the collective statistics of sequence correctness, producing a non-exponential decay and the observed crossover in SAR.
+
+We therefore propose the following energy model:
+\begin{equation}
+E_J[s] = -\sum_{i<j} J_{ij}\, s_i s_j - h \sum_{i=1}^{N} s_i,
+\end{equation}
+where \(s_i = \pm 1\) for \(i = 1, 2, \ldots, N\) are Ising variables representing the correctness of the \(i\)-th token \(y_i\) in the output sequence generated by the LLM.
+
+The coupling strengths \(J_{ij}\) are drawn independently from a Gaussian distribution with zero mean and finite variance:
+\begin{equation}
+\mathbb{E}_J[J_{ij}] = 0,
+\qquad
+\mathbb{E}_J[J_{ij}^2] = J_0^2.
+\end{equation}
+They model the noisy all-to-all correlations in token generation, and \(J_0\) characterizes the noise strength, which is assumed to be weak.
+The external field \(h\) parameterizes the token-level accuracy rate via \(p_{\mathrm{tok}}=1/(1+e^{-2h})\): a strong field \(h\) corresponds to a high token-level accuracy, which is typically assumed. This model is equivalent to the well-known \emph{Sherrington--Kirkpatrick (SK) model} in spin-glass physics.
+
+For a particular random realization of \(J_{ij}\), the probability of observing the Ising sequence \(s\) is
+\begin{equation}
+p_J[s] = \frac{1}{Z_J} \, e^{-E_J[s]},
+\end{equation}
+where \(Z_J\) is the partition function,
+\begin{equation}
+Z_J = \sum_{s} e^{-E_J[s]}.
+\end{equation}
+
+Specifically, the Sequence Accuracy Rate (SAR) corresponds to the geometric mean probability of the all-correct configuration under random couplings:
+\begin{equation}\label{eq:logSAR-master}
+\mathrm{SAR} := \exp\!\big(\mathbb{E}_J \log p_J[s=\mathbf{1}]\big).
+\end{equation}
+
+\subsection{Replica trick and disorder average}\label{app:replica}
+
+From \cref{eq:logSAR-master}, it is straightforward to show that
+\begin{align}
+\log \mathrm{SAR}
+&= \mathbb{E}_J \log p_J[s=\mathbf{1}]
+= \mathbb{E}_J \log\!\left(\frac{e^{-E_J[s=\mathbf{1}]}}{Z_J}\right) \nonumber\\
+&= \mathbb{E}_J \big(-E_J[s=\mathbf{1}] - \log Z_J\big)
+= \mathbb{E}_J\!\Big(\sum_{i<j} J_{ij} + hN - \log Z_J\Big).
+\end{align}
+Using the disorder mean \(\mathbb{E}_J[J_{ij}] = 0\), we have
+\begin{equation}
+\label{eq:log-sar-basic}
+\log \mathrm{SAR}
+= hN - \mathbb{E}_J \log Z_J .
+\end{equation}
+
+\paragraph{Replica trick.}
+The expectation \(\mathbb{E}_J \log Z_J\) in \eqref{eq:log-sar-basic} is intractable directly.
+Physicists therefore use the \emph{replica trick}:
+\begin{equation}
+\label{eq:replica-identity}
+\mathbb{E}_J \log Z_J
+= \lim_{n\to 0} \partial_n \, \mathbb{E}_J \big[ Z_J^{\,n} \big].
+\end{equation}
+By definition,
+\begin{align}
+\mathbb{E}_J \big[ Z_J^{\,n} \big]
+&= \mathbb{E}_J \left[
+\Big(\sum_{[s]} \exp\big(\sum_{i<j} J_{ij} s_i s_j + h \sum_i s_i\big)\Big)^{\!n}
+\right] \nonumber\\
+&= \sum_{\{s^a\}} \exp\!\Bigg(
+\sum_{a=1}^n \sum_{i<j} J_{ij}\, s_i^a s_j^a
++ h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a
+\Bigg),
+\end{align}
+where the spin variables have been replicated to \(s_i^a\) with \(i=1,\ldots,N\) and \(a=1,\ldots,n\).
+Here \(N\) is the number of sites (sequence length) and \(n\) the number of replicas.
+
+\paragraph{Disorder average.}
+Averaging \(Z_J^{\,n}\) over i.i.d.\ Gaussian couplings \(J_{ij}\) with
+\(\mathbb{E}_J[J_{ij}]=0\), \(\mathbb{E}_J[J_{ij}^2]=J_0^2\), we obtain
+\begin{align}
+\mathbb{E}_J \big[ Z_J^{\,n} \big]
+&= \sum_{\{s^a\}}
+\prod_{i<j}
+\mathbb{E}_{J_{ij}}
+\exp\!\Big(\sum_{a=1}^{n} J_{ij}\, s_i^a s_j^a\Big)\,
+\exp\!\Big(h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a\Big) \nonumber\\
+&= \sum_{\{s^a\}}
+\prod_{i<j}
+\exp\!\Big(\frac{J_0^2}{2}\, C_{ij}^2\Big)\,
+\exp\!\Big(h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a\Big),
+\end{align}
+where \(C_{ij} \equiv \sum_{a=1}^{n} s_i^a s_j^a\) and we used the Gaussian moment-generating function
+\(
+\mathbb{E}_{J_{ij}} e^{J_{ij} C_{ij}}
+= \exp\!\big(\tfrac{J_0^2}{2} C_{ij}^2\big).
+\)
+Thus,
+\begin{align}
+\mathbb{E}_J \big[ Z_J^{\,n} \big]
+&= \sum_{\{s^a\}}
+\exp\!\Big(
+\frac{J_0^2}{2} \sum_{i<j} C_{ij}^2
++ h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a
+\Big) \nonumber\\
+&= \sum_{\{s^a\}}
+\exp\!\Big(
+\frac{J_0^2}{2} \sum_{i<j} \big(\sum_{a=1}^{n} s_i^a s_j^a\big)^2
++ h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a
+\Big).
+\end{align}
+
+Expanding the quadratic replica term gives
+\begin{align}
+\sum_{i<j} \Big(\sum_{a=1}^{n} s_i^a s_j^a\Big)^2
+&= \sum_{i<j} \left(\sum_{a=1}^{n} (s_i^a s_j^a)^2
++ 2 \sum_{a<b} s_i^a s_j^a s_i^b s_j^b \right) \nonumber\\
+&= \sum_{i<j} \left(n + 2 \sum_{a<b} s_i^a s_j^a s_i^b s_j^b \right) \nonumber\\
+&= \frac{n N (N-1)}{2}
++ 2 \sum_{i<j} \sum_{a<b} s_i^a s_j^a s_i^b s_j^b .
+\end{align}
+Introducing the constant
+\(
+\Omega \equiv \exp\!\big(J_0^2 N(N-1)/4\big)
+\)
+to absorb the \(\mathcal{O}(n)\) term, we obtain the compact form
+\begin{equation}
+\label{eq:Zjnavg}
+\mathbb{E}_J \big[ Z_J^{\,n} \big]
+= \Omega^{\,n} \sum_{\{s^a\}}
+\exp\!\Big(
+J_0^2 \sum_{i<j} \sum_{a<b} s_i^a s_j^a s_i^b s_j^b
++ h \sum_{a=1}^{n} \sum_{i=1}^{N} s_i^a
+\Big).
+\end{equation}
+
+\paragraph{Geometric interpretation.}
+Equation~\eqref{eq:Zjnavg} defines a plaquette four-spin interaction on the graph product \(K_N \times K_n\) (complete graphs on \(N\) and \(n\) vertices, respectively). The construction is self-dual under the exchange \(N \leftrightarrow n\).
+\begin{figure}
+    \centering
+    \includegraphics[width=0.2\linewidth]{figs/geo-graph.pdf}
+    \caption{Example: $K_4 \times K_3$ graph.}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsubsection{Small-\texorpdfstring{$J_0$}{J0} Expansion}\label{app:smallJ}
+
+Assuming that the noise strength \(J_0\) is weak, we perform a perturbative expansion of the replicated partition function in powers of \(J_0\):
+\begin{align}
+\mathbb{E}_J Z_J^{\,n}
+&= \Omega^{n} \sum_{\{s\}}
+e^{\,h \sum_{i,a} s_i^a}
+\Bigg[
+1 + J_0^2
+\sum_{i<j,a<b}
+s_i^a s_j^a s_i^b s_j^b
++ \frac{J_0^4}{2}
+\Bigg(\sum_{i<j,a<b}
+s_i^a s_j^a s_i^b s_j^b\Bigg)^{\!2}
++ \cdots
+\Bigg].
+\end{align}
+
+Because the Boltzmann factor factorizes over spins,
+\[
+e^{h \sum_{i,a}s_i^a} = \prod_{i,a} e^{h s_i^a},
+\]
+the spin summations can be carried out independently. For a single spin, we define
+\begin{equation}
+z := \sum_{s=\pm1} e^{hs} = 2\cosh h,
+\qquad
+m := \langle s \rangle = \frac{1}{z}\sum_{s=\pm1} s\, e^{hs} = \tanh h.
+\end{equation}
+Hence, after performing the average over independent spins,
+\begin{align}
+\mathbb{E}_J Z_J^{\,n}
+&= \Omega^{n} z^{nN}
+\Bigg[
+1 + \frac{J_0^2}{4}N(N-1)n(n-1)m^4 \nonumber\\
+&\quad
++ \frac{J_0^4}{2} N(N-1)n(n-1)
+\Big(
+\tfrac14 + \tfrac12 (N+n-4)m^4 + (N-2)(n-2)m^6
++ \\
+&\tfrac14 \big(\tfrac14 N(N-1)n(n-1) - (2N-3)(2n-3)\big)m^8
+\Big)
++ \cdots
+\Bigg].
+\label{eq:ZJn-expand}
+\end{align}
+
+\paragraph{Plaquette pairings.}
+The term
+\[
+\big\langle \sum_{i<j,a<b}s_i^a s_j^a s_i^b s_j^b \big\rangle
+= \tfrac{1}{4} N(N-1)n(n-1) m^4
+\]
+counts the number of plaquettes on the product graph \(K_N \times K_n\),
+corresponding to choosing one edge from \(K_N\) and one from \(K_n\) independently.
+Each summand represents a single four-spin plaquette interaction.
+
+At order \(J_0^4\), we must evaluate
+\(
+\big\langle
+\big(\sum_{i<j,a<b}s_i^a s_j^a s_i^b s_j^b\big)^2
+\big\rangle
+\),
+which decomposes into five distinct topological classes of plaquette pairings:
+\begin{itemize}
+\item[(A)] Double-covered plaquettes:
+\(\tfrac{1}{4}N(N-1)n(n-1)\).
+\item[(B)] Edge-sharing plaquette pairs (sharing a $K_n$ edge):
+\(\tfrac{1}{2}N(N-1)(N-2)n(n-1)m^4\).
+\item[(B$'$)] Edge-sharing plaquette pairs (sharing a $K_N$ edge):
+\(\tfrac{1}{2}N(N-1)n(n-1)(n-2)m^4\).
+\item[(C)] Corner-sharing plaquette pairs:
+\(N(N-1)(N-2)n(n-1)(n-2)m^6\).
+\item[(D)] Non-intersecting plaquette pairs:
+\(\tfrac{1}{4}N(N-1)n(n-1)
+\big[\tfrac{1}{4}N(N-1)n(n-1)-(2N-3)(2n-3)\big]m^8\).
+\end{itemize}
+The sum of all classes yields
+\begin{align}
+\Big\langle
+\Big(\sum_{i<j,a<b}s_i^a s_j^a s_i^b s_j^b\Big)^2
+\Big\rangle
+&= N(N-1)n(n-1)
+\Big[
+\tfrac{1}{4} + \tfrac{1}{2}(N+n-4)m^4 + (N-2)(n-2)m^6 \nonumber\\
+&\qquad\qquad
++ \tfrac{1}{4}\big(\tfrac{1}{4}N(N-1)n(n-1)-(2N-3)(2n-3)\big)m^8
+\Big].
+\label{eq:plaquette2}
+\end{align}
+
+Substituting \eqref{eq:plaquette2} into \eqref{eq:ZJn-expand} gives the final expansion
+\begin{align}
+\mathbb{E}_J Z_J^{\,n}
+&= \Omega^{n}(2\cosh h)^{nN}
+\Big[
+1 + \tfrac{J_0^2}{4} N(N-1)n(n-1)m^4 \nonumber\\
+&\quad
++ \tfrac{J_0^4}{2} N(N-1)n(n-1)
+\Big(
+\tfrac{1}{4} + \tfrac{1}{2}(N+n-4)m^4 + (N-2)(n-2)m^6
++ \\
+&\tfrac{1}{4}\big(\tfrac{1}{4}N(N-1)n(n-1)-(2N-3)(2n-3)\big)m^8
+\Big)
++ \cdots
+\Big].
+\label{eq:ZJn-final}
+\end{align}
+
+\paragraph{Replica limit.}
+Taking the replica limit as in Eq.~\eqref{eq:replica-identity},
+\begin{align}
+\mathbb{E}_J \log Z_J
+&= \lim_{n\to 0}\partial_n\,\mathbb{E}_J Z_J^{\,n} \nonumber\\
+&= \log \Omega + N \log(2\cosh h)
+- \frac{J_0^2}{4}N(N-1)m^4 \nonumber\\
+&\quad
+- \frac{J_0^4}{2}N(N-1)
+\Big[
+\tfrac{1}{4} + \tfrac{1}{2}(N-4)m^4
+- 2(N-2)m^6 + \tfrac{3}{4}(2N-3)m^8
+\Big]
++ \mathcal{O}(J_0^6).
+\label{eq:logZJ-final}
+\end{align}
+
+\paragraph{Result for SAR.}
+Substituting \eqref{eq:logZJ-final} into Eq.~\eqref{eq:log-sar-basic} yields
+\begin{align}
+&\log \mathrm{SAR}
+= N\big(h - \log(2\cosh h)\big)
++ \frac{J_0^2}{4}N(N-1)\big(-1 + \tanh^4 h\big) \nonumber\\
+&\quad
++ \frac{J_0^4}{2}N(N-1)
+\Big[
+-\tfrac{1}{2} - (N-4)\tanh^4 h
++ 4(N-2)\tanh^6 h
+- \tfrac{3}{2}(2N-3)\tanh^8 h
+\Big]+ \mathcal{O}(J_0^6).
+\label{eq:logSAR-expand}
+\end{align}
+
+For \(h \gg 1\), using \(\tanh h \approx 1 - 2e^{-2h}\), the leading contribution in $e^{-2h}$ reads
+\begin{equation}\label{eq:logSAR-largeh}
+\log \mathrm{SAR}
+\simeq
+- e^{-2h}\, N
+\Big[\,1 + 2J_0^2(N-1) - 4J_0^4(N-1)^2 + \mathcal{O}(J_0^6)\,\Big].
+\end{equation}
+The leading two terms already capture the essential physics: the $J_0^2 N(N-1)$ contribution is the super-linear (correlation) term responsible for the accuracy cliff, and its sign is fixed and positive in $-\log\mathrm{SAR}$, so that disorder always accelerates the decay. Exponentiating only this leading-order correction,
+\begin{equation}
+\log \mathrm{SAR} \simeq -e^{-2h} N\big[1 + 2J_0^2(N-1)+\cdots\big] \;\approx\; -e^{-2h}\,N\,e^{2J_0^2(N-1)},
+\end{equation}
+reproduces the empirical double-exponential law \cref{emp_sar} with $\beta_0 = e^{-2h}$ and $\alpha \simeq e^{2J_0^2}$.
+
+Motivated by this leading-order structure, and applying a Pad\'e-type correction $2J_0^2 \mapsto 2J_0^2/(1+2J_0)$ to extend the validity to moderate $J_0$, we adopt the empirical closed form
+\begin{equation}\label{eq:emp-resum}
+\mathrm{SAR}(N)
+= \exp\!\Big(
+- N \exp\!\Big[\frac{2J_0^2}{1+2J_0}(N-1) - 2h\Big]
+\Big),
+\qquad
+\alpha \simeq e^{\frac{2J_0^2}{1+2J_0}},\quad \beta_0 = e^{-2h}.
+\end{equation}
+We stress that \cref{eq:emp-resum} is a phenomenological closed form motivated by exponentiating the leading-order correction, \emph{not} a strict resummation of the full perturbative series: the explicit $\mathcal{O}(J_0^4)$ coefficient in \cref{eq:logSAR-largeh} is $-4J_0^4(N-1)^2$, whereas a genuine exponentiation of the $J_0^2$ term would require $+2J_0^4(N-1)^2$. The two agree only at leading order in $J_0$. Consequently, \cref{eq:emp-resum} should be regarded as an effective description valid in the small-$J_0$, large-$h$ regime, where it provides a good approximation over a broad range of $J_0$; it is this regime in which we fit the data. The qualitative prediction---a positive, super-linear $N^2$ contribution to $-\log\mathrm{SAR}$ that produces the accuracy cliff---is robust and follows already from the leading $\mathcal{O}(J_0^2)$ term.
+
+\section{Proof of Theorem \ref{theorem1}}\label{app:proof}
+\begin{proof}
+Start with the condition
+\begin{equation}\label{eq:NDC}
+N\geq N_{\mathrm{DC}} \;=\; 1 + \frac{1}{\log\alpha}\left(\log\left(1-\frac{2\log\theta_{N,k}}{\beta_0}\right)+\frac{\log 2}{1-1/k}\right),
+\end{equation}
+with $\alpha>1$, $\beta_0>0$, $0< \theta_{N,k}\leq 1$, $k\geq 2$. Each term in $N_\mathrm{DC}$ is non-negative,
+\begin{equation}
+    \log\alpha > 0, \quad \log\left(1-\frac{2\log\theta_{N,k}}{\beta_0}\right)\geq 0,\quad \frac{\log 2}{1-1/k}>0,
+\end{equation}
+therefore Eq.~\eqref{eq:NDC} implies the following weaker conditions:
+\begin{equation}\label{eq:ineq1}
+    N> 1,
+\end{equation}
+\begin{equation}\label{eq:ineq2}
+    N > 1+\frac{1}{\log\alpha}\log\left(1-\frac{2\log\theta_{N,k}}{\beta_0}\right)>1+\frac{1}{\log\alpha}\log\left(-\frac{2\log\theta_{N,k}}{\beta_0}\right),
+\end{equation}
+\begin{equation}\label{eq:ineq3}
+    N> \frac{1}{\log\alpha}\frac{\log 2}{1-1/k},
+\end{equation}
+which are nevertheless more directly useful.
+
+Eq.~\eqref{eq:ineq3} implies
+\begin{equation}\label{eq:1/2bound}
+\begin{split}
+    &N(1-1/k)\log\alpha > \log 2 \\
+    \Rightarrow\;&\alpha^{N(1-1/k)} > 2 \\\Rightarrow\;&\alpha^{-N(1-1/k)} < 1/2 \\\Rightarrow\;&(1-\alpha^{N/k-N})> 1/2.
+\end{split}
+\end{equation}
+Eq.~\eqref{eq:ineq2} implies
+\begin{equation}\label{eq:expbound}
+    (N-1)\log\alpha>\log\left(-\frac{2\log\theta_{N,k}}{\beta_0}\right)
+    \Rightarrow\;\frac{1}{2}\beta_0\alpha^{N-1}>-\log\theta_{N,k}.
+\end{equation}
+Putting Eqs.~\eqref{eq:ineq1}, \eqref{eq:1/2bound}, \eqref{eq:expbound} together, we have
+\begin{equation}
+\begin{split}
+    \beta_0 N(\alpha^{N-1}-\alpha^{N/k-1})&=\beta_0 \alpha^{N-1} N (1-\alpha^{N/k-N})\\
+    &>\beta_0 \alpha^{N-1} \times 1\times \frac{1}{2}\\
+    &>-\log\theta_{N,k},
+\end{split}
+\end{equation}
+therefore the logarithmic gain $\Delta(N,k)=\log\theta_{N,k}+\beta_0 N(\alpha^{N-1}-\alpha^{N/k-1})>0$ is positive.
+\end{proof}
+
+\end{document}

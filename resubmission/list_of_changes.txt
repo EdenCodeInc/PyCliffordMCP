@@ -1,0 +1,84 @@
+LIST OF CHANGES — Manuscript XQ11175
+"How Focused Are LLMs? A Quantitative Study via Repetitive Deterministic Prediction Tasks"
+
+All changes respond to specific referee comments (R1 = first referee, R2 = second referee).
+No content was added beyond what the referees requested.
+
+ABSTRACT
+- Softened the description of the statistical model to an "effective" description linking
+  correlated token errors to sequence-level failure (removed the implied first-principles
+  attention mechanism). [R2-1]
+
+INTRODUCTION
+- Rewrote the "factorizable / product of per-step accuracies" statement to be precise: the
+  factorization is exact only for site-local tasks (letter replacement, Pauli multiplication);
+  integer addition has long-range carry dependence and is only approximately factorizable. [R1-1]
+- Added a sentence framing the spin-glass analogy as an effective, phenomenological description,
+  not a microscopic theory of the network. [R1-3, R2-1]
+
+EXPERIMENT (Methods)
+- Stated the sample size: up to n = 100 independent instances per length (10 repetitions x
+  batch 10); noted that a subset of grok-4 runs use fewer repetitions (n ~ 20-30). [R1-2, R2-3]
+- Stated that all accuracy curves report SAR with 95% confidence-interval error bars: bootstrap
+  over the repeated batches for the geometric-mean SAR, and Wilson score intervals where SAR is
+  the instance-level success rate (integer addition and the scaling collapse). [R1-2, R2-3]
+- Strengthened the no-tools statement: all queries used plain text completion/chat calls with
+  no tools, function-calling, or code-interpreter enabled; results reflect in-context
+  computation only. [R2-4]
+- Stated the decoding settings (temperature 0 where exposed; reasoning models use fixed internal
+  sampling; per-model settings in the released code). [R1/R2 general]
+
+FIGURES
+- All accuracy-vs-length figures (cyclic letter replacement, integer addition, Pauli
+  multiplication) now display 95% confidence intervals (bootstrap for the geometric-mean SAR
+  curves; Wilson for the instance-level success rate, i.e. integer addition and the scaling
+  collapse) and state n in the captions. [R1-2, R2-3]
+- Added a new scaling-collapse figure: SAR vs N/N* collapses onto a single crossover curve
+  across all models and tasks, confirming the universal finite-size crossover. [R2-2]
+- Phase (correlation-error) maps regenerated from the updated fits.
+
+ANALYSIS (Empirical formula)
+- Added a model-comparison statement: an AIC comparison against the single-exponential (alpha=1)
+  baseline favors the double-exponential in all but the highest-accuracy cases, which sit in the
+  alpha -> 1 limit; the per-curve comparison is in the released code. [R2-5]
+
+ANALYSIS (Hypothesis / statistical model)
+- Reframed the couplings J_ij as an effective form inspired by (not derived from) attention;
+  removed causal "attention-induced/attention-mediated" language. [R2-1]
+- Added an argument that disordered couplings are necessary: a field-only model (uniform or
+  random h_i, no coupling) factorizes -> single exponential, no crossover; uniform ferromagnetic
+  couplings give a smooth transition, not the observed sharp, sample-to-sample crossover. [R1-4]
+- Added clarification on symmetry and energetics: the field h breaks the s -> -s symmetry (no Z2
+  degeneracy); at large N the disorder energy (~ N^2) overtakes the field, so an incorrect
+  configuration can become energetically competitive; the frustration is the competition between
+  random-sign couplings and the ordering field. [R1-3]
+- Added a sentence introducing the scaling-collapse prediction and referencing the new figure.
+  [R2-2]
+- Listed microscopic connection (extract J_ij from attention; perturb attention sparsity) as
+  future work. [R2-1]
+
+DIVIDE-AND-CONQUER SECTION
+- Stated that the divide-and-conquer prediction follows from the empirical accumulation law and
+  does not depend on the SK-specific equations. [R1-5a]
+- Attributed the Pro/Flash difference to per-call overhead and no longer present the Flash curve
+  as a success. [R1-5b]
+- Flagged extension of the divide-and-conquer test to the other tasks as future work. [R1-5c]
+
+APPENDIX A (SK derivation)
+- Corrected the O(J0^4) coefficient in the large-field reduction from +2 J0^4 (N-1)^2 to
+  -4 J0^4 (N-1)^2. [R1-6, R2-6]
+- Reconciled the two functional forms: the double-exponential is the exponentiation of the
+  leading-order O(J0^2) correction (a phenomenological closed form valid for small J0, large h),
+  NOT a strict term-by-term resummation; the leading-order (alpha, beta0) <-> (J0, h) mapping is
+  retained. [R1-6, R2-6]
+- Fixed a broken equation reference ("Eq. (0)") to the explicit token-accuracy relation.
+
+CONCLUSION / FUTURE WORK
+- Added two future directions tied to referee suggestions: (i) extending divide-and-conquer to
+  the other tasks; (ii) connecting the model to network internals (extracting J_ij from
+  attention; testing attention-sparsity perturbations). [R1-5c, R2-1]
+
+NOTES
+- The manuscript and response use gender-neutral terms throughout.
+- No new experiments were run; all strengthening derives from re-analysis of the
+  already-collected data, code-level clarification, and revised framing.
